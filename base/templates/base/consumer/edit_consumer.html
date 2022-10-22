@@ -1,0 +1,192 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<div class="container">
+    <h1>Edit Consumer</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="\consumers">Consumers</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="\consumers\{{consumer.id}}">{{consumer.first_name}}
+                    {{consumer.middle_name}} {{consumer.last_name}} {{consumer.ext_name}}</a></li>
+            <li class="breadcrumb-item" aria-current="page">Edit Consumer</li>
+        </ol>
+    </nav>
+
+    <form id="form" method="POST" class="mb-2">
+        {% csrf_token %}
+        <div class="row">
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">First Name:</label>
+                <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name"
+                    value="{{consumer.first_name}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Middle Name:</label>
+                <input type="text" name="middle_name" id="middle_name" class="form-control" placeholder="Middle Name"
+                    value="{{consumer.middle_name}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Last Name:</label>
+                <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name"
+                    value="{{consumer.last_name}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Ext. Name:</label>
+                <input type="text" name="ext_name" id="ext_name" class="form-control" placeholder="Extension Name"
+                    value="{{consumer.ext_name}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Gender:</label>
+                <select name="gender" id="gender" class="form-select">
+                    <option value="">--select--</option>
+                    <option value='Male' {% if consumer.gender == 'Male' %}selected{% endif %}>Male</option>
+                    <option value='Female' {% if consumer.gender == 'Female' %}selected{% endif %}>Female</option>
+                </select>
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Civil Status:</label>
+                <select name="civil_status" id="civil_status" class="form-select">
+                    <option value="">--select--</option>
+                    <option value='Single' {% if consumer.civil_status == 'Single' %}selected{% endif %}>Single</option>
+                    <option value='Married' {% if consumer.civil_status == 'Married' %}selected{% endif %}>Married
+                    </option>
+                    <option value='Widowed' {% if consumer.civil_status == 'Widowed' %}selected{% endif %}>Widowed
+                    </option>
+                </select>
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Adress:</label>
+                <select name="address" id="address" class="form-select">
+                    <option value="">--select--</option>
+                    {% for baranggay in baranggays %}
+                    <option value="{{baranggay.id}}" {% if consumer.address_id == baranggay.id %}selected{% endif %}>
+                        {{baranggay.name}}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Religion:</label>
+                <select name="religion" id="religion" class="form-select">
+                    <option value="">--select--</option>
+                    <option value="Christianity" {% if consumer.religion == 'Christianity' %}selected{% endif %}>
+                        Christianity</option>
+                    <option value="Muslim" {% if consumer.religion == 'Muslim' %}selected{% endif %}>Muslim</option>
+                    <option value="Jewish" {% if consumer.religion == 'Jewish' %}selected{% endif %}>Jewish</option>
+                </select>
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Contact Number:</label>
+                <input type="text" name="contact_no" id="contact_no" class="form-control" placeholder="Contact Number"
+                    value="{{consumer.contact_no}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Email:</label>
+                <input type="text" name="email" id="email" class="form-control" placeholder="Email"
+                    value="{{consumer.email}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Username</label>
+                <input type="text" name="username" id="username" class="form-control" placeholder="Username"
+                    value="{{consumer.username}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3 col-lg-6 col-md-6">
+                <label class="mb-2">Meter Number:</label>
+                <input type="text" name="meter_no" id="meter_no" class="form-control" placeholder="Meter Number"
+                    value="{{consumer.meter_no}}">
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+
+      
+        <div class="form-group d-flex justify-content-end">
+            <div>
+                <button class="btn btn-danger" onclick="history.back()">Cancel</button>
+                <button type="submit" value="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    const validation = new window.JustValidate('#form', {
+        errorFieldCssClass: 'is-invalid',
+    });
+
+    validation
+        .addField('#first_name', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#last_name', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#gender', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#civil_status', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#address', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#religion', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#contact_no', [{
+            rule: 'number',
+            errorMessage: 'Please enter a valid contact number',
+        }, {
+            rule: 'minLength',
+            value: 11,
+        }, {
+            rule: 'maxLength',
+            value: 11,
+        }])
+        .addField('#email', [{
+            rule: 'email',
+            errorMessage: 'Please enter a valid email',
+        },])
+        .addField('#meter_no', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .onSuccess((event) => {
+            document.getElementById("form").submit();
+        });
+</script>
+
+{%endblock content%}

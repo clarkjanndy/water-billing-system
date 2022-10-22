@@ -1,0 +1,171 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-4 vh-100 bg-primary
+            align-items-center justify-content-center d-flex d-none d-sm-flex">
+            <center class="text-white">
+                <img src="{% static 'images/logo.png' %}" width="100"></img>
+                <h1>Water Billing System &copy;</h1>
+                <small>version 1.0.0</small>
+            </center>
+        </div>
+
+        <div class="col-12 bg-primary p-2
+            align-items-center justify-content-center d-flex d-block d-sm-none">
+            <center class="text-white">
+                <img src="{% static 'images/logo.png' %}" width="50"></img>
+                <h1>Water Billing System &copy;</h1>
+                <small>version 1.0.0</small>
+            </center>
+        </div>
+
+        <div class="col p-5 d-flex   align-items-center justify-content-center" style="width: 100%;">
+            <div class="flex-grow-1 ">
+                <div class="mb-5 text-secondary">
+                    <h1>Register Here</h1>
+                    <p>Fill-up the form with your details</p>
+                </div>
+
+                <form id="form" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="form-group mb-3 col-lg-6">
+                            <input type="text" name="first_name" id="first_name" class="form-control form-control-lg"
+                                placeholder="First Name">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="form-group mb-3 col-lg-6">
+                            <input type="text" name="last_name" id="last_name" class="form-control form-control-lg"
+                                placeholder="Last Name">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group mb-3 col-lg-6">
+                            <input type="text" name="username" id="username" class="form-control form-control-lg"
+                                placeholder="Username">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="form-group mb-3 col-lg-6">
+                            <input type="email" name="email" id="email" class="form-control form-control-lg"
+                                placeholder="E-mail">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group mb-3 col-lg-6">
+                            <input type="password" name="password" id="password" class="form-control form-control-lg"
+                                placeholder="Password">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="form-group mb-3 col-lg-6">
+                            <input type="password" name="password1" id="password1" class="form-control form-control-lg"
+                                placeholder="Confirm Password">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <a type="" href="\" class="btn btn-lg btn-danger">Cancel</a>
+                        <button type="submit" value="submit" class="btn btn-lg btn-primary">Register</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        var flag = true;
+        async function check_username() {
+            let username = document.getElementById('username').value;
+            let url = 'check_username/' + username;
+            let response = await fetch(url);
+            if (response.status == 200) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+        }
+
+        const validation = new window.JustValidate('#form', {
+            errorFieldCssClass: 'is-invalid',
+        });
+
+        validation
+            .addField('#first_name', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            },])
+            .addField('#last_name', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            },])
+            .addField('#username', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            },
+            {
+                rule: 'minLength',
+                value: 8,
+            },
+            {
+                validator: () => {
+                    check_username();
+                    return true;
+                    
+                },
+                errorMessage: 'Name already exists',
+            }])
+            .addField('#email', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            },
+            {
+                rule: 'email',
+                errorMessage: 'Please input a valid email',
+            },])
+            .addField('#password', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            }, {
+                rule: 'minLength',
+                value: 8,
+            }])
+            .addField('#password1', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            },
+            {
+                validator: (value, fields) => {
+                    if (
+                        fields['#password'] &&
+                        fields['#password'].elem
+                    ) {
+                        const repeatPasswordValue =
+                            fields['#password'].elem.value;
+
+                        return value === repeatPasswordValue;
+                    }
+
+                    return true;
+                },
+                errorMessage: 'Password does not match',
+            }])
+            .onSuccess((event) => {
+                document.getElementById("form").submit();
+            });
+
+    </script>
+    {%endblock content%}

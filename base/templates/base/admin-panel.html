@@ -1,0 +1,77 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<div class="container">
+    <h1>Admin Panel</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Admin Panel</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-4 p-2">
+            <div class="border p-2" style=" border-left: 5px solid #0275d8 !important;">
+                <h5><i class="bx bx-user"></i> Consumers</h5>
+                <p>200</p>
+
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-primary" href="consumers">View All</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 p-2">
+            <div class="border p-2" style=" border-left: 5px solid #0275d8 !important;">
+                <h5><i class="bx bx-building-house"></i> Barangay</h5>
+                <p>200</p>
+
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-primary" href="baranggays">View All</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 p-2">
+            <div class="border p-2" style=" border-left: 5px solid #0275d8 !important;">
+                <h5><i class="bx bx-money"></i> Transactions</h5>
+                <p>200</p>
+
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-primary">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-4 p-2">
+            <div class="border p-2">
+                <div class="text-primary"><i class="bx bx-water"></i> Consumed Water</div>
+                <div class="">
+                   <h3>300 m<sup>3</sup></h3>
+                </div>
+                <div class="text-muted">(as of Dec. 12, 2022)</div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-4 p-2">
+            <div class="border p-2">
+                <div class="text-primary"><i class="bx bx-money"></i> Total Collection</div>
+                <div class="">
+                   <h3><span>&#8369;</span> 300.00</h3>
+                </div>
+                <div class="text-muted">(as of Dec. 12, 2022)</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{%endblock content%}

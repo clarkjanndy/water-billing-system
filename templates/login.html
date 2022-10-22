@@ -1,0 +1,89 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-4 vh-100 bg-primary
+            align-items-center justify-content-center d-flex d-none d-sm-flex">
+            <center class="text-white">
+                <img src="{% static 'images/logo.png' %}" width="100"></img>
+                <h1>
+                    Waterworks Billing And Collection System &copy;</h1>
+                <small>version 1.0.0</small>
+            </center>
+        </div>
+
+        <div class="col-12 bg-primary p-2
+            align-items-center justify-content-center d-flex d-block d-sm-none">
+            <center class="text-white">
+                <img src="{% static 'images/logo.png' %}" width="50"></img>
+                <h1>
+                    Waterworks Billing And Collection System &copy;
+                </h1>
+                <small>version 1.0.0</small>
+            </center>
+        </div>
+
+        <div class="col p-5 d-flex   align-items-center justify-content-center" style="width: 100%;">
+            <div class="flex-grow-1 ">
+                <h1 class="mb-5 text-secondary">Login Here</h1>
+
+                <form action="" id="form" method="POST" autocomplete="off">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-3">
+                        <input type="text" name="username" id="username" class="form-control form-control-lg"
+                            placeholder="Username" value="{% if  username != '' %}{{username}}{% endif %}">
+                        <div class="is-invalid">
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <input type="password" name="password" id="password" class="form-control form-control-lg"
+                            placeholder="Password" value="{% if  password != '' %}{{password}}{% endif %}">
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    {% if message != '' %}
+                    <div class="text-danger">{{message}}</div>
+                    {% endif%}
+
+                    <div class="lead text-secondary">
+                        <p>Forgot Password?</p>
+                        <p>Contact admin for password reset request.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <a type=" submit" href="\" class="btn btn-lg btn-danger">Cancel</a>
+                        <button type=" submit" value="" class="btn btn-lg btn-primary">Login</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const validation = new window.JustValidate('#form', {
+            errorFieldCssClass: 'is-invalid',
+        });
+
+        validation
+            .addField('#username', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            },])
+            .addField('#password', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            },])
+            .onSuccess((event) => {
+                document.getElementById("form").submit();
+            });
+
+    </script>
+    {%endblock content%}

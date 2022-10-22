@@ -1,0 +1,201 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<!--Add Modals Here-->
+{% include '../modals/add-reading.html' %}
+
+<div class="container">
+    <h1>{{consumer.first_name}} {{consumer.middle_name}} {{consumer.last_name}} {{consumer.ext_name}}</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="\consumers">Consumers</a></li>
+            <li class="breadcrumb-item" aria-current="page">{{consumer.first_name}} {{consumer.middle_name}}
+                {{consumer.last_name}} {{consumer.ext_name}}</li>
+        </ol>
+    </nav>
+
+    {% if messages %}
+    {% for message in messages %}
+    {%include 'toast.html'%}
+    {% endfor %}
+    {% endif %}
+
+    <section class="mb-4">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="border mb-4 p-2">
+
+                    <div class="text-center">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                            alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">{{consumer.first_name}} {{consumer.middle_name}}
+                            {{consumer.last_name}} {{consumer.ext_name}}</h5>
+                        <p class="text-muted mb-1">@{{consumer.username}}</p>
+                        <p class="text-success mb-1">{% if consumer.is_active == 1 %}Active{% endif %}</p>
+                        <p class="text-danger mb-1">{% if consumer.is_active == 0 %}Inactive{% endif %}</p>
+                        <p class="text-muted mb-1">Consumer</p>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-primary" href="\consumers\{{consumer.id}}\edit">Edit Profile</a>
+                        </div>
+                    </div>
+
+                    <div>
+
+                        <h6>Quick Actions</h6>
+                        <div class="row">
+                            <div class="col-12">
+                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-reading">Add Reading</a>
+                                <a class="btn btn-primary">Transact</a>
+                            </div>
+                        </div>
+
+                        <h6>Others</h6>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                        id="flexSwitchCheckDefault" />
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">Allow this user to have
+                                        admin access</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                        id="flexSwitchCheckDefault" />
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">Deactivate this
+                                        user</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="row mb-4">
+                    <div class="col-lg-6">
+                        <div class="border p-2">
+                            <div class="text-primary"><i class="bx bx-water"></i> Consumed Water</div>
+                            <div class="">
+                                <h3>300 m<sup>3</sup></h3>
+                            </div>
+                            <div class="text-muted">(as of Dec. 12, 2022)</div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-primary" href="/consumers/{{consumer.id}}/readings">View
+                                    Details</a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="border p-2">
+                            <div class="text-primary"><i class="bx bx-money"></i> Total Unpaid Bills</div>
+                            <div class="">
+                                <h3><span>&#8369;</span> 300.00</h3>
+                            </div>
+                            <div class="text-muted">(as of Dec. 12, 2022)</div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="border p-2">
+                    <h6 class="text-primary">Personal Details</h6>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Full Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.first_name}} {{consumer.middle_name}}
+                                {{consumer.last_name}} {{consumer.ext_name}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Gender</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.gender}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Civil Status</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.civil_status}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Adress</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.address.name}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Religion</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.religion}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Contact No</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.contact_no}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.email}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Meter No.</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.meter_no}}</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+
+</script>
+{% endblock content %}

@@ -1,0 +1,75 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<div class="container">
+    <h1>Edit Baranggay</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="\baranggays">Baranggays</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a
+                    href="\baranggays\{{baranggay.id}}">{{baranggay.name}}</a></li>
+            <li class="breadcrumb-item" aria-current="page">Edit Baranggay</li>
+        </ol>
+    </nav>
+
+
+    <form id="form" method="POST" class="mb-2 col-lg-6 col-md-12 col-sm-12">
+        {% csrf_token %}
+        <div class="row">
+            <div class="form-group mb-3">
+                <label class="mb-2">Baranggay Name:</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="Baranggay Name"
+                    value="{{baranggay.name}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="mb-2">Baranggay Code:</label>
+                <input type="text" name="code" id="code" class="form-control" placeholder="Baranggay Name"
+                    value="{{baranggay.code}}">
+                <div class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="mb-2">Description:</label>
+                <textarea name="description" id="description" class="form-control" rows=10
+                    placeholder="Type Desciption here">{{baranggay.description}}</textarea>
+                <div class="invalid-feedback"></div>
+            </div>
+
+        </div>
+
+        <div class="form-group d-flex justify-content-end">
+            <div>
+                <a type="" href="\baranggays" class="btn btn-danger">Cancel</a>
+                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    const validation = new window.JustValidate('#form', {
+        errorFieldCssClass: 'is-invalid',
+    });
+
+    validation
+        .addField('#name', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .onSuccess((event) => {
+            document.getElementById("form").submit();
+        });
+</script>
+
+
+
+{%endblock content%}

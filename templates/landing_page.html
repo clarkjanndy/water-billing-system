@@ -1,0 +1,18 @@
+{% extends 'app.html'%}
+
+
+{% load static %}
+
+{% block content%}
+
+<div class="container-fliud vh-100  d-flex align-items-center justify-content-center p-3 text-secondary">
+    <center class="">
+        <img src="{% static 'images/logo.png' %}" width="100"></img>
+        <h1>
+            Waterworks Billing And Collection System &copy;</h1>
+        <p>We will help you track your water comsumption on time</p>
+        <a class="btn btn-lg btn-primary" href="/login">Login</a>
+    </center>
+</div>
+
+{%endblock content%}

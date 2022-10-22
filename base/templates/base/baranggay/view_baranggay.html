@@ -1,0 +1,42 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<div class="container">
+    <h1>{{baranggay.name}} - {{baranggay.code}}</h1>
+
+    {% if messages %}
+    {% for message in messages %}
+    {%include 'toast.html'%}
+    {% endfor %}
+    {% endif %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="\baranggays">Baranggays</a></li>
+            <li class="breadcrumb-item" aria-current="page">{{baranggay.name}}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+
+        <div class="col-lg-6">
+            <img src="{% static 'images/baranggay.jpg'%}" alt="Water Billing System" class="img-fluid">
+        </div>
+
+        <div class="col-lg-6 ">
+            <h3>Description</h3>
+            {{baranggay.description}}
+        </div>
+
+    </div>
+
+
+</div>
+
+
+{%endblock content%}

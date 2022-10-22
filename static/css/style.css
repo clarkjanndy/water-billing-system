@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed');
+
+* {
+    font-family: 'Barlow Semi Condensed', 'Arial';
+    box-sizing: border-box;
+}
+
+a{
+    text-decoration: none !important;
+}
+
+.align-icon {
+    vertical-align: middle;
+}
+
+/*Navbar CSS*/
+.dropdown-menu.show {
+    left: -200px;
+}
+
+
+.dropdown-panel:hover{
+    background-color: inherit !important;
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+/* Bootstrap Custom CSS*/
+.btn {
+    border-radius: 0 !important;
+}
+
+.form-control {
+    border-radius: 0 !important;
+}
