@@ -35,3 +35,25 @@ a{
 .form-control {
     border-radius: 0 !important;
 }
+
+
+/*BX Icons*/
+.bx-1{
+    font-size: 1rem;
+}
+
+.bx-2{
+    font-size: 2rem;
+}
+
+.bx-3{
+    font-size: 3rem;
+}
+
+.bx-4{
+    font-size: 4rem;
+}
+
+.bx-5{
+    font-size: 5rem;
+}

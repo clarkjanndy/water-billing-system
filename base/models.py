@@ -33,17 +33,20 @@ class Notification(models.Model):
 class Reading(models.Model):
     previous = models.IntegerField(blank = False, null= False)
     present = models.IntegerField(blank = False, null = False)
-    billing_month = models.DateField(auto_now_add=True, blank=True)
+    billing_month = models.DateField(null=True, blank=True)
     consumption = models.IntegerField(blank = False, null=False)
-    multiplier = models.IntegerField(blank = False, null=False)
+    multiplier = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
     user = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING)
     
     def __str__(self):
         return self.consumption
     
 class Collectibles(models.Model):
-    category = models.IntegerField(blank = False, null = False)
-    amount = models.BigIntegerField(blank = False, null = False)
+    category = models.CharField(blank = False, null = False, max_length = 32)
+    amount = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
     due_date = models.DateField(blank = False, null = False, max_length = 32)
-    status = models.IntegerField(blank = False, null = False)
-        
+    status = models.CharField(blank = False, null = False, max_length = 32)
+    reading = models.OneToOneField(Reading, on_delete = models.DO_NOTHING, null = True)
+
+    def __str__(self):
+        return self.category  

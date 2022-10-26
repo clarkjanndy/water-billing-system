@@ -1,0 +1,106 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="container">
+    <h1>{{consumer.first_name}} {{consumer.middle_name}} {{consumer.last_name}} {{consumer.ext_name}}</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="\consumers">Consumers</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="\consumers\{{consumer.id}}">{{consumer.first_name}}
+                    {{consumer.middle_name}}
+                    {{consumer.last_name}} {{consumer.ext_name}}</a></li>
+            <li class="breadcrumb-item" aria-current="page">Bills</li>
+        </ol>
+    </nav>
+
+    {% if messages %}
+    {% for message in messages %}
+    {%include 'toast.html'%}
+    {% endfor %}
+    {% endif %}
+
+    <section class="mb-4">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="border p-2">
+                    <h6 class="text-primary">Bills</h6>
+
+                    <div class="table-responsive">
+                        <table class="table" id="consumers">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th scope="col">Billing Month</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Due Date</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if bills %}
+                                {% for bill in bills %}
+                                <tr>
+                                    <td>{{bill.reading.billing_month|date:"M Y"}}</td>
+                                    <td><span>&#8369;</span> {{bill.amount}}</td>
+                                    <td>{{bill.due_date}}</td>
+                                    <td>{{bill.status}}</td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-lg-5">
+                <div class="border p-2">
+                    <h6 class="text-primary">Paid Vs. Unpaid Graph</h6>
+                    <div id="paid-vs-unpaid"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+</div>
+
+<script>
+    async function render_histogram() {
+        const response = await fetch('/api/v1/bills-paid-vs-unpaid/{{consumer.id}}');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        console.log(data['paid'])
+
+        var options = {
+            series: [parseFloat(data['paid']), parseFloat(data['unpaid'])],
+            chart: {
+                type: 'donut',
+            },
+            labels: ["Paid", "Unpaid"],
+            responsive: [{
+                breakpoint: 400 ,
+                options: {
+                    chart: {
+                        width: 400
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#paid-vs-unpaid"), options);
+        chart.render();
+    }
+    render_histogram();
+</script>
+{% endblock content %}

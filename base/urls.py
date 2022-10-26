@@ -16,7 +16,7 @@ urlpatterns = [
     path('consumers/<int:id>', consumer_views.view_consumer, name="view_consumer"),
     path('consumers/<int:id>/edit', consumer_views.edit_consumer, name="edit_consumer"),
     path('consumers/<int:id>/readings', consumer_views.view_consumer_readings, name="view_consumer_readings"),
-    path('consumers/<int:id>/bills', consumer_views.edit_consumer, name="edit_consumer"),
+    path('consumers/<int:id>/bills', consumer_views.view_consumer_bills, name="view_consumer_bills"),
     
     path('baranggays', baranggay_views.index, name="baranggays"),
     path('baranggays/add', baranggay_views.add_baranggay, name="add_baranggay"),

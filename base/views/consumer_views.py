@@ -1,7 +1,8 @@
+from asyncore import read
 from django.shortcuts import HttpResponse, render
 from django.shortcuts import redirect
 
-from base.models import CustomUser
+from base.models import Collectibles, CustomUser
 from base.models import Baranggay
 from base.models import Reading
 
@@ -15,7 +16,7 @@ def index(request):
         return redirect("/")
 
     if not request.user.is_superuser and not request.user.id == id:
-        return HttpResponse(status=403)
+       return redirect("/")
 
     consumers = CustomUser.objects.filter(is_superuser=False)
 
@@ -28,7 +29,7 @@ def view_consumer(request, id):
         return redirect("/")
 
     if not request.user.is_superuser and not request.user.id == id:
-        return HttpResponse(status=403)
+        return redirect("/")
 
     consumer = CustomUser.objects.get(id=id)
     baranggays = Baranggay.objects.all()
@@ -42,17 +43,16 @@ def view_consumer(request, id):
 
     return render(request, "./base/consumer/view_consumer.html", data)
 
-
 def view_consumer_readings(request, id):
     if not request.user.is_authenticated:
         return redirect("/")
 
     if not request.user.is_superuser and not request.user.id == id:
-        return HttpResponse(status=403)
+        return redirect("/")
 
     consumer = CustomUser.objects.get(id=id)
-    last_reading = Reading.objects.all().filter(user_id=id).last()
-    readings = Reading.objects.all().filter(user_id=id)
+    last_reading = Reading.objects.all().filter(user_id=id).order_by('billing_month').last()
+    readings = Reading.objects.filter(user=id).order_by('billing_month')
 
     data = {
         "readings": readings,
@@ -62,13 +62,29 @@ def view_consumer_readings(request, id):
 
     return render(request, "./base/consumer/view_consumer_readings.html", data)
 
+def view_consumer_bills(request, id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+
+    if not request.user.is_superuser and not request.user.id == id:
+        return redirect("/")
+
+    consumer = CustomUser.objects.get(id=id)
+    bills = Collectibles.objects.select_related('reading').filter(reading__user_id=id)
+
+    data = {
+        "bills": bills,
+        "consumer": consumer,
+    }
+
+    return render(request, "./base/consumer/view_consumer_bills.html", data)
 
 def add_consumer(request):
     if not request.user.is_authenticated:
         return redirect("/")
 
     if not request.user.is_superuser:
-        return HttpResponse(status=403)
+        return redirect("/")
 
     if request.method == "POST":
         baranggay = Baranggay.objects.get(id=request.POST["address"])
@@ -104,9 +120,13 @@ def edit_consumer(request, id):
         return redirect("/")
 
     if not request.user.is_superuser and not request.user.id == id:
-        return HttpResponse(status=403)
+        return redirect("/")
 
     consumer = CustomUser.objects.get(id=id)
+
+    if consumer == None:
+        return redirect("/")
+
     if request.method == "POST":
         baranggay = Baranggay.objects.get(id=request.POST["address"])
 
