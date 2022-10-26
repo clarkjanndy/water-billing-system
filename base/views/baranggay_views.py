@@ -14,7 +14,7 @@ def index(request):
         return redirect("/")
 
     if not request.user.is_superuser:
-        return HttpResponse(status=403)
+        return redirect("/")
 
     baranggays = Baranggay.objects.all()
     data = {"baranggays": baranggays}
@@ -36,7 +36,7 @@ def add_baranggay(request):
         return redirect("/")
     
     if not request.user.is_superuser:
-        return HttpResponse(status=403)
+        return redirect("/")
 
     if request.method == "POST":
 
@@ -57,7 +57,7 @@ def edit_baranggay(request, id):
         return redirect("/")
     
     if not request.user.is_superuser:
-        return HttpResponse(status=403)
+        return redirect("/")
 
     baranggay = Baranggay.objects.get(id=id)
     if request.method == "POST":

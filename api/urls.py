@@ -1,10 +1,14 @@
 from django.urls import path
 
-from .views import CustomUserList, CustomUserRetrieveUpdateDestroy
+from .views import analytics_views 
 
 
 urlpatterns = [
-    path('users/', CustomUserList.as_view()),
-    path('users/<int:id>', CustomUserRetrieveUpdateDestroy.as_view()),        
+    #analytics
+    path('consumption/<int:id>', analytics_views.consumption_get, name="consumption_get"), 
+    path('consumption-history/<int:id>', analytics_views.consumption_history_get, name="consumption_histogram_get"), 
+
+    path('bills-unpaid/<int:id>', analytics_views.bills_unpaid_get, name="bills_unpaid_get"),
+    path('bills-paid-vs-unpaid/<int:id>', analytics_views.bills_paid_vs_unpaid_get, name="bills_paid_vs_unpaid_get"),  
 ]
     

@@ -12,10 +12,14 @@
     </a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
+
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="#"><span class="bx bx-user bx-2"></span></a>
+        </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
+          <a class="nav-link" href="#"><span class="bx bx-bell bx-2"></span></a>
         </li>
 
         <li class="nav-item">
@@ -24,14 +28,20 @@
 
         <li class="nav-item">
           <a class="nav-link" href="#">The Team</a>
-        </li>
+        </li> -->
       </ul>
 
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{% static 'images/icons/bell-regular-24.png'%}"
+              width="35" height="35" class="rounded-circle">
+          </a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://www.mensjournal.com/wp-content/uploads/mf/1280-selfie.jpg?w=900&quality=86&strip=all" alt="
-              Waterworks Billing And Collection System" width="40" height="40" class="rounded-circle">
+
+            <img src="https://www.mensjournal.com/wp-content/uploads/mf/1280-selfie.jpg?w=900&quality=86&strip=all" width="35" height="35" class="rounded-circle">
             <span class="bx bx-chevron-down"></span>
           </a>
           <ul class="dropdown-menu shadow">
@@ -75,6 +85,7 @@
           </ul>
         </li>
       </ul>
+
     </div>
   </div>
 </nav>

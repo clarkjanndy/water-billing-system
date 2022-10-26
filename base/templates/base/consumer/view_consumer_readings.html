@@ -33,9 +33,9 @@
             <div class="col-lg-7">
                 <div class="border p-2">
                     <h6 class="text-primary">Readings</h6>
-                    <div>
+                    <h6>
                         Meter No: {{consumer.meter_no}}
-                    </div>
+                    </h6>
                     <div class="d-flex justify-content-end mb-2">
                         <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-reading">Add Reading</a>
                     </div>
@@ -43,23 +43,30 @@
                         <table class="table" id="consumers">
                             <thead class="bg-primary text-white">
                                 <tr>
+                                    <th scope="col">ID</th>
                                     <th scope="col">Billing Month</th>
                                     <th scope="col">Previous</th>
                                     <th scope="col">Present</th>
                                     <th scope="col">Cubic Meter</th>
+                                    <th scope="col">- - -</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            {% if readings %}
-                            {% for reading in readings %}
+                                {% if readings %}
+                                {% for reading in readings %}
                                 <tr>
+                                    <th>#{{reading.id}}</th>
                                     <td>{{reading.billing_month|date:"M Y"}}</td>
                                     <td>{{reading.previous}}</td>
                                     <td>{{reading.present}}</td>
                                     <td>{{reading.consumption}} m<sup>3</sup></td>
+                                    <td>
+                                        <a href="" data-toggle="modal" data-target="#exampleModal"
+                                        data-id="@mdo">Edit</a>
+                                    </td>
                                 </tr>
-                            {% endfor %}
-                            {% endif %}
+                                {% endfor %}
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
@@ -81,50 +88,52 @@
 </div>
 
 <script>
-    var options = {
-        chart: {
-            height: 280,
-            type: "area",
-            toolbar: {
-                show: false
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        series: [
-            {
-                name: "Series 1",
-                data: [45, 52, 38, 45, 19, 23, 2]
-            }
-        ],
-        fill: {
-            type: "gradient",
-            gradient: {
-                shadeIntensity: 1,
-                opacityFrom: 0.7,
-                opacityTo: 0.9,
-                stops: [0, 90, 100]
-            }
-        },
-        xaxis: {
-            categories: [
-                "01 Jan",
-                "02 Jan",
-                "03 Jan",
-                "04 Jan",
-                "05 Jan",
-                "06 Jan",
-                "07 Jan"
-            ]
+    async function render_histogram() {
+        const response = await fetch('/api/v1/consumption-history/{{consumer.id}}');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        var date_format = { year: 'numeric', month: 'short' };
+        var formatted_date = new Array()
+
+        for (const date of data['x_label']) {
+            formatted_date.push(new Date(date).toLocaleDateString("en-US", date_format))
         }
-    };
 
-    var chart = new ApexCharts(document.querySelector("#consumption-histogram"), options);
+        var options = {
+            chart: {
+                height: 280,
+                type: "area",
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            series: [
+                {
+                    name: "Consumption",
+                    data: data['series']
+                }
+            ],
+            fill: {
+                type: "gradient",
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.9,
+                    stops: [0, 90, 100],
+                }
+            },
+            xaxis: {
+                categories: formatted_date
+            }
+        };
 
-    chart.render();
+        var chart = new ApexCharts(document.querySelector("#consumption-histogram"), options);
+        chart.render();
+    }
 
-
-
+    render_histogram();
 </script>
 {% endblock content %}
