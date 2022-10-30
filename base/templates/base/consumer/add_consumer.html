@@ -107,7 +107,7 @@
 
         </div>
 
-        <div class="text-dark">
+        <div class="text-danger">
             Important Notes:
             <ul class="unstyled">
                 <li>Username of the the Consumer will be automatically generated.</li>
@@ -131,6 +131,8 @@
     const validation = new window.JustValidate('#form', {
         errorFieldCssClass: 'is-invalid',
     });
+
+    meter_no = document.getElementById('meter_no');
 
     validation
         .addField('#first_name', [{
@@ -174,7 +176,19 @@
         .addField('#meter_no', [{
             rule: 'required',
             errorMessage: 'This field is required',
-        },])
+        }, {
+            validator: () => {
+                var func = async function validate() {
+                    const response = await fetch('/api/v1/validate-meter?meter_no=' + meter_no.value);
+                    const data = await response.json(); // Extracting data as a JSON Object from the response
+
+                    return data['valid']
+                    
+                }
+                return func;
+            },
+            errorMessage: 'Meter number already in use.',
+        }])
         .onSuccess((event) => {
             document.getElementById("form").submit();
         });

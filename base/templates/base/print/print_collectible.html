@@ -1,0 +1,163 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+<div class="container">
+
+    <div class="d-inline">
+        <img src="{% static 'images/logo.png'%}" width="50">  
+        <b>Water Billing and Collection System</b>
+    </div>
+   
+
+    <div class="row">
+        <div class="col-lg-6 col-mb-12 col-sm-12">
+            <div class="border p-2 m-3">
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Name</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{consumer.first_name}}
+                            {{consumer.middle_name}}
+                            {{consumer.last_name}} {{consumer.ext_name}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Meter No.</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{consumer.meter_no}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Billing Month</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{reading.billing_month|date:"M Y"}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Due Date</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{collectible.due_date|date:"M d, Y"}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Status</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="
+                        {% if collectible.status == 'paid' %}text-primary{% endif %}
+                        {% if collectible.status == 'unpaid' %}text-success{% endif %}
+                        {% if collectible.status == 'due' %}text-danger{% endif %}
+                        mb-0">{{collectible.status}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Previous Reading</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{reading.previous}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Present</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{reading.present}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Consumption</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{reading.consumption}} m<sup>3</sup></b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Rate per m<sup>3</sup></p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0"><span>&#8369;</span> {{reading.multiplier}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Bill</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0"><span>&#8369;</span> {{collectible.amount}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Arrear Months</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{arrear.num_arrear}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Arrear Amount</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0"><span>&#8369;</span> {{arrear.arrear_amount}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Penalty</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0"><span>&#8369;</span> {{collectible.penalty}}</b>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <h5 class="mb-0">Total Bill</h5>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="text-muted mb-0"><b><span>&#8369;</span> {{ arrear.total_bill }}</b></h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    window.onload = function () { window.print(); }
+</script>
+
+
+
+
+{%endblock content%}

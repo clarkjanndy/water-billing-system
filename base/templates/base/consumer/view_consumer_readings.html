@@ -7,8 +7,6 @@
 {% include 'navbar.html' %}
 
 <!--Add Modals Here-->
-{% include '../modals/add-reading.html' %}
-
 <div class="container">
     <h1>{{consumer.first_name}} {{consumer.middle_name}} {{consumer.last_name}} {{consumer.ext_name}}</h1>
 
@@ -36,14 +34,17 @@
                     <h6>
                         Meter No: {{consumer.meter_no}}
                     </h6>
+
+                    {% if user.is_superuser %}
                     <div class="d-flex justify-content-end mb-2">
-                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-reading">Add Reading</a>
+                        <a class="btn btn-primary" href="\readings\add?user_id={{consumer.id}}">
+                           <span class="bx bx-layer-plus"></span>  Add Reading</a>
                     </div>
+                    {% endif %}
                     <div class="table-responsive">
-                        <table class="table" id="consumers">
+                        <table class="table" id="readings">
                             <thead class="bg-primary text-white">
                                 <tr>
-                                    <th scope="col">ID</th>
                                     <th scope="col">Billing Month</th>
                                     <th scope="col">Previous</th>
                                     <th scope="col">Present</th>
@@ -55,14 +56,13 @@
                                 {% if readings %}
                                 {% for reading in readings %}
                                 <tr>
-                                    <th>#{{reading.id}}</th>
                                     <td>{{reading.billing_month|date:"M Y"}}</td>
                                     <td>{{reading.previous}}</td>
                                     <td>{{reading.present}}</td>
                                     <td>{{reading.consumption}} m<sup>3</sup></td>
                                     <td>
-                                        <a href="" data-toggle="modal" data-target="#exampleModal"
-                                        data-id="@mdo">Edit</a>
+                                        <a href="/readings/{{reading.id}}/edit" class="btn btn-sm btn-primary">Edit</a>
+                                        <a href="/readings/{{reading.id}}" class="btn btn-sm btn-success">View</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -135,5 +135,11 @@
     }
 
     render_histogram();
+</script>
+
+<script>
+	$('#readings').dataTable( {
+		"ordering": false
+	} );
 </script>
 {% endblock content %}

@@ -1,5 +1,7 @@
 {% load static %}
 
+{% include 'change_password.html' %}
+
 <nav class="navbar navbar-expand-lg bg-light shadow mb-3">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -34,14 +36,16 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="{% static 'images/icons/bell-regular-24.png'%}"
-              width="35" height="35" class="rounded-circle">
+            <img src="{% static 'images/icons/bell-regular-24.png'%}" width="35" height="35" class="rounded-circle">
           </a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 
-            <img src="https://www.mensjournal.com/wp-content/uploads/mf/1280-selfie.jpg?w=900&quality=86&strip=all" width="35" height="35" class="rounded-circle">
+            <div class="bg-success rounded-circle d-inline-flex justify-content-center align-items-center text-white"
+              style="width:30px; height: 30px; font-size: 15px;">
+              {{user.first_name|first}}{{user.last_name|first}}
+            </div>
             <span class="bx bx-chevron-down"></span>
           </a>
           <ul class="dropdown-menu shadow">
@@ -49,10 +53,13 @@
               <div class="dropdown-item dropdown-panel" href="#">
                 <div class="shadow p-3">
                   <div class="p-2">
-                    <img
-                      src="https://www.mensjournal.com/wp-content/uploads/mf/1280-selfie.jpg?w=900&quality=86&strip=all"
-                      width="30" height="30" class="rounded-circle shadow">
-                    <span>Clark Janndy Casol</span>
+                    <div
+                      class="bg-success rounded-circle d-inline-flex justify-content-center align-items-center text-white"
+                      style="width:30px; height: 30px; font-size: 15px;">
+                      {{user.first_name|first}}{{user.last_name|first}}
+                    </div>
+                    <span>{{user.first_name}} {{user.middle_name}}
+                      {{user.last_name}} {{user.ext_name}}</span>
                   </div>
                   <div>
 
@@ -62,7 +69,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item p-3" href="#">
+              <a class="dropdown-item p-3" href="/consumers/{{user.id}}">
                 <i class="bx bx-user d-inline" style="margin-right: 10px;"></i>
                 <div class="d-inline">View Profile</div>
               </a>
@@ -72,6 +79,13 @@
               <a class="dropdown-item p-3 " href="\admin">
                 <i class="bx bx-grid d-inline" style="margin-right: 10px;"></i>
                 <div class="d-inline">Admin Panel</div>
+              </a>
+            </li>
+
+            <li>
+              <a class="dropdown-item p-3" href="" data-bs-toggle="modal" data-bs-target="#change_password">
+                <i class="bx bx-key d-inline" style="margin-right: 10px;"></i>
+                <div class="d-inline">Change Password</div>
               </a>
             </li>
 

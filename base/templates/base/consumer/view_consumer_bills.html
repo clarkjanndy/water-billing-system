@@ -27,18 +27,27 @@
 
     <section class="mb-4">
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-lg-8">
                 <div class="border p-2">
                     <h6 class="text-primary">Bills</h6>
-
+                    <h6>
+                        Meter No: {{consumer.meter_no}}
+                    </h6>
+                    <div class="d-flex justify-content-end mb-2">
+                        <a class="btn btn-primary" href="/bills/{{bills.first.id}}">
+                           <span class="bx bx-dollar"></span> View Billing</a>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table" id="consumers">
+                        <table class="table" id="bills">
                             <thead class="bg-primary text-white">
                                 <tr>
                                     <th scope="col">Billing Month</th>
+                                    <th scope="col">Cubic Meter</th>
+                                    <th scope="col">Cost per m<sup>3</sup></th>
                                     <th scope="col">Amount</th>
-                                    <th scope="col">Due Date</th>
+                                    <th scope="col">Penalty</th>
                                     <th scope="col">Status</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,9 +55,16 @@
                                 {% for bill in bills %}
                                 <tr>
                                     <td>{{bill.reading.billing_month|date:"M Y"}}</td>
+                                    <td>{{bill.reading.consumption}} m<sup>3</sup></td>
+                                    <td>{{bill.reading.multiplier}}</td>
                                     <td><span>&#8369;</span> {{bill.amount}}</td>
-                                    <td>{{bill.due_date}}</td>
-                                    <td>{{bill.status}}</td>
+                                    <td><span>&#8369;</span> {{bill.penalty}}</td>
+                                    <th class="
+                                    {% if bill.status == 'paid' %}text-primary{% endif %}
+                                    {% if bill.status == 'unpaid' %}text-success{% endif %}
+                                    {% if bill.status == 'due' %}text-danger{% endif %}">
+                                    {{bill.status}}</th>
+                                    
                                 </tr>
                                 {% endfor %}
                                 {% endif %}
@@ -59,7 +75,7 @@
                 </div>
 
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-4">
                 <div class="border p-2">
                     <h6 class="text-primary">Paid Vs. Unpaid Graph</h6>
                     <div id="paid-vs-unpaid"></div>
@@ -77,7 +93,13 @@
         const response = await fetch('/api/v1/bills-paid-vs-unpaid/{{consumer.id}}');
         const data = await response.json(); // Extracting data as a JSON Object from the response
 
-        console.log(data['paid'])
+        if (data['paid'] == null) {
+            data['paid'] = 0;
+        }
+
+        if (data['unpaid'] == null) {
+            data['unpaid'] = 0;
+        }
 
         var options = {
             series: [parseFloat(data['paid']), parseFloat(data['unpaid'])],
@@ -86,7 +108,7 @@
             },
             labels: ["Paid", "Unpaid"],
             responsive: [{
-                breakpoint: 400 ,
+                breakpoint: 400,
                 options: {
                     chart: {
                         width: 400
@@ -102,5 +124,11 @@
         chart.render();
     }
     render_histogram();
+</script>
+
+<script>
+	$('#bills').dataTable( {
+		"ordering": false
+	} );
 </script>
 {% endblock content %}
