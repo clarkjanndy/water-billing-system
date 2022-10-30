@@ -5,6 +5,12 @@
 
 {% block content%}
 
+{% if messages %}
+{% for message in messages %}
+{%include 'toast.html'%}
+{% endfor %}
+{% endif %}
+
 <div class="container-fliud vh-100  d-flex align-items-center justify-content-center p-3 text-secondary">
     <center class="">
         <img src="{% static 'images/logo.png' %}" width="100"></img>

@@ -7,8 +7,6 @@
 {% include 'navbar.html' %}
 
 <!--Add Modals Here-->
-{% include '../modals/add-reading.html' %}
-
 <div class="container">
     <h1>{{consumer.first_name}} {{consumer.middle_name}} {{consumer.last_name}} {{consumer.ext_name}}</h1>
 
@@ -32,16 +30,24 @@
                 <div class="border mb-4 p-2">
 
                     <div class="text-center">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                            alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+
+                        <div class="d-flex justify-content-center">
+                            <div class="bg-success rounded-circle d-flex justify-content-center align-items-center text-white"
+                                style="width: 150px; height: 150px; font-size: 80px;">
+                                {{consumer.first_name|first}}{{consumer.last_name|first}}
+                            </div>
+                        </div>
+
                         <h5 class="my-3">{{consumer.first_name}} {{consumer.middle_name}}
                             {{consumer.last_name}} {{consumer.ext_name}}</h5>
                         <p class="text-muted mb-1">@{{consumer.username}}</p>
                         <p class="text-success mb-1">{% if consumer.is_active == 1 %}Active{% endif %}</p>
                         <p class="text-danger mb-1">{% if consumer.is_active == 0 %}Inactive{% endif %}</p>
-                        <p class="text-muted mb-1">Consumer</p>
+                        <p class="text-muted mb-1">{% if consumer.is_superuser == 1 %}Admin{% endif %}</p>
+                        <p class="text-muted mb-1">{% if consumer.is_superuser == 0 %}Consumer{% endif %}</p>
                         <div class="d-flex justify-content-center">
-                            <a class="btn btn-primary" href="\consumers\{{consumer.id}}\edit">Edit Profile</a>
+                            <a class="btn btn-outline-primary" href="\consumers\{{consumer.id}}\edit">
+                                <span class="bx bx-edit"></span> Edit Profile</a>
                         </div>
                     </div>
 
@@ -50,9 +56,10 @@
                         <h6>Quick Actions</h6>
                         <div class="row">
                             <div class="col-12">
-                                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-reading">Add
-                                    Reading</a>
-                                <a class="btn btn-primary">Transact</a>
+                                <a class="btn btn-primary" href="\readings\add?user_id={{consumer.id}}">
+                                    <span class="bx bx-layer-plus"></span> Add Reading</a>
+                                <a class="btn btn-primary">
+                                    <span class="bx bx-dollar"></span> Transact</a>
                             </div>
                         </div>
 
@@ -61,18 +68,10 @@
                             <div class="col-12">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" role="switch"
-                                        id="flexSwitchCheckDefault" />
+                                        id="flexSwitchCheckDefault" onclick="changeRole()" 
+                                        {% if consumer.is_superuser == 1 %}checked{% endif %} />
                                     <label class="form-check-label" for="flexSwitchCheckDefault">Allow this user to have
                                         admin access</label>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch"
-                                        id="flexSwitchCheckDefault" />
-                                    <label class="form-check-label" for="flexSwitchCheckDefault">Deactivate this
-                                        user</label>
                                 </div>
                             </div>
                         </div>
@@ -91,22 +90,30 @@
                             </div>
                             <div class="text-muted" id="reading_latest_date">(as of Dec. 12, 2022)</div>
                             <div class="d-flex justify-content-end">
-                                <a class="btn btn-primary" href="/consumers/{{consumer.id}}/readings">View
-                                    Details</a>
-
+                                <a class="btn btn-outline-primary" href="/consumers/{{consumer.id}}/readings">
+                                    <span class="bx bx-stats"></span> Statistics</a>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-lg-6">
                         <div class="border p-2">
+
                             <div class="text-primary"><i class="bx bx-money"></i> Total Unpaid Bills</div>
                             <div class="">
                                 <h3><span>&#8369;</span> <span id="total_bills_unpaid">0</span></h3>
                             </div>
                             <div class="text-muted" id="bill_latest_date">(as of Dec. 12, 2022)</div>
+
                             <div class="d-flex justify-content-end">
-                                <a class="btn btn-primary" href="/consumers/{{consumer.id}}/bills">View Details</a>
+                                <div>
+
+                                    <a class="btn btn-outline-primary" href="/bills/{{latest_bill.id}}">
+                                        <span class="bx bx-printer"></span> View Billing</a>
+
+                                    <a class="btn btn-outline-primary" href="/consumers/{{consumer.id}}/bills">
+                                        <span class="bx bx-stats"></span> Statistics</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -197,11 +204,15 @@
 </div>
 
 <script>
-    var options = { year: 'numeric', month: 'short', day: 'numeric' };
-    var today = new Date();
+    function set_dates() {
+        var options = { year: 'numeric', month: 'short', day: 'numeric' };
+        var today = new Date();
 
-    document.getElementById('reading_latest_date').innerText = "(as of " + today.toLocaleDateString("en-US", options) + ")";
-    document.getElementById('bill_latest_date').innerText = "(as of " + today.toLocaleDateString("en-US", options) + ")";
+        document.getElementById('reading_latest_date').innerText = "(as of " + today.toLocaleDateString("en-US", options) + ")";
+        document.getElementById('bill_latest_date').innerText = "(as of " + today.toLocaleDateString("en-US", options) + ")";
+    }
+    set_dates();
+
 </script>
 
 <script>
@@ -221,4 +232,23 @@
     }
     get_total_unpaid_bills();
 </script>
+<script>
+    async function changeRole() {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': 'FwtimvAlQfY622SpgXcv1C9QuOix5NTbNyf4pJ1sSKhMkFbLxNOECfna6B8cONKg',
+            },
+            body: JSON.stringify({
+                id: '{{consumer.id}}',
+                superuser: '{% if consumer.is_superuser == 0 %}1{% endif %}{% if consumer.is_superuser == 1 %}0{% endif %}',
+            }),
+        };
+        const response = await fetch('/api/v1/action/make-admin', requestOptions);
+        window.location.reload()
+    }
+</script>
+
+
 {% endblock content %}

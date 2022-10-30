@@ -41,12 +41,12 @@ class Reading(models.Model):
     def __str__(self):
         return self.consumption
     
-class Collectibles(models.Model):
-    category = models.CharField(blank = False, null = False, max_length = 32)
+class Collectible(models.Model):
+    penalty = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
     amount = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
     due_date = models.DateField(blank = False, null = False, max_length = 32)
     status = models.CharField(blank = False, null = False, max_length = 32)
     reading = models.OneToOneField(Reading, on_delete = models.DO_NOTHING, null = True)
 
     def __str__(self):
-        return self.category  
+        return str(self.amount)

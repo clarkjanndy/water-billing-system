@@ -1,5 +1,3 @@
-from __future__ import barry_as_FLUFL
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 

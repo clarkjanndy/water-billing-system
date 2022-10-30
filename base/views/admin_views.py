@@ -14,7 +14,7 @@ def admin(request):
     page = 'admin-panel'
     
     data = {'page':page}
-    return render(request, './base/admin-panel.html', data)
+    return render(request, './base/admin_panel.html', data)
 
 
 

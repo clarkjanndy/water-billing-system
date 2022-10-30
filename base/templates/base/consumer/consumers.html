@@ -6,6 +6,8 @@
 
 {%include 'navbar.html'%}
 
+<!--Add Modals Here-->
+
 <div class="container">
     <h1>Consumers</h1>
 
@@ -16,7 +18,7 @@
     </nav>
 
     <div class="mb-3 d-flex justify-content-end">
-        <a class="btn btn-primary" href="consumers/add">Add Consumer</a>
+        <a class="btn btn-primary" href="consumers/add"><span class="bx bx-user-plus"></span> Add Consumer</a>
     </div>
 
     <div class="table-responsive">
@@ -41,8 +43,9 @@
                     <td>{{consumer.address.name}}</td>
                     <td>{{consumer.meter_no}}</td>
                     <td class="w-25">
-                        <a class="btn btn-sm btn-primary" href="consumers/{{consumer.id}}">View Profile</a>
-                        <a class="btn btn-sm btn-success" href="consumers/{{consumer.id}}/edit">Edit Profile</a>
+                        <a class="btn btn-sm btn-success" href="consumers/{{consumer.id}}"><span class="bx bx-user"></span> View Profile</a>
+                        <a class="btn btn-sm btn-primary" href="readings/add?user_id={{consumer.id}}"><span class="bx bx-layer-plus"></span> Add Reading</a>
+                        
                     </td>
                 </tr>
                 {% endfor %}
