@@ -183,7 +183,22 @@
         .addField('#meter_no', [{
             rule: 'required',
             errorMessage: 'This field is required',
-        },])
+        }, {
+            validator: () => {
+                var func = async function validate() {
+                    const response = await fetch('/api/v1/validate-meter?meter_no=' + meter_no.value);
+                    const data = await response.json(); // Extracting data as a JSON Object from the response
+
+                    if (meter_no.value == '{{consumer.meter_no}}'){
+                        return true
+                    }
+                    return data['valid']
+                    
+                }
+                return func;
+            },
+            errorMessage: 'Meter number already in use.',
+        }])
         .onSuccess((event) => {
             document.getElementById("form").submit();
         });

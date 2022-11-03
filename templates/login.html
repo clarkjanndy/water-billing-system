@@ -9,7 +9,6 @@
         <div class="col-4 vh-100 bg-primary
             align-items-center justify-content-center d-flex d-none d-sm-flex">
             <center class="text-white">
-                <img src="{% static 'images/logo.png' %}" width="100"></img>
                 <h1>
                     Waterworks Billing And Collection System &copy;</h1>
                 <small>version 1.0.0</small>
@@ -19,7 +18,7 @@
         <div class="col-12 bg-primary p-2
             align-items-center justify-content-center d-flex d-block d-sm-none">
             <center class="text-white">
-                <img src="{% static 'images/logo.png' %}" width="50"></img>
+
                 <h1>
                     Waterworks Billing And Collection System &copy;
                 </h1>
@@ -28,9 +27,9 @@
         </div>
 
         <div class="col p-5 d-flex   align-items-center justify-content-center" style="width: 100%;">
-            <div class="flex-grow-1 ">
-                <h1 class="mb-5 text-secondary">Login Here</h1>
-
+            <div class="flex-grow-1">
+                    <h1 class="mb-5 text-secondary" class="d-inline">Login Here</h1>
+            
                 <form action="" id="form" method="POST" autocomplete="off">
                     {% csrf_token %}
 

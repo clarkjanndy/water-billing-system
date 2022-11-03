@@ -1,3 +1,5 @@
+from datetime import datetime
+from gc import collect
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -23,9 +25,11 @@ class CustomUser(AbstractUser):
         return self.username
     
 class Notification(models.Model):
-    content = models.TextField(blank=False)
-    user = models.OneToOneField(CustomUser, on_delete = models.DO_NOTHING)
+    user = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING)
+    content = models.TextField(blank=False, null=True)
+    link = models.CharField(blank=False, null=False, max_length=60)
     status = models.IntegerField(choices = ((0, 'Unseen'), (1, 'Seen')))
+    created_on = models.DateTimeField(null=True, blank=True, default=datetime.now)
     
     def __str__(self):
         return self.content
@@ -50,3 +54,16 @@ class Collectible(models.Model):
 
     def __str__(self):
         return str(self.amount)
+
+class Transaction(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING)
+    amount = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
+    tendered = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
+    change = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
+    content = models.TextField(blank=False, null=True)
+    created_on = models.DateTimeField(null=True, blank=True, default=datetime.now)
+
+class Invoice(models.Model):
+    collectible = models.OneToOneField(Collectible, on_delete = models.DO_NOTHING, null = True)
+    transaction = models.ForeignKey(Transaction, on_delete = models.DO_NOTHING, null = True)
+    

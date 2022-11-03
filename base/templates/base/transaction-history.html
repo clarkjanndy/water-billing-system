@@ -1,0 +1,118 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<!--Add Modals Here-->
+<div class="container">
+    <h1>Transaction History </h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Admin Panel</a></li>
+            <li class="breadcrumb-item">Transaction History</li>
+        </ol>
+    </nav>
+
+    <section class="mb-4">
+        <div class="row">
+
+            <div class="col-lg-8">
+
+                <ul class="list-group">
+                    {% if transactions %}
+                    {% for transaction in transactions %}
+                    <p class="notif-id d-none">{{notif.id}}</p>
+                    <li class="list-group-item d-inline-flex {% if notif.status == 0 %}bg-unseen{% endif %}">
+                        <a class="d-flex" href="{{notif.link}}" id="my_button" notif="{{notif.id}}">
+                            <div class="d-flex align-items-center">
+                                <img src="{% static 'images/icons/history-regular-24.png'%}" width="35">
+                            </div>
+                            <div class="mx-4">
+                                <div class="text-dark">
+                                    {{transaction.content}}
+                                </div>
+                                <div class="text-muted">
+                                    {{transaction.created_on}}
+                                </div>
+                            </div>
+                        </a>
+
+                    </li>
+
+
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="list-group-item d-flex justify-content-center bg-unseen">
+                       No transaction history yet...
+                    </li>
+                    {% endif %}
+
+                </ul>
+
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    var elms = document.querySelectorAll("[id='my_button']");
+
+    for (var i = 0; i < elms.length; i++) {
+        elms[i].addEventListener("click", mark_as_read);
+    }
+
+    async function mark_as_read() {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                id: this.getAttribute('notif'),
+            }),
+        };
+        const response = await fetch('/api/v1/action/read-notification', requestOptions);
+    }
+</script>
+
+<script>
+    async function mark_all_as_read() {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                id: '{{consumer.id}}',
+            }),
+        };
+        const response = await fetch('/api/v1/action/notification-mark-all-as-read', requestOptions);
+        window.location.reload();
+    }
+
+    async function delete_all() {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                id: '{{consumer.id}}',
+            }),
+        };
+        const response = await fetch('/api/v1/action/notification-delete-all', requestOptions);
+        window.location.reload();
+    }
+</script>
+
+
+{% endblock content %}

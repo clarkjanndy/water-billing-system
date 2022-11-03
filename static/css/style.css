@@ -36,6 +36,10 @@ a{
     border-radius: 0 !important;
 }
 
+.bg-unseen{
+    background-color: #f1f1f1;
+}
+
 
 /*BX Icons*/
 .bx-1{

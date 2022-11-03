@@ -10,35 +10,95 @@
     <h1>{{consumer.first_name}} {{consumer.middle_name}}
         {{consumer.last_name}} {{consumer.ext_name}}</h1>
 
-    {% if messages %}
-    {% for message in messages %}
-    {%include 'toast.html'%}
-    {% endfor %}
-    {% endif %}
-
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item" aria-current="page"><a href="\consumers">Consumers</a></li>
             <li class="breadcrumb-item" aria-current="page"><a href="\consumers\{{consumer.id}}">{{consumer.first_name}}
                     {{consumer.middle_name}}
                     {{consumer.last_name}} {{consumer.ext_name}}</a></li>
-            <li class="breadcrumb-item" aria-current="page"><a href="\consumers\{{consumer.id}}\bills">Bills</a></li>
-            <li class="breadcrumb-item" aria-current="page">View Bill</li>
+            <li class="breadcrumb-item" aria-current="page">Transact</li>
         </ol>
     </nav>
 
-
-
     <div class="row">
         <div class="col-lg-6 col-mb-12 col-sm-12">
+            <h6>Select Billing Month</h6>
+            <div class="col mb-2 ">
+                <div class="d-flex">
+                    <div>
+                        {% if choices %}
+                        {% for choice in choices %}
 
-            <div class="d-flex justify-content-end mb-3">
-                <a class="btn btn-primary" href="/print/bills/{{collectible.id}}"
-                target="popup"
-                target="popup" onclick="window.open('/print/bills/{{collectible.id}}','name','width=1080,height=1080')">
-                <span class="bx bx-printer"></span> Print</a>
+                        {% if choice.id == collectible.id %}
+                        <a class="btn btn-success" href="/transact/{{choice.id}}">
+                            {{choice.reading.billing_month|date:"M Y"}}</a>
+                        {% else %}
+                        <a class="btn btn-outline-success"
+                            href="/transact/{{choice.id}}">{{choice.reading.billing_month|date:"M Y"}}</a>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% else %}
+                            <p class="text-danger">This consumer has no unpaid or due billings right now.</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
 
+            <form id="transaction-form" method="POST" class="mb-2" action="/transact/complete">
+                {% csrf_token %}
+                <div class="row">
+
+                    <div class="form-group mb-3 col-12 d-none">
+                        <label class="mb-2">Consumer Id</label>
+                        <input type="number" name="consumer_id" id="consumer_id" class="form-control"
+                            placeholder="Amount Due" value="{{ consumer.id }}" readonly>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 d-none   ">
+                        <label class="mb-2">Bill Id</label>
+                        <input type="number" name="collectible_id" id="collectible_id" class="form-control"
+                            placeholder="Amount Due" value="{{ collectible.id }}" readonly>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label class="mb-2">Amount Due:</label>
+                        <input type="number" name="total" id="total" class="form-control" placeholder="Amount Due"
+                            value="{{ arrear.total_bill }}" readonly>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label class="mb-2">Cash Tendered: </label>
+                        <input type="number" name="tendered" id="tendered" class="form-control"
+                            placeholder="Cash Tendered" oninput="compute_change()">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label class="mb-2">Change: </label>
+                        <input type="number" name="change" id="change" class="form-control" placeholder="Change"
+                            readonly>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group d-flex justify-content-end">
+                    <div>
+                        <a type=""  onclick="history.back()" class="btn btn-danger">Cancel</a>
+                        <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        {% if collectible.status != 'paid' %}
+        <div class="col-lg-6 col-mb-12 col-sm-12">
             <div class="border p-2 mb-3">
                 <div class="row">
                     <div class="col-6">
@@ -59,7 +119,8 @@
                     </div>
                     {% else %}
                     <div class="col-6">
-                        <b class="text-muted mb-0">{{arrear.start_month|date:"M Y"}} - {{reading.billing_month|date:"M Y"}}</b>
+                        <b class="text-muted mb-0">{{arrear.start_month|date:"M Y"}} -
+                            {{reading.billing_month|date:"M Y"}}</b>
                     </div>
                     {% endif %}
                 </div>
@@ -167,11 +228,62 @@
                     </div>
                 </div>
             </div>
-
         </div>
-    </div>
+        {% endif %}
 
+    </div>
 </div>
+
+<script>
+    const validation = new window.JustValidate('#transaction-form', {
+        errorFieldCssClass: 'is-invalid',
+    });
+
+    const total = document.getElementById('total');
+    const tendered = document.getElementById('tendered');
+    const change = document.getElementById('change');
+
+    validation
+        .addField('#total', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#tendered', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        }, {
+            rule: 'number',
+            errorMessage: 'Please input an amount higher than the total',
+        }, {
+            validator: () => {
+                if (parseFloat(total.value) <= parseFloat(tendered.value)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            errorMessage: 'Present reading must be greater than previous reading',
+        }])
+        .addField('#change', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .onSuccess((event) => {
+            document.getElementById("transaction-form").submit();
+        });
+
+    function compute_change() {
+        change_value = parseFloat(tendered.value) - parseFloat(total.value);
+
+        if (change_value > 0) {
+            change.value = change_value
+        } else {
+            change.value = 0
+        }
+
+    }
+
+</script>
 
 
 

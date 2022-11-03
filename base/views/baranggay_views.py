@@ -24,7 +24,7 @@ def view_baranggay(request, id):
         return redirect("/")
 
     baranggay = Baranggay.objects.get(id=id)
-    consumers = CustomUser.objects.all().filter(address_id=id)
+    consumers = CustomUser.objects.all().filter(address_id=id, is_superuser = 0)
     data = {"baranggay": baranggay, "consumers": consumers}
     return render(request, "./base/baranggay/view_baranggay.html", data)
 
@@ -66,7 +66,7 @@ def edit_baranggay(request, id):
         baranggay.save()
 
         messages.success(request, "Details updated successfully")
-        return redirect("/baranggays/" + id)
+        return redirect("/baranggays/" + str(id))
 
     data = {"baranggay": baranggay}
     return render(request, "./base/baranggay/edit_baranggay.html", data)

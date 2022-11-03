@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from base.models import Collectible, CustomUser
+from base.models import Collectible, CustomUser, Notification
 from base.models import Baranggay
 from base.models import Reading
 
@@ -161,3 +161,17 @@ def edit_consumer(request, id):
     baranggays = Baranggay.objects.all()
     data = {"baranggays": baranggays, "consumer": consumer}
     return render(request, "./base/consumer/edit_consumer.html", data)
+
+def get_notifications(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+
+    consumer = CustomUser.objects.get(id=request.user.id)
+    notifications = Notification.objects.all().filter(user=consumer).order_by('created_on', 'status')
+
+    data = {
+        "consumer": consumer,
+        "notifs": notifications
+    }
+
+    return render(request, "./base/consumer/notifications.html", data)
