@@ -26,17 +26,54 @@
 
         <div class="col-lg-6">
             <img src="{% static 'images/baranggay.jpg'%}" alt="Water Billing System" class="img-fluid">
+            <div class="mt-3">
+                <h3>Description</h3>
+                {{baranggay.description}}
+            </div>
+
         </div>
 
         <div class="col-lg-6 ">
-            <h3>Description</h3>
-            {{baranggay.description}}
+            <h4 class="mb-3">Consumers within {{baranggay.name}}</h4>
+            <div class="table-responsive">
+                <table class="table" id="consumers">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Contact #</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Meter No.</th>
+                            <th scope="col">- - -</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for consumer in consumers %}
+                        <tr>
+                            <th scope="row">{{consumer.id}}</th>
+                            <td>{{consumer.first_name}} {{consumer.middle_name}} {{consumer.last_name}}
+                                {{consumer.ext_name}}
+                            </td>
+                            <td>{{consumer.contact_no}}</td>
+                            <td>{{consumer.address.name}}</td>
+                            <td>{{consumer.meter_no}}</td>
+                            <td class="w-25">
+                                <a class="btn btn-sm btn-success" href="/consumers/{{consumer.id}}"><span
+                                        class="bx bx-user"></span> View Profile</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>
-
-
 </div>
-
+<script>
+	$('#consumers').dataTable( {
+		"ordering": false
+	} );
+</script>
 
 {%endblock content%}

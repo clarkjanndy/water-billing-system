@@ -26,7 +26,7 @@
 
     <section class="mb-4">
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4" >
                 <div class="border mb-4 p-2">
 
                     <div class="text-center">
@@ -40,32 +40,31 @@
 
                         <h5 class="my-3">{{consumer.first_name}} {{consumer.middle_name}}
                             {{consumer.last_name}} {{consumer.ext_name}}</h5>
-                        <p class="text-muted mb-1">@{{consumer.username}}</p>
-                        <p class="text-success mb-1">{% if consumer.is_active == 1 %}Active{% endif %}</p>
-                        <p class="text-danger mb-1">{% if consumer.is_active == 0 %}Inactive{% endif %}</p>
-                        <p class="text-muted mb-1">{% if consumer.is_superuser == 1 %}Admin{% endif %}</p>
-                        <p class="text-muted mb-1">{% if consumer.is_superuser == 0 %}Consumer{% endif %}</p>
+                        <h6 class="text-muted mb-1">{{consumer.meter_no}}</h6>
+                        <h6 class="text-muted mb-1">{% if consumer.is_superuser == 1 %}Admin{% endif %}</h6>
+                        <h6 class="text-muted mb-1">{% if consumer.is_superuser == 0 %}Consumer{% endif %}</h6>
                         <div class="d-flex justify-content-center">
                             <a class="btn btn-outline-primary" href="\consumers\{{consumer.id}}\edit">
                                 <span class="bx bx-edit"></span> Edit Profile</a>
                         </div>
                     </div>
 
+                  
+                    {% if user.is_superuser == 1%}
                     <div>
-
                         <h6>Quick Actions</h6>
                         <div class="row">
                             <div class="col-12">
                                 <a class="btn btn-primary" href="\readings\add?user_id={{consumer.id}}">
                                     <span class="bx bx-layer-plus"></span> Add Reading</a>
-                                <a class="btn btn-primary">
+                                <a class="btn btn-primary" href="\transact\{{latest_bill.id}}">
                                     <span class="bx bx-dollar"></span> Transact</a>
                             </div>
                         </div>
 
                         <h6>Others</h6>
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12" >
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" role="switch"
                                         id="flexSwitchCheckDefault" onclick="changeRole()" 
@@ -75,8 +74,10 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
+                    {% endif %}
+
+              
                 </div>
             </div>
 
@@ -101,15 +102,15 @@
 
                             <div class="text-primary"><i class="bx bx-money"></i> Total Unpaid Bills</div>
                             <div class="">
-                                <h3><span>&#8369;</span> <span id="total_bills_unpaid">0</span></h3>
+                                <h3><span>&#8369;</span> <span id="total_bills_unpaid">00.00</span></h3>
                             </div>
                             <div class="text-muted" id="bill_latest_date">(as of Dec. 12, 2022)</div>
 
                             <div class="d-flex justify-content-end">
                                 <div>
 
-                                    <a class="btn btn-outline-primary" href="/bills/{{latest_bill.id}}">
-                                        <span class="bx bx-printer"></span> View Billing</a>
+                                    <a class="btn btn-outline-primary" href="/bills/{{latest_bill.id}}?from=profile">
+                                        <span class="bx bx-food-menu"></span> View Billing</a>
 
                                     <a class="btn btn-outline-primary" href="/consumers/{{consumer.id}}/bills">
                                         <span class="bx bx-stats"></span> Statistics</a>
@@ -204,7 +205,7 @@
 </div>
 
 <script>
-    function set_dates() {
+   function set_dates() {
         var options = { year: 'numeric', month: 'short', day: 'numeric' };
         var today = new Date();
 
@@ -212,7 +213,6 @@
         document.getElementById('bill_latest_date').innerText = "(as of " + today.toLocaleDateString("en-US", options) + ")";
     }
     set_dates();
-
 </script>
 
 <script>
@@ -220,7 +220,9 @@
         const response = await fetch('/api/v1/consumption/{{consumer.id}}');
         const data = await response.json(); // Extracting data as a JSON Object from the response
 
-        document.getElementById('total_consumption').innerHTML = data['consumption__sum'];
+        if  (data['consumption__sum'] != null){
+            document.getElementById('total_consumption').innerHTML = data['consumption__sum'];
+        }
     }
     get_total_consumption();
 
@@ -228,25 +230,28 @@
         const response = await fetch('/api/v1/bills-unpaid/{{consumer.id}}');
         const data = await response.json(); // Extracting data as a JSON Object from the response
 
-        document.getElementById('total_bills_unpaid').innerHTML = data['amount__sum'];
+        if  (data['amount__sum'] != null){
+            document.getElementById('total_bills_unpaid').innerHTML = data['amount__sum'];
+        }
     }
     get_total_unpaid_bills();
 </script>
+
 <script>
     async function changeRole() {
         const requestOptions = {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': 'FwtimvAlQfY622SpgXcv1C9QuOix5NTbNyf4pJ1sSKhMkFbLxNOECfna6B8cONKg',
+                'X-CSRFToken': '{{ csrf_token }}',
             },
             body: JSON.stringify({
                 id: '{{consumer.id}}',
-                superuser: '{% if consumer.is_superuser == 0 %}1{% endif %}{% if consumer.is_superuser == 1 %}0{% endif %}',
             }),
         };
         const response = await fetch('/api/v1/action/make-admin', requestOptions);
         window.location.reload()
+       
     }
 </script>
 

@@ -1,13 +1,17 @@
-from tkinter import CURRENT
+from datetime import datetime
 from django.shortcuts import redirect, render
 
 from base.models import CustomUser
 from base.models import Reading
 from base.models import Collectible
+from base.models import Notification
 
 from django.contrib import messages
 
 from datetime import date, datetime, timedelta
+
+def formatdate(date, format):
+    return datetime.strptime(date, format)
 
 # Create your views here.
 def add_reading(request):
@@ -38,6 +42,17 @@ def add_reading(request):
         )
         # collectibles added
         new_collectibles.save()
+
+        new_notification = Notification(
+            user = CustomUser.objects.get(id=request.POST["consumer_id"]),
+            content= "You have been charged a total of " + str(new_collectibles.amount) + " pesos for your " + str(new_reading.billing_month.strftime('%B, %Y'))
+            + " billing. Due date is on " + str(new_collectibles.due_date.strftime('%B %d, %Y')) +". Thank You!",
+            link="/bills/"+ str(new_collectibles.id),
+            status=0
+        )
+        #create notification
+        new_notification.save()
+
         messages.success(request, "Reading added successfully")
         return redirect("/consumers/" + request.POST["consumer_id"] + "/readings")
 
@@ -74,6 +89,16 @@ def edit_reading(request, id):
         collectible.amount = request.POST["total_bill"]
         # collectibles edited
         collectible.save()
+
+        new_notification = Notification(
+            user = CustomUser.objects.get(id=request.POST["consumer_id"]),
+            content= "Your billing for the month of "+ str(reading.billing_month.strftime('%B, %Y')) + " has been updated. Your new bill for the month of " +
+            str(reading.billing_month.strftime('%B, %Y')) +" is now " + str(collectible.amount) +" pesos. Thank You",
+            link="/bills/"+ str(collectible.id),
+            status=0
+        ) 
+        #create notification
+        new_notification.save()
 
         messages.success(request, "Reading updated successfully")
         return redirect("/consumers/" + request.POST["consumer_id"] + "/readings")

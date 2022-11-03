@@ -1,0 +1,83 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+
+<div class="container">
+   
+
+    <div class="row mt-5">
+        <div class="col-lg-6 col-mb-12 col-sm-12">
+
+            <div class="border p-2">
+
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Date of Transaction</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{transaction.created_on}}</b>
+                    </div>
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Full Name</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{consumer.first_name}} {{consumer.middle_name}}
+                            {{consumer.last_name}} {{consumer.ext_name}}</b>
+                    </div>
+                </div>
+                <hr>
+                
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Meter No.</p>
+                    </div>
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{consumer.meter_no}}</b>
+                    </div>
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-0">Billing Month</p>
+                    </div>
+                    <div class="col-6">
+                        {% for inv in invoices %}
+                        <div class="text-muted">
+                            <b>{{inv.collectible.reading.billing_month|date:"M, Y"}} - ({{inv.collectible}} + <span
+                                    class="text-danger">{{inv.collectible.penalty}}</span>) </b>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <h5 class="mb-0">Total Bill</h5>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="text-muted mb-0"><b><span>&#8369;</span> {{ transaction.amount }}</b></h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script>
+    window.onload = function () { window.print(); }
+</script>
+
+
+
+
+
+{%endblock content%}

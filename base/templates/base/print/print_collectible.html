@@ -7,7 +7,7 @@
 <div class="container">
 
     <div class="d-inline">
-        <img src="{% static 'images/logo.png'%}" width="50">  
+        <img src="{% static 'images/buena.png'%}" width="50">  
         <b>Water Billing and Collection System</b>
     </div>
    
@@ -39,9 +39,15 @@
                     <div class="col-6">
                         <p class="mb-0">Billing Month</p>
                     </div>
+                    {% if arrear.start_month == reading.billing_month%}
                     <div class="col-6">
                         <b class="text-muted mb-0">{{reading.billing_month|date:"M Y"}}</b>
                     </div>
+                    {% else %}
+                    <div class="col-6">
+                        <b class="text-muted mb-0">{{arrear.start_month|date:"M Y"}} - {{reading.billing_month|date:"M Y"}}</b>
+                    </div>
+                    {% endif %}
                 </div>
                 <hr>
                 <div class="row">

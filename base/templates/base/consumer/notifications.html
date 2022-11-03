@@ -1,0 +1,189 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<!--Add Modals Here-->
+<div class="container">
+    <h1>{{consumer.first_name}} {{consumer.middle_name}} {{consumer.last_name}} {{consumer.ext_name}}</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="\consumers">Consumers</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="\consumers\{{consumer.id}}">
+                    {{consumer.first_name}} {{consumer.middle_name}}
+                    {{consumer.last_name}} {{consumer.ext_name}}</a></li>
+            <li class="breadcrumb-item" aria-current="page">Notifications</li>
+        </ol>
+    </nav>
+
+    <section class="mb-4">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="border mb-4 p-2">
+
+                    <div class="text-center">
+
+                        <div class="d-flex justify-content-center">
+                            <div class="bg-success rounded-circle d-flex justify-content-center align-items-center text-white"
+                                style="width: 150px; height: 150px; font-size: 80px;">
+                                {{consumer.first_name|first}}{{consumer.last_name|first}}
+                            </div>
+                        </div>
+
+                        <h5 class="my-3">{{consumer.first_name}} {{consumer.middle_name}}
+                            {{consumer.last_name}} {{consumer.ext_name}}</h5>
+                        <h6 class="text-muted mb-1">{{consumer.meter_no}}</h6>
+                        <h6 class="text-muted mb-1">{% if consumer.is_superuser == 1 %}Admin{% endif %}</h6>
+                        <h6 class="text-muted mb-1">{% if consumer.is_superuser == 0 %}Consumer{% endif %}</h6>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-outline-primary" href="\consumers\{{consumer.id}}\edit">
+                                <span class="bx bx-edit"></span> Edit Profile</a>
+                        </div>
+                    </div>
+
+                          
+                    {% if user.is_superuser == 1%}
+                    <div>
+                        <h6>Quick Actions</h6>
+                        <div class="row">
+                            <div class="col-12">
+                                <a class="btn btn-primary" href="\readings\add?user_id={{consumer.id}}">
+                                    <span class="bx bx-layer-plus"></span> Add Reading</a>
+                                <a class="btn btn-primary">
+                                    <span class="bx bx-dollar"></span> Transact</a>
+                            </div>
+                        </div>
+
+                        <h6>Others</h6>
+                        <div class="row">
+                            <div class="col-12" >
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                        id="flexSwitchCheckDefault" onclick="changeRole()" 
+                                        {% if consumer.is_superuser == 1 %}checked{% endif %} />
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">Allow this user to have
+                                        admin access</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <h3 class="text-primary">Notifications</h3>
+                        <div class="d-flex justify-content-end mb-2">
+                            <div>
+                                <a href="#" onclick="mark_all_as_read()" class="btn btn-sm btn-primary">
+                                    <span class="bx bx-bookmark"></span> Mark all as read
+                                </a>
+                                <a href="#" onclick="delete_all()" class="btn btn-sm btn-danger">
+                                    <span class="bx bx-trash"></span> Delete All
+                                </a>
+                            </div>
+
+                        </div>
+                    </li>
+                    {% if notifications %}
+                    {% for notif in notifications %}
+                    <p class="notif-id d-none">{{notif.id}}</p>
+                    <li class="list-group-item d-inline-flex {% if notif.status == 0 %}bg-unseen{% endif %}">
+                        <a class="d-flex" href="{{notif.link}}?from" id="my_button" notif="{{notif.id}}">
+                            <div class="d-flex align-items-center">
+                                <img src="{% static 'images/icons/bell-regular-24.png'%}" width="35">
+                            </div>
+                            <div class="mx-4">
+                                <div class="text-dark">
+                                    {{notif.content}}
+                                </div>
+                                <div class="text-muted">
+                                    {{notif.created_on|date:"M d Y"}}
+                                </div>
+                            </div>
+                        </a>
+
+                    </li>
+
+
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="list-group-item d-flex justify-content-center bg-unseen">
+                       You don't have any notifications yet...
+                    </li>
+                    {% endif %}
+
+                </ul>
+
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    var elms = document.querySelectorAll("[id='my_button']");
+
+    for (var i = 0; i < elms.length; i++) {
+        elms[i].addEventListener("click", mark_as_read);
+    }
+
+    async function mark_as_read() {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                id: this.getAttribute('notif'),
+            }),
+        };
+        const response = await fetch('/api/v1/action/read-notification', requestOptions);
+    }
+</script>
+
+<script>
+    async function mark_all_as_read() {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                id: '{{consumer.id}}',
+            }),
+        };
+        const response = await fetch('/api/v1/action/notification-mark-all-as-read', requestOptions);
+        window.location.reload();
+    }
+
+    async function delete_all() {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                id: '{{consumer.id}}',
+            }),
+        };
+        const response = await fetch('/api/v1/action/notification-delete-all', requestOptions);
+        window.location.reload();
+    }
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,58 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<!--Add Modals Here-->
+
+<div class="container">
+    <h1>Admins</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Admin Panel</a></li>
+            <li class="breadcrumb-item">Admins</li>
+        </ol>
+    </nav>
+
+    <div class="table-responsive">
+        <table class="table" id="consumers">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Contact #</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Meter No.</th>
+                    <th scope="col">- - -</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                <tr>
+                    <th scope="row">{{admin.id}}</th>
+                    <td>{{admin.first_name}} {{admin.middle_name}} {{admin.last_name}} {{admin.ext_name}}
+                    </td>
+                    <td>{{admin.contact_no}}</td>
+                    <td>{{admin.address.name}}</td>
+                    <td>{{admin.meter_no}}</td>
+                    <td class="w-25">
+                        <a class="btn btn-sm btn-success" href="/consumers/{{admin.id}}"><span class="bx bx-user"></span> View Profile</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+	$('#consumers').dataTable( {
+		"ordering": false
+	} );
+</script>
+
+{%endblock content%}
