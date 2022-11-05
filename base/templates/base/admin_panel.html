@@ -51,11 +51,11 @@
 
         <div class="col-lg-3 col-md-3 p-2">
             <div class="border p-2" style=" border-left: 5px solid #0275d8 !important;">
-                <h5><i class="bx bx-history"></i> Transaction History</h5>
-                <p id="transactions">200</p>
+                <h5><i class="bx bx-key"></i> Password Reset Requests</h5>
+                <p id="password-reset-requests">0</p>
 
                 <div class="d-flex justify-content-end">
-                    <a class="btn btn-primary" href="/admin/transaction-history">View All</a>
+                    <a class="btn btn-primary" href="/admin/password-reset-requests">View All</a>
                 </div>
             </div>
         </div>
@@ -69,6 +69,11 @@
                     <h3><span id="total_consumption">300</span> m<sup>3</sup></h3>
                 </div>
                 <div class="text-muted" id="reading_latest_date">(as of Dec. 12, 2022)</div>
+
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-primary" href="/admin/consumption-histogram">View Details</a>
+                </div>
+                
             </div>
         </div>
 
@@ -79,6 +84,10 @@
                     <h3><span>&#8369;</span> <span id="total_bills_unpaid">300.00</span></h3>
                 </div>
                 <div class="text-muted" id="bill_latest_date">(as of Dec. 12, 2022)</div>
+
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-primary" href="/admin/transaction-history">View Details</a>
+                </div>
             </div>
         </div>
 
@@ -121,13 +130,13 @@
     }
     admin_count();
 
-    async function transaction_count() {
-        const response = await fetch('/api/v1/transaction-history-count');
+    async function password_reset_request_count() {
+        const response = await fetch('/api/v1/password-reset-request-count');
         const data = await response.json(); // Extracting data as a JSON Object from the response
 
-        document.getElementById('transactions').innerHTML = data['count'];
+        document.getElementById('password-reset-requests').innerHTML = data['count'];
     }
-    transaction_count();
+    password_reset_request_count();
 
     async function get_total_consumption() {
         const response = await fetch('/api/v1/consumption');

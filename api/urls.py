@@ -6,6 +6,7 @@ from .views import analytics_views, validation_views, action_views
 urlpatterns = [
     #validation
     path('validate-password', validation_views.validate_password, name="check_password"),
+    path('validate-username', validation_views.validate_username, name="validate_username"),
     path('validate-meter', validation_views.validate_meter, name="validate_meter"),
     path('validate-billing-month', validation_views.validate_billing_month, name="validate_billing_month"),
 
@@ -15,12 +16,16 @@ urlpatterns = [
     path('transaction-history-count', analytics_views.transaction_history_count, name="transaction_history_count"),
     path('admin-count', analytics_views.admin_count, name="admin_count"),
     path('notifications/<int:id>', analytics_views.notification_unseen_get, name="notification_unseen_get"),
+    path('password-reset-request-count', analytics_views.password_reset_request_count, name="password_reset_request_count"),
 
     path('consumption', analytics_views.consumption_all, name="consumption_all"),
+    path('consumption-by-month', analytics_views.consumption_all_by_month, name="consumption_all_by_month"),
     path('consumption/<int:id>', analytics_views.consumption_get, name="consumption_get"), 
-    path('consumption-history/<int:id>', analytics_views.consumption_history_get, name="consumption_histogram_get"), 
+    path('consumption-histogram', analytics_views.consumption_history_all, name="consumption_histogram_all"),
+    path('consumption-histogram/<int:id>', analytics_views.consumption_history_get, name="consumption_histogram_get"), 
 
     path('bills-paid', analytics_views.bills_paid_all, name="bills_paid_all"),
+    path('bills-paid-by-month', analytics_views.bills_paid_all_by_month, name="bills_paid_all_by_month"),
     path('bills-unpaid', analytics_views.bills_unpaid_all, name="bills_unpaid_all"),
     path('bills-unpaid/<int:id>', analytics_views.bills_unpaid_get, name="bills_unpaid_get"),
     path('bills-paid-vs-unpaid/<int:id>', analytics_views.bills_paid_vs_unpaid_get, name="bills_paid_vs_unpaid_get"),  

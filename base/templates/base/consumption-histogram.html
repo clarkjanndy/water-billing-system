@@ -1,0 +1,132 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<!--Add Modals Here-->
+
+<div class="container">
+    <h1>Consumption</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/admin">Admin Panel</a></li>
+            <li class="breadcrumb-item" aria-current="page">Consumption</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="border p-2">
+                <h5 class="text-primary">Consumption Histogram</h5>
+                <div id="consumption-histogram"></div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="border p-2">
+                <h5 class="text-primary">Other Details</h5>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <p class="mb-0">Total Consumption: </p>
+                    </div>
+                    <div class="col">
+                        <p class="text-muted mb-0"><span id="total-consumption">00.00 </span> m<sup>3</sup></p>
+                    </div>
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col">
+                        <p class="mb-0">This Month's Cosumption: </p>
+                    </div>
+                    <div class="col">
+                        <p class="text-muted mb-0"><span id="total-consumption-by-month">00.00 </span> m<sup>3</sup>
+                        </p>
+                    </div>
+                </div>
+                <hr>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function render_histogram() {
+        const response = await fetch('/api/v1/consumption-histogram');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        var date_format = { year: 'numeric', month: 'short' };
+        var formatted_date = new Array()
+
+        for (const date of data['x_label']) {
+            formatted_date.push(new Date(date).toLocaleDateString("en-US", date_format))
+        }
+
+        var options = {
+            chart: {
+                height: 280,
+                type: "area",
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            series: [
+                {
+                    name: "Consumption",
+                    data: data['series']
+                }
+            ],
+            fill: {
+                type: "gradient",
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.9,
+                    stops: [0, 90, 100],
+                }
+            },
+            xaxis: {
+                categories: formatted_date
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#consumption-histogram"), options);
+        chart.render();
+    }
+
+    render_histogram();
+</script>
+
+<script>
+    async function get_total_consumption() {
+        const response = await fetch('/api/v1/consumption');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        if (data['consumption__sum'] != null) {
+            document.getElementById('total-consumption').innerText = data['consumption__sum'];
+        }
+    }
+    get_total_consumption();
+
+
+    async function get_total_consumption_by_month() {
+        const response = await fetch('/api/v1/consumption-by-month');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        if (data['consumption__sum'] != null) {
+            document.getElementById('total-consumption-by-month').innerText = data['consumption__sum'];
+        }
+    }
+    get_total_consumption_by_month()
+</script>
+
+{%endblock content%}
