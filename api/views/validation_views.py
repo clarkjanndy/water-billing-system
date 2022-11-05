@@ -13,6 +13,13 @@ def validate_password(request):
 
     return JsonResponse({'valid': True})
 
+def validate_username(request):
+    user = CustomUser.objects.all().filter(username = request.GET['username'])
+    if not user.exists():
+         return JsonResponse({'valid': True})
+    
+    return JsonResponse({'valid': False})
+
 def validate_meter(request):
     user = CustomUser.objects.all().filter(meter_no = request.GET['meter_no'])
     if not user.exists():

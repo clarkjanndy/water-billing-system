@@ -7,7 +7,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 
-from base.models import CustomUser, Collectible, Reading, Notification
+
+from base.models import CustomUser, Collectible, PasswordResetRequest, Notification
 
 #scan for due billings upon landing
 def update_due_billings():
@@ -82,7 +83,21 @@ def change_password(request):
     
     return redirect("/admin")
 
-
+def send_reset_request(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    
+    if request.method == 'POST':
+        user = CustomUser.objects.get(username = request.POST['reset_username'])
+        
+        password_reset_request = PasswordResetRequest()
+        password_reset_request.user=user
+        password_reset_request.message = request.POST['reset_message']
+        password_reset_request.status = 'pending'
+        password_reset_request.save()
+        
+    messages.success(request, "Password reset request succesfully sent. You can log in using the default password as soon as the admin approve the request.")       
+    return redirect("/login")
 
 def logout(request):
     auth_logout(request)

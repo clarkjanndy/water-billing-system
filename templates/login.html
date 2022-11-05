@@ -5,6 +5,12 @@
 {% block content%}
 <div class="container-fluid">
 
+    {% if messages %}
+    {% for message in messages %}
+    {%include 'toast.html'%}
+    {% endfor %}
+    {% endif %}
+
     <div class="row">
         <div class="col-4 vh-100 bg-primary
             align-items-center justify-content-center d-flex d-none d-sm-flex">
@@ -28,8 +34,8 @@
 
         <div class="col p-5 d-flex   align-items-center justify-content-center" style="width: 100%;">
             <div class="flex-grow-1">
-                    <h1 class="mb-5 text-secondary" class="d-inline">Login Here</h1>
-            
+                <h1 class="mb-5 text-secondary" class="d-inline">Login Here</h1>
+
                 <form action="" id="form" method="POST" autocomplete="off">
                     {% csrf_token %}
 
@@ -51,8 +57,9 @@
                     {% endif%}
 
                     <div class="lead text-secondary">
-                        <p>Forgot Password?</p>
-                        <p>Contact admin for password reset request.</p>
+                        <p>Forgotten Password?</p>
+                        <p>Click <a href="" data-bs-toggle="modal" data-bs-target="#reset_request">here</a> to sent a
+                            password reset request to admin.</p>
                     </div>
 
                     <div class="form-group">
@@ -84,5 +91,77 @@
                 document.getElementById("form").submit();
             });
 
+    </script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="reset_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Password Reset Request</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="reset-request" action="/send-reset-request">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="reset_username" class="col-form-label">Username:</label>
+                                <input type="text" class="form-control" id="reset_username" name="reset_username"
+                                    placeholder="Username">
+                                <div class="is-invalid"></div>
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label for="reset_message" class="col-form-label">Message: </label>
+                                <textarea type="password" class="form-control" id="reset_message" name="reset_message"
+                                    rows="6" placeholder="Message"></textarea>
+                                <div class="is-invalid"></div>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Sent Request</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const request_validation = new window.JustValidate('#reset-request', {
+            errorFieldCssClass: 'is-invalid',
+        });
+
+        request_validation
+            .addField('#reset_username', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            }, {
+                validator: () => {
+                    var func = async function validate() {
+                        const response = await fetch('/api/v1/validate-username?username=' + reset_username.value);
+                        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+                        return !data['valid']
+
+                    }
+                    return func;
+                },
+                errorMessage: 'We did not found that username on our database',
+            }]).addField('#reset_message', [{
+                rule: 'required',
+                errorMessage: 'This field is required',
+            }, {
+                rule: 'maxLength',
+                value: 20,
+                errorMessage: 'Maximum of 20 characters only',
+            }])
+            .onSuccess((event) => {
+                document.getElementById("reset-request").submit();
+            });
     </script>
     {%endblock content%}

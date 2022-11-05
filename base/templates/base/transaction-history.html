@@ -2,117 +2,138 @@
 
 {% load static %}
 
-{% block content %}
+{% block content%}
 
-{% include 'navbar.html' %}
+{%include 'navbar.html'%}
 
 <!--Add Modals Here-->
+
 <div class="container">
-    <h1>Transaction History </h1>
+    <h1>Collection</h1>
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin">Admin Panel</a></li>
-            <li class="breadcrumb-item">Transaction History</li>
+            <li class="breadcrumb-item" aria-current="page"><a href="/admin">Admin Panel</a></li>
+            <li class="breadcrumb-item" aria-current="page">Collection</li>
         </ol>
     </nav>
 
-    <section class="mb-4">
-        <div class="row">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="table-responsive">
+                <table class="table" id="collections">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Meter No.</th>
+                            <th scope="col">Consumer</th>
+                            <th scope="col">Amount Collected</th>
+                            <th scope="col">- - -</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trans in transactions %}
+                        <tr>
+                            <td>{{trans.created_on|date:"M d, Y"}}</td>
+                            <td>{{trans.user.meter_no}}</td>
+                            <td>{{trans.user.first_name}} {{trans.user.middle_name}} {{trans.user.last_name}}
+                                {{trans.user.ext_name}}
+                            </td>
+                            <td><span>&#8369;</span> {{trans.amount}}</td>
+                            <td class="w-25">
+                                <a class="btn btn-sm btn-success" href="/transact/view/{{trans.id}}"><span
+                                        class="bx bx-user"></span> View Detials</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-            <div class="col-lg-8">
+        </div>
 
-                <ul class="list-group">
-                    {% if transactions %}
-                    {% for transaction in transactions %}
-                    <p class="notif-id d-none">{{notif.id}}</p>
-                    <li class="list-group-item d-inline-flex {% if notif.status == 0 %}bg-unseen{% endif %}">
-                        <a class="d-flex" href="{{notif.link}}" id="my_button" notif="{{notif.id}}">
-                            <div class="d-flex align-items-center">
-                                <img src="{% static 'images/icons/history-regular-24.png'%}" width="35">
-                            </div>
-                            <div class="mx-4">
-                                <div class="text-dark">
-                                    {{transaction.content}}
-                                </div>
-                                <div class="text-muted">
-                                    {{transaction.created_on}}
-                                </div>
-                            </div>
-                        </a>
+        <div class="col-lg-4">
+            <div class="border p-2">
+                <h5 class="text-primary">Other Details</h5>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <p class="mb-0">Total Collection: </p>
+                    </div>
+                    <div class="col">
+                        <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collection">00.00</span></p>
+                    </div>
+                </div>
+                <hr>
 
-                    </li>
+                <div class="row">
+                    <div class="col">
+                        <p class="mb-0">This Month's Collection: </p>
+                    </div>
+                    <div class="col">
+                        <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collection-by-month">00.00</span></p>
+                    </div>
+                </div>
+                <hr>
 
+                <div class="row">
+                    <div class="col">
+                        <p class="mb-0">Collectibles: </p>
+                    </div>
+                    <div class="col">
+                        <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collectibles">00.00</span></p>
+                    </div>
+                </div>
+                <hr>
 
-                    </li>
-                    {% endfor %}
-                    {% else %}
-                    <li class="list-group-item d-flex justify-content-center bg-unseen">
-                       No transaction history yet...
-                    </li>
-                    {% endif %}
-
-                </ul>
 
             </div>
         </div>
-    </section>
+    </div>
+
 
 </div>
 
 <script>
-    var elms = document.querySelectorAll("[id='my_button']");
-
-    for (var i = 0; i < elms.length; i++) {
-        elms[i].addEventListener("click", mark_as_read);
-    }
-
-    async function mark_as_read() {
-        const requestOptions = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: JSON.stringify({
-                id: this.getAttribute('notif'),
-            }),
-        };
-        const response = await fetch('/api/v1/action/read-notification', requestOptions);
-    }
+    $('#collections').dataTable({
+        "ordering": false
+    });
 </script>
 
 <script>
-    async function mark_all_as_read() {
-        const requestOptions = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: JSON.stringify({
-                id: '{{consumer.id}}',
-            }),
-        };
-        const response = await fetch('/api/v1/action/notification-mark-all-as-read', requestOptions);
-        window.location.reload();
-    }
+    async function get_total_collection() {
+        const response = await fetch('/api/v1/bills-paid');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
 
-    async function delete_all() {
-        const requestOptions = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-            body: JSON.stringify({
-                id: '{{consumer.id}}',
-            }),
-        };
-        const response = await fetch('/api/v1/action/notification-delete-all', requestOptions);
-        window.location.reload();
+        if (data['amount__sum'] != null) {
+            document.getElementById('total-collection').innerText = data['amount__sum'];
+        }
     }
+    get_total_collection();
+
+
+    async function get_collections_by_month() {
+        const response = await fetch('/api/v1/bills-paid-by-month');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        if (data['amount__sum'] != null) {
+            document.getElementById('total-collection-by-month').innerText = data['amount__sum'];
+        }
+
+    }
+    get_collections_by_month();
+
+    async function get_total_collectibles() {
+        const response = await fetch('/api/v1/bills-unpaid');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        if (data['amount__sum'] != null) {
+            document.getElementById('total-collectibles').innerText = data['amount__sum'];
+        }
+
+    }
+    get_total_collectibles();
+
 </script>
 
-
-{% endblock content %}
+{%endblock content%}

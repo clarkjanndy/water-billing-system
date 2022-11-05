@@ -23,6 +23,12 @@ class CustomUser(AbstractUser):
     
     def __str__(self):
         return self.username
+
+class PasswordResetRequest(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING)
+    message = models.TextField(blank=False, null=True)
+    status = models.CharField(blank = False, null= False, max_length=12)
+    created_on = models.DateTimeField(null=True, blank=True, default=datetime.now)
     
 class Notification(models.Model):
     user = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING)

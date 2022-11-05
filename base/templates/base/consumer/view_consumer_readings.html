@@ -63,7 +63,7 @@
                                     <td>{{reading.present}}</td>
                                     <td>{{reading.consumption}} m<sup>3</sup></td>
 
-                                    {% if user.is_superuser == 1%}
+                                    {% if user.is_superuser == 1 %}
                                     <td>
                                         <a href="/readings/{{reading.id}}/edit" class="btn btn-sm btn-primary">Edit</a>
                                     </td>
@@ -93,7 +93,7 @@
 
 <script>
     async function render_histogram() {
-        const response = await fetch('/api/v1/consumption-history/{{consumer.id}}');
+        const response = await fetch('/api/v1/consumption-histogram/{{consumer.id}}');
         const data = await response.json(); // Extracting data as a JSON Object from the response
 
         var date_format = { year: 'numeric', month: 'short' };
