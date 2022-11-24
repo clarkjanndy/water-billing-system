@@ -80,7 +80,7 @@ WSGI_APPLICATION = "water_billing_system.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "water billing",
+        "NAME": "wbacs",
         "USER": "root",
         "PASSWORD": "",
         "HOST": "localhost",

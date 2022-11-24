@@ -10,6 +10,7 @@ from .views import collectible_views
 
 urlpatterns = [
     path('', page_views.landing_page, name="landing_page"),  
+    path('init', page_views.init, name="initialize"), 
     path('login', page_views.login, name="login"),
     path('change-password', page_views.change_password, name="change_password"),
     path('send-reset-request', page_views.send_reset_request, name="send_reset_request"),
