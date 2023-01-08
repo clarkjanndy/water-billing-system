@@ -10,7 +10,7 @@
     <h1>Baranggays</h1>
 
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb"> 
+        <ol class="breadcrumb">
             <li class="breadcrumb-item" aria-current="page">Baranggays</li>
         </ol>
     </nav>
@@ -19,30 +19,32 @@
         <a class="btn btn-primary" href="baranggays/add"><span class="bx bx-building-house"></span> Add Baranggay</a>
     </div>
 
-    <div class="table-responsive">
-        <table class="table" id="baranggay">
-            <thead class="bg-primary text-white">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Code</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for baranggay in baranggays %}
-                <tr>
-                    <td>{{baranggay.id}}</td>
-                    <td>{{baranggay.code}}</td>
-                    <td>{{baranggay.name}}</td>
-                    <td class="w-25">
-                        <a class="btn btn-sm btn-primary" href="baranggays/{{baranggay.id}}">View</a>
-                        <a class="btn btn-sm btn-success" href="baranggays/{{baranggay.id}}/edit">Edit</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="p-3 bg-light rounded">
+        <div class="table-responsive">
+            <table class="table" id="baranggay">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for baranggay in baranggays %}
+                    <tr>
+                        <td>{{baranggay.id}}</td>
+                        <td>{{baranggay.code}}</td>
+                        <td>{{baranggay.name}}</td>
+                        <td class="w-25">
+                            <a class="btn btn-sm btn-primary" href="baranggays/{{baranggay.id}}">View</a>
+                            <a class="btn btn-sm btn-success" href="baranggays/{{baranggay.id}}/edit">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

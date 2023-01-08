@@ -21,70 +21,72 @@
     </nav>
 
     <form id="add-reading-form" method="POST" class="mb-2 col-lg-6 col-md-12 col-sm-12">
-        {% csrf_token %}
-        <div class="form-group d-none">
-            <label for="consumer_id" class="col-form-label">Consumer:</label>
-            <input type="text" class="form-control" id="consumer_id" name="consumer_id" value="{{consumer.id}}">
-        </div>
-
-        <div class="row">
-            <div class="form-group col-lg-6">
-                <label for="billing_month" class="col-form-label">Billing Month:</label>
-                <input type="month" class="form-control" id="billing_month" name="billing_month">
-                <div class="is-invalid"></div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group col-lg-6">
-                <label for="previous" class="col-form-label">Previous Reading:</label>
-                <input type="number" class="form-control" id="previous" name="previous" oninput="get_consumption()"
-                    value="{{last_reading.present}}" placeholder='Previous Reading'>
-                <div class="is-invalid"></div>
-            </div>
-            <div class="form-group col-lg-6">
-                <label for="present" class="col-form-label">Present Reading:</label>
-                <input type="number" class="form-control" id="present" name="present" oninput="get_consumption()"
-                    placeholder='Present Reading'>
-                <div class="is-invalid"></div>
-            </div>
-            <div class="form-group col-lg-6">
-                <label for="consumption" class="col-form-label">Consumption: (in cubic meter or
-                    m<sup>3</sup>)</label>
-                <input type="text" class="form-control" id="consumption" name="consumption" readonly
-                    placeholder='Consumption'>
-                <div class="is-invalid"></div>
+        <div class="p-3  bg-light rounded">
+            {% csrf_token %}
+            <div class="form-group d-none">
+                <label for="consumer_id" class="col-form-label">Consumer:</label>
+                <input type="text" class="form-control" id="consumer_id" name="consumer_id" value="{{consumer.id}}">
             </div>
 
-            <div class="form-group col-lg-6">
-                <label for="multiplier" class="col-form-label">Multiplier: (rate per cubic meter or
-                    m<sup>3</sup>)</label>
-                <input type="number" class="form-control" id="multiplier" name="multiplier" value="10"
-                    oninput="get_consumption()" placeholder='Multiplier'>
-                <div class="is-invalid"></div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label for="billing_month" class="col-form-label">Billing Month:</label>
+                    <input type="month" class="form-control" id="billing_month" name="billing_month">
+                    <div class="is-invalid"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label for="previous" class="col-form-label">Previous Reading:</label>
+                    <input type="number" class="form-control" id="previous" name="previous" oninput="get_consumption()"
+                        value="{{last_reading.present}}" placeholder='Previous Reading'>
+                    <div class="is-invalid"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label for="present" class="col-form-label">Present Reading:</label>
+                    <input type="number" class="form-control" id="present" name="present" oninput="get_consumption()"
+                        placeholder='Present Reading'>
+                    <div class="is-invalid"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label for="consumption" class="col-form-label">Consumption: (in cubic meter or
+                        m<sup>3</sup>)</label>
+                    <input type="text" class="form-control" id="consumption" name="consumption" readonly
+                        placeholder='Consumption'>
+                    <div class="is-invalid"></div>
+                </div>
+
+                <div class="form-group col-lg-6">
+                    <label for="multiplier" class="col-form-label">Multiplier: (rate per cubic meter or
+                        m<sup>3</sup>)</label>
+                    <input type="number" class="form-control" id="multiplier" name="multiplier" value="10"
+                        oninput="get_consumption()" placeholder='Multiplier'>
+                    <div class="is-invalid"></div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <label class="text-primary col-form-label">Total Bill in <span>&#8369;</span>: </label>
+                <input type="text" class="form-control" id="total_bill" name="total_bill" readonly
+                    placeholder='Total Bill'>
+            </div>
+
+            <div class="text-danger">
+                Notice:
+                <ul>
+                    <li>The total bill will be automatically added to this consumer's unpaid bills.</li>
+                    <li>Due date is after 30 day (s)</li>
+                </ul>
+            </div>
+
+            <div class="form-group d-flex justify-content-end">
+                <div>
+                    <button class="btn btn-danger" onclick="history.back()">Cancel</button>
+                    <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+                </div>
             </div>
         </div>
-
-        <div class="col-lg-4">
-            <label class="text-primary col-form-label">Total Bill in <span>&#8369;</span>: </label>
-            <input type="text" class="form-control" id="total_bill" name="total_bill" readonly placeholder='Total Bill'>
-        </div>
-
-        <div class="text-danger">
-            Notice:
-            <ul>
-                <li>The total bill will be automatically added to this consumer's unpaid bills.</li>
-                <li>Due date is after 30 day (s)</li>
-            </ul>
-        </div>
-
-        <div class="form-group d-flex justify-content-end">
-            <div>
-                <button class="btn btn-danger" onclick="history.back()">Cancel</button>
-                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
-            </div>
-        </div>
-
     </form>
 </div>
 
@@ -109,12 +111,12 @@
         .addField('#billing_month', [{
             rule: 'required',
             errorMessage: 'This field is required',
-        },{
+        }, {
             validator: () => {
                 var func = async function validate() {
-                    const response = await fetch('/api/v1/validate-billing-month?billing_month=' + billing_month.value +'-1&user_id={{consumer.id}}');
+                    const response = await fetch('/api/v1/validate-billing-month?billing_month=' + billing_month.value + '-1&user_id={{consumer.id}}');
                     const data = await response.json(); // Extracting data as a JSON Object from the response
-                  
+
                     return data['valid']
                 }
                 return func;

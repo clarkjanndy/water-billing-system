@@ -18,79 +18,82 @@
         </ol>
     </nav>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="table-responsive">
-                <table class="table" id="collections">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th scope="col">Date</th>
-                            <th scope="col">Meter No.</th>
-                            <th scope="col">Consumer</th>
-                            <th scope="col">Amount Collected</th>
-                            <th scope="col">- - -</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for trans in transactions %}
-                        <tr>
-                            <td>{{trans.created_on|date:"M d, Y"}}</td>
-                            <td>{{trans.user.meter_no}}</td>
-                            <td>{{trans.user.first_name}} {{trans.user.middle_name}} {{trans.user.last_name}}
-                                {{trans.user.ext_name}}
-                            </td>
-                            <td><span>&#8369;</span> {{trans.amount}}</td>
-                            <td class="w-25">
-                                <a class="btn btn-sm btn-success" href="/transact/view/{{trans.id}}"><span
-                                        class="bx bx-user"></span> View Detials</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <div class="p-3 bg-light rounded">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="table-responsive">
+                    <table class="table" id="collections">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Meter No.</th>
+                                <th scope="col">Consumer</th>
+                                <th scope="col">Amount Collected</th>
+                                <th scope="col">- - -</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trans in transactions %}
+                            <tr>
+                                <td>{{trans.created_on|date:"M d, Y"}}</td>
+                                <td>{{trans.user.meter_no}}</td>
+                                <td>{{trans.user.first_name}} {{trans.user.middle_name}} {{trans.user.last_name}}
+                                    {{trans.user.ext_name}}
+                                </td>
+                                <td><span>&#8369;</span> {{trans.amount}}</td>
+                                <td class="w-25">
+                                    <a class="btn btn-sm btn-success" href="/transact/view/{{trans.id}}"><span
+                                            class="bx bx-user"></span> View Detials</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
-        </div>
+            <div class="col-lg-4">
+                <div class="border p-2">
+                    <h5 class="text-primary">Other Details</h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">Total Collection: </p>
+                        </div>
+                        <div class="col">
+                            <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collection">00.00</span></p>
+                        </div>
+                    </div>
+                    <hr>
 
-        <div class="col-lg-4">
-            <div class="border p-2">
-                <h5 class="text-primary">Other Details</h5>
-                <hr>
-                <div class="row">
-                    <div class="col">
-                        <p class="mb-0">Total Collection: </p>
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">This Month's Collection: </p>
+                        </div>
+                        <div class="col">
+                            <p class="text-muted mb-0"><span>&#8369;</span> <span
+                                    id="total-collection-by-month">00.00</span></p>
+                        </div>
                     </div>
-                    <div class="col">
-                        <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collection">00.00</span></p>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col">
+                            <p class="mb-0">Collectibles: </p>
+                        </div>
+                        <div class="col">
+                            <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collectibles">00.00</span>
+                            </p>
+                        </div>
                     </div>
+                    <hr>
+
+
                 </div>
-                <hr>
-
-                <div class="row">
-                    <div class="col">
-                        <p class="mb-0">This Month's Collection: </p>
-                    </div>
-                    <div class="col">
-                        <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collection-by-month">00.00</span></p>
-                    </div>
-                </div>
-                <hr>
-
-                <div class="row">
-                    <div class="col">
-                        <p class="mb-0">Collectibles: </p>
-                    </div>
-                    <div class="col">
-                        <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collectibles">00.00</span></p>
-                    </div>
-                </div>
-                <hr>
-
-
             </div>
         </div>
     </div>
-
 
 </div>
 

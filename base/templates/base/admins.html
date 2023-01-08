@@ -18,41 +18,44 @@
         </ol>
     </nav>
 
-    <div class="table-responsive">
-        <table class="table" id="consumers">
-            <thead class="bg-primary text-white">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Contact #</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Meter No.</th>
-                    <th scope="col">- - -</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for admin in admins %}
-                <tr>
-                    <th scope="row">{{admin.id}}</th>
-                    <td>{{admin.first_name}} {{admin.middle_name}} {{admin.last_name}} {{admin.ext_name}}
-                    </td>
-                    <td>{{admin.contact_no}}</td>
-                    <td>{{admin.address.name}}</td>
-                    <td>{{admin.meter_no}}</td>
-                    <td class="w-25">
-                        <a class="btn btn-sm btn-success" href="/consumers/{{admin.id}}"><span class="bx bx-user"></span> View Profile</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="p-3 bg-light rounded">
+        <div class="table-responsive">
+            <table class="table" id="consumers">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Contact #</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Meter No.</th>
+                        <th scope="col">- - -</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admin in admins %}
+                    <tr>
+                        <th scope="row">{{admin.id}}</th>
+                        <td>{{admin.first_name}} {{admin.middle_name}} {{admin.last_name}} {{admin.ext_name}}
+                        </td>
+                        <td>{{admin.contact_no}}</td>
+                        <td>{{admin.address.name}}</td>
+                        <td>{{admin.meter_no}}</td>
+                        <td class="w-25">
+                            <a class="btn btn-sm btn-success" href="/consumers/{{admin.id}}"><span
+                                    class="bx bx-user"></span> View Profile</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-	$('#consumers').dataTable( {
-		"ordering": false
-	} );
+    $('#consumers').dataTable({
+        "ordering": false
+    });
 </script>
 
 {%endblock content%}

@@ -21,70 +21,71 @@
     </nav>
 
     <form id="add-reading-form" method="POST" class="mb-2 col-lg-6 col-md-12 col-sm-12">
-        {% csrf_token %}
-        <div class="form-group d-none">
-            <label for="consumer_id" class="col-form-label">Consumer:</label>
-            <input type="text" class="form-control" id="consumer_id" name="consumer_id" value="{{consumer.id}}">
-        </div>
-
-        <div class="row">
-            <div class="form-group col-lg-6">
-                <label for="billing_month" class="col-form-label">Billing Month:</label>
-                <input type="month" class="form-control" id="billing_month" name="billing_month" readonly>
-                <div class="is-invalid"></div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group col-lg-6">
-                <label for="previous" class="col-form-label">Previous Reading:</label>
-                <input type="number" class="form-control" id="previous" name="previous" oninput="get_consumption()"
-                    placeholder='Previous Reading' value="{{reading.previous}}">
-                <div class="is-invalid"></div>
-            </div>
-            <div class="form-group col-lg-6">
-                <label for="present" class="col-form-label">Present Reading:</label>
-                <input type="number" class="form-control" id="present" name="present" oninput="get_consumption()"
-                    placeholder='Present Reading' value="{{reading.present}}">
-                <div class="is-invalid"></div>
-            </div>
-            <div class="form-group col-lg-6">
-                <label for="consumption" class="col-form-label">Consumption: (in cubic meter or
-                    m<sup>3</sup>)</label>
-                <input type="text" class="form-control" id="consumption" name="consumption" readonly
-                    placeholder='Consumption' value="{{reading.consumption}}">
-                <div class="is-invalid"></div>
+        <div class="p-3 bg-light rounded">
+            {% csrf_token %}
+            <div class="form-group d-none">
+                <label for="consumer_id" class="col-form-label">Consumer:</label>
+                <input type="text" class="form-control" id="consumer_id" name="consumer_id" value="{{consumer.id}}">
             </div>
 
-            <div class="form-group col-lg-6">
-                <label for="multiplier" class="col-form-label">Multiplier: (rate per cubic meter or
-                    m<sup>3</sup>)</label>
-                <input type="number" class="form-control" id="multiplier" name="multiplier" oninput="get_consumption()"
-                    placeholder='Multiplier' value="{{reading.multiplier}}">
-                <div class="is-invalid"></div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label for="billing_month" class="col-form-label">Billing Month:</label>
+                    <input type="month" class="form-control" id="billing_month" name="billing_month" readonly>
+                    <div class="is-invalid"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label for="previous" class="col-form-label">Previous Reading:</label>
+                    <input type="number" class="form-control" id="previous" name="previous" oninput="get_consumption()"
+                        placeholder='Previous Reading' value="{{reading.previous}}">
+                    <div class="is-invalid"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label for="present" class="col-form-label">Present Reading:</label>
+                    <input type="number" class="form-control" id="present" name="present" oninput="get_consumption()"
+                        placeholder='Present Reading' value="{{reading.present}}">
+                    <div class="is-invalid"></div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label for="consumption" class="col-form-label">Consumption: (in cubic meter or
+                        m<sup>3</sup>)</label>
+                    <input type="text" class="form-control" id="consumption" name="consumption" readonly
+                        placeholder='Consumption' value="{{reading.consumption}}">
+                    <div class="is-invalid"></div>
+                </div>
+
+                <div class="form-group col-lg-6">
+                    <label for="multiplier" class="col-form-label">Multiplier: (rate per cubic meter or
+                        m<sup>3</sup>)</label>
+                    <input type="number" class="form-control" id="multiplier" name="multiplier"
+                        oninput="get_consumption()" placeholder='Multiplier' value="{{reading.multiplier}}">
+                    <div class="is-invalid"></div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <label class="text-primary col-form-label">Total Bill in <span>&#8369;</span>: </label>
+                <input type="text" class="form-control" id="total_bill" name="total_bill" readonly
+                    placeholder='Total Bill' value="{{collectible.amount}}">
+            </div>
+
+            <div class="text-danger">
+                Notice:
+                <ul>
+                    <li>The total bill will be automatically updated for this consumer's bill.</li>
+                </ul>
+            </div>
+
+            <div class="form-group d-flex justify-content-end">
+                <div>
+                    <a class="btn btn-danger" onclick="history.back()">Cancel</a>
+                    <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+                </div>
             </div>
         </div>
-
-        <div class="col-lg-4">
-            <label class="text-primary col-form-label">Total Bill in <span>&#8369;</span>: </label>
-            <input type="text" class="form-control" id="total_bill" name="total_bill" readonly placeholder='Total Bill'
-                value="{{collectible.amount}}">
-        </div>
-
-        <div class="text-danger">
-            Notice:
-            <ul>
-                <li>The total bill will be automatically updated for this consumer's bill.</li>
-            </ul>
-        </div>
-
-        <div class="form-group d-flex justify-content-end">
-            <div>
-                <a class="btn btn-danger" onclick="history.back()">Cancel</a>
-                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
-            </div>
-        </div>
-
     </form>
 </div>
 
@@ -100,9 +101,9 @@
     const total_bill = document.getElementById('total_bill');
     const minimum_consumption = 10;
 
-    const  date = '{{reading.billing_month|date:"m/Y"}}';
+    const date = '{{reading.billing_month|date:"m/Y"}}';
     var [month, year] = date.split('/');
-    
+
     document.getElementById('billing_month').valueAsDate = new Date(year, month);
 
     validation
