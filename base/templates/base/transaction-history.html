@@ -18,8 +18,51 @@
         </ol>
     </nav>
 
-    <div class="p-3 bg-light rounded">
+    <div class="p-3 bg-light rounded mb-3">
         <div class="row">
+            <div class="col-lg-4">
+                <div class="rounded p-2 border">
+                    <div class="d-flex justify-content-between">
+                        <div class="text-primary lead">Total Collection</div>
+                        <a class="text-muted lead"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="This is the total amount of money collected." href="facebook.com"><span class="bx bxs-info-square"></span></a>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div>
+                            <p class="text-muted mb-0" style="font-size: 40px"><span>&#8369;</span> <span
+                                    id="total-collection">00.00</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border p-2 rounded mt-1">
+                    <div class="d-flex justify-content-between">
+                        <div class="text-primary lead">This Month's Collection</div>
+                        <a class="text-muted lead"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="This is the total amount of money collected for the current month." href="facebook.com"><span class="bx bxs-info-square"></span></a>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div>
+                            <p class="text-muted mb-0" style="font-size: 40px"><span>&#8369;</span> <span
+                                    id="total-collection-by-month">00.00</span></p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border p-2 rounded mt-1">
+                    <div class="d-flex justify-content-between">
+                        <div class="text-primary lead">Collectibles</div>
+                        <a class="text-muted lead"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="This is the total amount of money needs to be collected from the consumers." href="facebook.com"><span class="bx bxs-info-square"></span></a>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div>
+                            <p class="text-muted mb-0" style="font-size: 40px"><span>&#8369;</span> <span
+                                    id="total-collectibles">00.00</span></p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-8">
                 <div class="table-responsive">
                     <table class="table" id="collections">
@@ -43,7 +86,7 @@
                                 <td><span>&#8369;</span> {{trans.amount}}</td>
                                 <td class="w-25">
                                     <a class="btn btn-sm btn-success" href="/transact/view/{{trans.id}}"><span
-                                            class="bx bx-user"></span> View Detials</a>
+                                            class="bx bx-user"></span> View Details</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -53,45 +96,48 @@
 
             </div>
 
-            <div class="col-lg-4">
-                <div class="border p-2">
-                    <h5 class="text-primary">Other Details</h5>
-                    <hr>
-                    <div class="row">
-                        <div class="col">
-                            <p class="mb-0">Total Collection: </p>
-                        </div>
-                        <div class="col">
-                            <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collection">00.00</span></p>
-                        </div>
+        </div>
+    </div>
+
+    <div class="p-3 bg-light rounded mb-3">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="my-3">
+                    <h3>Reports</h3>
+
+                    <div class="d-flex justify-content-end mb-3">
+                        <a class="btn btn-primary" href=""><span class="bx bx-printer"></span> Print Collection
+                            Report</a>
                     </div>
-                    <hr>
 
-                    <div class="row">
-                        <div class="col">
-                            <p class="mb-0">This Month's Collection: </p>
-                        </div>
-                        <div class="col">
-                            <p class="text-muted mb-0"><span>&#8369;</span> <span
-                                    id="total-collection-by-month">00.00</span></p>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table" id="readings">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th scope="col">Month</th>
+                                    <th scope="col">Collection</th>
+                                    <th scope="col">- - -</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for collection in collections %}
+                                <tr>
+                                    <td>{{collection.month|date:"M Y"}}</td>
+                                    <td>{{collection.amount}} m<sup>3</sup></td>
+                                    <td class="w-25">
+                                        <a class="btn btn-sm btn-success" href="consumers/{{consumer.id}}"><span
+                                                class="bx bx-printer"></span> Print Report</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                    <hr>
-
-                    <div class="row">
-                        <div class="col">
-                            <p class="mb-0">Collectibles: </p>
-                        </div>
-                        <div class="col">
-                            <p class="text-muted mb-0"><span>&#8369;</span> <span id="total-collectibles">00.00</span>
-                            </p>
-                        </div>
-                    </div>
-                    <hr>
-
-
                 </div>
             </div>
+
+
         </div>
     </div>
 
