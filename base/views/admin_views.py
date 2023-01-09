@@ -3,7 +3,11 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from base.models import Transaction, CustomUser, PasswordResetRequest
+from base.models import Transaction, CustomUser, PasswordResetRequest, Reading
+
+
+from django.db.models import Sum, Count, Value, F
+from django.db.models.functions import TruncMonth
 
 # Create your views here.
 
@@ -37,7 +41,15 @@ def transaction_history(request):
 
     transactions = Transaction.objects.select_related('user').order_by('-created_on')
     
-    data = {'transactions':transactions}
+    metrics = {
+        'amount': Sum('amount'),
+    }
+    collections = Transaction.objects.annotate(month=TruncMonth('created_on')).values('month').annotate(amount=Sum('amount')).order_by('-month')
+    
+    print(collections)
+    data = {'transactions':transactions,
+            'collections': collections}
+    
     return render(request, './base/transaction-history.html', data)
 
 def consumption_histogram(request):
@@ -47,10 +59,16 @@ def consumption_histogram(request):
     if not request.user.is_superuser:
         return HttpResponse(status=403)
 
-    # transactions = Transaction.objects.select_related('user').order_by('-created_on')
+    readings = (
+    Reading.objects.values("billing_month")
+    .annotate(
+        month=Count("billing_month", distinct=False), consumption=Sum("consumption")
+    )
+    .order_by("-billing_month")
+    )
     
-    # data = {'transactions':transactions}
-    return render(request, './base/consumption-histogram.html')
+    data = {'readings': readings}    
+    return render(request, './base/consumption-histogram.html', data)
 
 def password_reset_requests(request):
     if not request.user.is_authenticated:
@@ -96,6 +114,15 @@ def delete_password_reset_request(request, id):
     messages.success(request, "Password reset request has been deleted")
     return redirect("/admin/password-reset-requests")
     
+def reports(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    if not request.user.is_superuser:
+        return HttpResponse(status=403)
 
-
+    # transactions = Transaction.objects.select_related('user').order_by('-created_on')
+    
+    # data = {'transactions':transactions}
+    return render(request, './base/reports.html')
 

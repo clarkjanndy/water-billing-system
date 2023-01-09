@@ -7,6 +7,7 @@ from .views import consumer_views
 from .views import baranggay_views
 from .views import reading_views
 from .views import collectible_views
+from .views import report_views
 
 urlpatterns = [
     path('', page_views.landing_page, name="landing_page"),  
@@ -20,6 +21,7 @@ urlpatterns = [
     path('admin/transaction-history', admin_views.transaction_history, name="transaction-history"),
     path('admin/consumption-histogram', admin_views.consumption_histogram, name="consumption_histogram"),
     path('admin/password-reset-requests', admin_views.password_reset_requests, name="password_reset_requests"),
+    path('admin/reports', admin_views.reports, name="reports"),
     
     path('admin/approve-password-reset-request/<int:id>', admin_views.approve_password_reset_request, name="approve_password_reset_request"),
     path('admin/delete-password-reset-request/<int:id>', admin_views.delete_password_reset_request, name="delete_password_reset_request"),
@@ -49,6 +51,9 @@ urlpatterns = [
 
     path('print/bills/<int:id>', collectible_views.print_collectible, name="print_collectible"),
     path('print/reciept/<int:id>', collectible_views.print_reciept, name="print_reciept"),
+    
+    # printable reports
+    path('print/consumption/', report_views.print_consumption, name="print_consumption"),
          
     path('logout', page_views.logout, name="logout"),   
 ]
