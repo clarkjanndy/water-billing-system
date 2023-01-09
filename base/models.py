@@ -23,6 +23,14 @@ class CustomUser(AbstractUser):
     
     def __str__(self):
         return self.username
+    
+    def get_status(self):
+        bills = Collectible.objects.select_related('reading').filter(reading__user = self, status = 'paid')
+
+        if bills:
+            return 'paid'
+        return 'unpaid'
+        
 
 class PasswordResetRequest(models.Model):
     user = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING)

@@ -32,6 +32,7 @@
                         <th scope="col">Contact #</th>
                         <th scope="col">Address</th>
                         <th scope="col">Meter No.</th>
+                        <th scope="col">Status</th>
                         <th scope="col">- - -</th>
                     </tr>
                 </thead>
@@ -45,6 +46,7 @@
                         <td>{{consumer.contact_no}}</td>
                         <td>{{consumer.address.name}}</td>
                         <td>{{consumer.meter_no}}</td>
+                        <td class="{% if consumer.get_status == 'paid' %} text-primary {% else %} text-success {% endif %}">{{consumer.get_status}}</td>
                         <td class="w-25">
                             <a class="btn btn-sm btn-success" href="consumers/{{consumer.id}}"><span
                                     class="bx bx-user"></span> View Profile</a>
