@@ -20,13 +20,15 @@
 
     <div class="p-3 bg-light rounded mb-3">
         <div class="row">
-            <div class="col-lg-4">
-                <div class="rounded p-2 border">
+            <div class="col-lg-4 mb-2">
+                <div class="rounded p-2 border" style="height: 33%;">
                     <div class="d-flex justify-content-between">
                         <div class="text-primary lead">Total Collection</div>
-                        <a class="text-muted lead"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="This is the total amount of money collected." href="facebook.com"><span class="bx bxs-info-square"></span></a>
+                        <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="This is the total amount of money collected." ><span
+                                class="bx bxs-info-square"></span></a>
                     </div>
-                    
+
                     <div class="d-flex justify-content-center align-items-center">
                         <div>
                             <p class="text-muted mb-0" style="font-size: 40px"><span>&#8369;</span> <span
@@ -35,10 +37,12 @@
                     </div>
                 </div>
 
-                <div class="border p-2 rounded mt-1">
+                <div class="border p-2 rounded mt-1" style="height: 33%;">
                     <div class="d-flex justify-content-between">
                         <div class="text-primary lead">This Month's Collection</div>
-                        <a class="text-muted lead"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="This is the total amount of money collected for the current month." href="facebook.com"><span class="bx bxs-info-square"></span></a>
+                        <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="This is the total amount of money collected for the current month."
+                            ><span class="bx bxs-info-square"></span></a>
                     </div>
                     <div class="d-flex justify-content-center align-items-center">
                         <div>
@@ -49,10 +53,12 @@
                     </div>
                 </div>
 
-                <div class="border p-2 rounded mt-1">
+                <div class="border p-2 rounded mt-1" style="height: 33%;">
                     <div class="d-flex justify-content-between">
                         <div class="text-primary lead">Collectibles</div>
-                        <a class="text-muted lead"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="This is the total amount of money needs to be collected from the consumers." href="facebook.com"><span class="bx bxs-info-square"></span></a>
+                        <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="This is the total amount of money needs to be collected from the consumers."
+                            ><span class="bx bxs-info-square"></span></a>
                     </div>
                     <div class="d-flex justify-content-center align-items-center">
                         <div>
@@ -64,36 +70,44 @@
                 </div>
             </div>
             <div class="col-lg-8">
-                <div class="table-responsive">
-                    <table class="table" id="collections">
-                        <thead class="bg-primary text-white">
-                            <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">Meter No.</th>
-                                <th scope="col">Consumer</th>
-                                <th scope="col">Amount Collected</th>
-                                <th scope="col">- - -</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for trans in transactions %}
-                            <tr>
-                                <td>{{trans.created_on|date:"M d, Y"}}</td>
-                                <td>{{trans.user.meter_no}}</td>
-                                <td>{{trans.user.first_name}} {{trans.user.middle_name}} {{trans.user.last_name}}
-                                    {{trans.user.ext_name}}
-                                </td>
-                                <td><span>&#8369;</span> {{trans.amount}}</td>
-                                <td class="w-25">
-                                    <a class="btn btn-sm btn-success" href="/transact/view/{{trans.id}}"><span
-                                            class="bx bx-user"></span> View Details</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                <div class="border border p-2 rounded">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="text-primary lead">Transaction History</div>
+                        <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="List of money collected from each consumer." ><span
+                                class="bx bxs-info-square"></span></a>
+                    </div>
 
+                    <div class="table-responsive">
+                        <table class="table" id="collections">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Meter No.</th>
+                                    <th scope="col">Consumer</th>
+                                    <th scope="col">Amount Collected</th>
+                                    <th scope="col">- - -</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for trans in transactions %}
+                                <tr>
+                                    <td>{{trans.created_on|date:"M d, Y"}}</td>
+                                    <td>{{trans.user.meter_no}}</td>
+                                    <td>{{trans.user.first_name}} {{trans.user.middle_name}} {{trans.user.last_name}}
+                                        {{trans.user.ext_name}}
+                                    </td>
+                                    <td><span>&#8369;</span> {{trans.amount}}</td>
+                                    <td class="w-25">
+                                        <a class="btn btn-sm btn-success" href="/transact/view/{{trans.id}}"><span
+                                                class="bx bx-user"></span> View Details</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
         </div>
