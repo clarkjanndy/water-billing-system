@@ -18,6 +18,7 @@ urlpatterns = [
 
     path('admin/dashboard', admin_views.dashboard, name="dashboard"),
     path('admin/users', admin_views.users, name="users"),
+    path('admin/users/<int:id>', admin_views.view_user, name="view-user"),
     path('admin/transaction-history', admin_views.transaction_history, name="transaction-history"),
     path('admin/consumption-histogram', admin_views.consumption_histogram, name="consumption_histogram"),
     path('admin/password-reset-requests', admin_views.password_reset_requests, name="password_reset_requests"),

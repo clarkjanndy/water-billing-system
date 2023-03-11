@@ -29,8 +29,20 @@ def users(request):
 
     admins = CustomUser.objects.all().filter(is_superuser = 1)
     
-    data = {'admins':admins}
+    data = {'admins':admins,'page': 'administration'}
     return render(request, './base/users.html', data)
+
+def view_user(request, id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    if not request.user.is_superuser:
+        return HttpResponse(status=403)
+
+    admin = CustomUser.objects.get(is_superuser = 1, id = id)
+    
+    data = {'admin':admin,'page': 'administration'}
+    return render(request, './base/view_user.html', data)
 
 def transaction_history(request):
     if not request.user.is_authenticated:
@@ -75,7 +87,7 @@ def password_reset_requests(request):
     
     password_requests = PasswordResetRequest.objects.all()
     
-    data = {'password_requests': password_requests}
+    data = {'password_requests': password_requests, 'page': 'administration'}
 
     return render(request, './base/password_reset_request.html', data)
 
