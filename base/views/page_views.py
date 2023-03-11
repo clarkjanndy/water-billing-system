@@ -97,7 +97,7 @@ def login(request):
             auth_login(request, user)
 
             if user.is_superuser:
-                return redirect("/admin")
+                return redirect("/admin/dashboard")
             else:
                 return redirect("/consumers/" + str(user.id))
         else:

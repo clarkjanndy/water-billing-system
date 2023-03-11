@@ -9,14 +9,27 @@ a{
     text-decoration: none !important;
 }
 
+.menu-item{
+    font-weight: bold;
+    color:black;
+}
+
+.menu-item:hover{
+    border-bottom: 2px solid #0275d8;
+}
+
+.active{
+    border-bottom: 2px solid #0275d8;
+}
+
 .align-icon {
     vertical-align: middle;
 }
 
 /*Navbar CSS*/
-.dropdown-menu.show {
+/* .dropdown-menu.show{
     left: -200px;
-}
+} */
 
 
 .dropdown-panel:hover{

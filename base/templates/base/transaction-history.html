@@ -138,7 +138,7 @@
                                 {% for collection in collections %}
                                 <tr>
                                     <td>{{collection.month|date:"M Y"}}</td>
-                                    <td>{{collection.amount}} m<sup>3</sup></td>
+                                    <td><span>&#8369;</span> {{collection.amount}} </td>
                                     <td class="w-25">
                                         <a class="btn btn-sm btn-success" href="consumers/{{consumer.id}}"><span
                                                 class="bx bx-printer"></span> Print Report</a>

@@ -11,16 +11,16 @@ from django.db.models.functions import TruncMonth
 
 # Create your views here.
 
-def admin(request):
+def dashboard(request):
     if not request.user.is_authenticated:
         return redirect("/")
     
     if not request.user.is_superuser:
         return HttpResponse(status=403)
 
-    return render(request, './base/admin_panel.html')
+    return render(request, './base/dashboard.html', {"page": "dashboard"})
 
-def admins(request):
+def users(request):
     if not request.user.is_authenticated:
         return redirect("/")
     
@@ -30,7 +30,7 @@ def admins(request):
     admins = CustomUser.objects.all().filter(is_superuser = 1)
     
     data = {'admins':admins}
-    return render(request, './base/admins.html', data)
+    return render(request, './base/users.html', data)
 
 def transaction_history(request):
     if not request.user.is_authenticated:
@@ -41,12 +41,8 @@ def transaction_history(request):
 
     transactions = Transaction.objects.select_related('user').order_by('-created_on')
     
-    metrics = {
-        'amount': Sum('amount'),
-    }
     collections = Transaction.objects.annotate(month=TruncMonth('created_on')).values('month').annotate(amount=Sum('amount')).order_by('-month')
     
-    print(collections)
     data = {'transactions':transactions,
             'collections': collections}
     
