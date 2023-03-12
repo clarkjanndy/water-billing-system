@@ -17,8 +17,13 @@ def dashboard(request):
     
     if not request.user.is_superuser:
         return HttpResponse(status=403)
+    
+    transactions = Transaction.objects.select_related('user').order_by('-created_on')
+    
+    data = {'transactions': transactions,
+            "page": "dashboard"}
 
-    return render(request, './base/dashboard.html', {"page": "dashboard"})
+    return render(request, './base/dashboard.html', data)
 
 def users(request):
     if not request.user.is_authenticated:

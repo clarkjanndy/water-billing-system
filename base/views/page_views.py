@@ -69,7 +69,7 @@ def update_due_billings():
 def landing_page(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
-            return redirect("/admin")
+            return redirect("/admin/dashboard")
         else:
             return redirect("/consumers/" + str(request.user.id))
 
@@ -80,7 +80,7 @@ def landing_page(request):
 def login(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
-            return redirect("/admin")
+            return redirect("/admin/dashboard")
         else:
             return redirect("/consumers/" + str(request.user.id))
 
@@ -121,7 +121,7 @@ def change_password(request):
 
         messages.success(request, "Your password had been changed")
 
-    return redirect("/admin")
+    return redirect("/admin/dashboard")
 
 
 def send_reset_request(request):
