@@ -1,0 +1,425 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<div class="container">
+    <h1>Dashboard</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Dashboard</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-3 p-2">
+            <div class="border bg-light rounded">
+                <div class="row">
+                    <div class="col-5">
+                        <div style="height: 150px;"
+                            class="d-flex justify-content-center align-items-center text-white bg-primary">
+                            <div class="text-center">
+                                <i class="bx bx-user" style="font-size: 40px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
+                            <div class="text-center">
+                                <div>
+                                    <h5 id="consumers" style="font-size: 30px;">200</h5>
+                                    <h5>Consumers</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 p-2">
+            <div class="border bg-light rounded">
+                <div class="row">
+                    <div class="col-5">
+                        <div style="height: 150px;"
+                            class="d-flex justify-content-center align-items-center text-white bg-primary">
+                            <div class="text-center">
+                                <i class="bx bx-building-house" style="font-size: 40px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
+                            <div class="text-center">
+                                <div>
+                                    <h5 id="baranggays" style="font-size: 30px;">200</h5>
+                                    <h5>Barangays</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 p-2">
+            <div class="border bg-light rounded">
+                <div class="row">
+                    <div class="col-5">
+                        <div style="height: 150px;"
+                            class="d-flex justify-content-center align-items-center text-white bg-primary">
+                            <div class="text-center">
+                                <i class="bx bx-user-circle" style="font-size: 40px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
+                            <div class="text-center">
+                                <div>
+                                    <h5 id="admins" style="font-size: 30px;">200</h5>
+                                    <h5>Admin Users</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 p-2">
+            <div class="border bg-light rounded">
+                <div class="row">
+                    <div class="col-5">
+                        <div style="height: 150px;"
+                            class="d-flex justify-content-center align-items-center text-white bg-primary">
+                            <div class="text-center">
+                                <i class="bx bx-key" style="font-size: 50px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div style="height: 150px" class="d-flex justify-content-center align-items-center">
+                            <div class="text-center">
+                                <div>
+                                    <h5 id="password-reset-requests" style="font-size: 40px;">200</h5>
+                                    <h5>Password <br>Reset Request</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-8 p-2">
+            <div class="border bg-light container p-2">
+                <div class="d-flex justify-content-between mb-2">
+                    <div class="text-primary lead">Consumption</div>
+                    <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="Details about water consumption."><span class="bx bxs-info-square"></span></a>
+                </div>
+                <div id="consumption-histogram"></div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 p-2">
+            <div class="border bg-light">
+                <div class="d-flex justify-content-between mb-2 p-2">
+                    <div class="text-primary lead"></div>
+                    <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="More details"><span class='bx bx-right-arrow-alt'
+                            style="font-size: 25px;"></span></a>
+                </div>
+                <div style="height: 240px;">
+                    <div id="paid-vs-unpaid"></div>
+                </div>
+                <div style="height: 75px;" class="bg-primary">
+                    <div class="row p-2">
+                        <div class="col-6 text-center text-white" style="border-right: 1px solid wheat;">
+                            <div>Released Water</div>
+                            <h4>00.00 m<sup>3</sup></h4>
+                        </div>
+                        <div class="col-6 text-center text-white">
+                            <div>Water Loss</div>
+                            <h4>00.00 m<sup>3</sup></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-8 p-2">
+            <div class="border bg-light container p-2">
+                <div class="d-flex justify-content-between mb-2">
+                    <div class="text-primary lead">Collection</div>
+                    <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="Details about water consumption."><span class="bx bxs-info-square"></span></a>
+                </div>
+                <div id="monthly-collection"></div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 p-2">
+            <div class="border bg-light">
+                <div class="d-flex justify-content-between mb-2 p-2">
+                    <div class="text-primary lead"></div>
+                    <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="More details"><span class='bx bx-right-arrow-alt'
+                            style="font-size: 25px;"></span></a>
+                </div>
+                <div style="height: 240px;">
+                    <div id="collection-income"></div>
+                </div>
+                <div style="height: 75px;" class="bg-primary">
+                    <div class="row p-2">
+                        <div class="col-6 text-center text-white" style="border-right: 1px solid wheat;">
+                            <div>Total Collection</div>
+                            <h4>&#8369; 00.00</h4>
+                        </div>
+                        <div class="col-6 text-center text-white">
+                            <div>Projected Income</div>
+                            <h4>&#8369; 00.00</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- <script>
+    function set_dates() {
+        var options = { year: 'numeric', month: 'short', day: 'numeric' };
+        var today = new Date();
+
+        document.getElementById('reading_latest_date').innerText = "as of " + today.toLocaleDateString("en-US", options);
+        document.getElementById('bill_latest_date').innerText = "as of " + today.toLocaleDateString("en-US", options);
+    }
+    set_dates();
+</script> -->
+
+<script>
+    async function consumer_count() {
+        const response = await fetch('/api/v1/consumer-count');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        document.getElementById('consumers').innerHTML = data['count'];
+    }
+    consumer_count();
+
+    async function baranggay_count() {
+        const response = await fetch('/api/v1/baranggay-count');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        document.getElementById('baranggays').innerHTML = data['count'];
+    }
+    baranggay_count();
+
+    async function admin_count() {
+        const response = await fetch('/api/v1/admin-count');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        document.getElementById('admins').innerHTML = data['count'];
+    }
+    admin_count();
+
+    async function password_reset_request_count() {
+        const response = await fetch('/api/v1/password-reset-request-count');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        document.getElementById('password-reset-requests').innerHTML = data['count'];
+    }
+    password_reset_request_count();
+</script>
+
+<script>
+    async function consumption_histogram() {
+        const response = await fetch('/api/v1/consumption-histogram');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        var date_format = { year: 'numeric', month: 'short' };
+        var formatted_date = new Array()
+
+        for (const date of data['x_label']) {
+            formatted_date.push(new Date(date).toLocaleDateString("en-US", date_format))
+        }
+
+        var options = {
+            chart: {
+                height: 300,
+                type: "area",
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            series: [
+                {
+                    name: "Consumption",
+                    data: data['series']
+                }
+            ],
+            fill: {
+                type: "gradient",
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.9,
+                    stops: [0, 90, 100],
+                }
+            },
+            xaxis: {
+                categories: formatted_date
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#consumption-histogram"), options);
+        chart.render();
+    }
+
+    consumption_histogram();
+</script>
+
+<script>
+    async function consumption_pie_chart() {
+        const response = await fetch('/api/v1/bills-paid-vs-unpaid/2');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        if (data['paid'] == null) {
+            data['paid'] = 0;
+        }
+
+        if (data['unpaid'] == null) {
+            data['unpaid'] = 0;
+        }
+
+        var options = {
+            series: [parseFloat(data['paid']), parseFloat(data['unpaid'])],
+            chart: {
+                type: 'pie',
+                height: 240,
+
+            },
+            labels: ["Paid", "Unpaid"],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 400
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#paid-vs-unpaid"), options);
+        chart.render();
+    }
+    consumption_pie_chart();
+</script>
+
+<script>
+    async function collection_histogram() {
+        const response = await fetch('/api/v1/consumption-histogram');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        var date_format = { year: 'numeric', month: 'short' };
+        var formatted_date = new Array()
+
+        for (const date of data['x_label']) {
+            formatted_date.push(new Date(date).toLocaleDateString("en-US", date_format))
+        }
+
+        var options = {
+            chart: {
+                height: 300,
+                type: "bar",
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            series: [
+                {
+                    name: "Collection",
+                    data: data['series']
+                }
+            ],
+            xaxis: {
+                categories: formatted_date
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#monthly-collection"), options);
+        chart.render();
+    }
+
+    collection_histogram();
+</script>
+
+
+<script>
+    async function collection_chart() {
+        const response = await fetch('/api/v1/consumption-histogram');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        var date_format = { year: 'numeric', month: 'short' };
+        var formatted_date = new Array()
+
+        for (const date of data['x_label']) {
+            formatted_date.push(new Date(date).toLocaleDateString("en-US", date_format))
+        }
+
+
+        var options = {
+          series: [70],
+          chart: {
+          height: 250,
+          type: 'radialBar',
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%',
+            }
+          },
+        },
+        labels: ['Collected Funds'],
+        };
+
+        var chart = new ApexCharts(document.querySelector("#collection-income"), options);
+        chart.render();
+    }
+
+    collection_chart();
+</script>
+
+<script>
+    $('#transactions').dataTable({
+        "ordering": false
+    });
+</script>
+
+{%endblock content%}

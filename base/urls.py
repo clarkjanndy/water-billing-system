@@ -16,8 +16,9 @@ urlpatterns = [
     path('change-password', page_views.change_password, name="change_password"),
     path('send-reset-request', page_views.send_reset_request, name="send_reset_request"),
 
-    path('admin', admin_views.admin, name="admin-panel"),
-    path('admin/admins', admin_views.admins, name="admins"),
+    path('admin/dashboard', admin_views.dashboard, name="dashboard"),
+    path('admin/users', admin_views.users, name="users"),
+    path('admin/users/<int:id>', admin_views.view_user, name="view-user"),
     path('admin/transaction-history', admin_views.transaction_history, name="transaction-history"),
     path('admin/consumption-histogram', admin_views.consumption_histogram, name="consumption_histogram"),
     path('admin/password-reset-requests', admin_views.password_reset_requests, name="password_reset_requests"),
@@ -53,7 +54,7 @@ urlpatterns = [
     path('print/reciept/<int:id>', collectible_views.print_reciept, name="print_reciept"),
     
     # printable reports
-    path('print/consumption/', report_views.print_consumption, name="print_consumption"),
+    path('report/consumption/', report_views.print_consumption, name="print_consumption"),
          
     path('logout', page_views.logout, name="logout"),   
 ]

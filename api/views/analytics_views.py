@@ -38,7 +38,7 @@ def admin_count(request):
 #password reset requests
 def password_reset_request_count(request):
     queryset = (
-        PasswordResetRequest.objects.all().aggregate(count=Count("id"))
+        PasswordResetRequest.objects.exclude(status='approved').aggregate(count=Count("id"))
     )
     return JsonResponse(queryset, safe=True)
 

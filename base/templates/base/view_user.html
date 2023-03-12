@@ -1,0 +1,260 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<!--Add Modals Here-->
+<div class="container">
+    <h1>{{admin.first_name}} {{admin.middle_name}} {{admin.last_name}} {{admin.ext_name}}</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/admin/users">Administration</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="/admin/users">Admin Users</a></li>
+            <li class="breadcrumb-item" aria-current="page">{{admin.first_name}} {{admin.middle_name}}
+                {{admin.last_name}} {{admin.ext_name}}</li>
+        </ol>
+    </nav>
+
+    {% if messages %}
+    {% for message in messages %}
+    {%include 'toast.html'%}
+    {% endfor %}
+    {% endif %}
+
+    <section class="mb-4">
+        <div class="row">
+            <div class="col-lg-4" >
+                <div class="border mb-4 p-2 bg-light rounded">
+
+                    <div class="text-center">
+
+                        <div class="d-flex justify-content-center">
+                            <div class="bg-success rounded-circle d-flex justify-content-center align-items-center text-white"
+                                style="width: 150px; height: 150px; font-size: 80px;">
+                                {{admin.first_name|first}}{{admin.last_name|first}}
+                            </div>
+                        </div>
+
+                        <h5 class="my-3">{{admin.first_name}} {{admin.middle_name}}
+                            {{admin.last_name}} {{admin.ext_name}}</h5>
+                        <h6 class="text-muted mb-1">{{admin.meter_no}}</h6>
+                        <h6 class="text-muted mb-1">{% if admin.is_superuser == 1 %}Admin{% endif %}</h6>
+                        <h6 class="text-muted mb-1">{% if admin.is_superuser == 0 %}admin{% endif %}</h6>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-outline-primary" href="\admins\{{admin.id}}\edit">
+                                <span class="bx bx-edit"></span> Edit Profile</a>
+                        </div>
+                    </div>
+
+                  
+                    {% if user.is_superuser == 1%}
+                    <div>
+                        <h6>Quick Actions</h6>
+                        <div class="row">
+                            <div class="col-12">
+                                <a class="btn btn-primary" href="\readings\add?user_id={{admin.id}}">
+                                    <span class="bx bx-layer-plus"></span> Add Reading</a>
+                                <a class="btn btn-primary" href="\transact\{{latest_bill.id}}">
+                                    <span class="bx bx-dollar"></span> Transact</a>
+                            </div>
+                        </div>
+
+                        <h6>Others</h6>
+                        <div class="row">
+                            <div class="col-12" >
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                        id="flexSwitchCheckDefault" onclick="changeRole()" 
+                                        {% if admin.is_superuser == 1 %}checked{% endif %} />
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">Allow this user to have
+                                        admin access</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+              
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="row mb-4">
+                    <div class="col-lg-6">
+                        <div class="border p-2 bg-light rounded">
+                            <div class="text-primary"><i class="bx bx-water"></i> Consumed Water</div>
+                            <div>
+                                <h3><span id="total_consumption">0</span> m<sup>3</sup></h3>
+                            </div>
+                            <div class="text-muted" id="reading_latest_date">(as of Dec. 12, 2022)</div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-outline-primary" href="/admins/{{admin.id}}/readings">
+                                    <span class="bx bx-stats"></span> Statistics</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="border p-2 bg-light rounded">
+
+                            <div class="text-primary"><i class="bx bx-money"></i> Total Unpaid Bills</div>
+                            <div class="">
+                                <h3><span>&#8369;</span> <span id="total_bills_unpaid">00.00</span></h3>
+                            </div>
+                            <div class="text-muted" id="bill_latest_date">(as of Dec. 12, 2022)</div>
+
+                            <div class="d-flex justify-content-end">
+                                <div>
+
+                                    <a class="btn btn-outline-primary" href="/bills/{{latest_bill.id}}?from=profile">
+                                        <span class="bx bx-food-menu"></span> View Billing</a>
+
+                                    <a class="btn btn-outline-primary" href="/admins/{{admin.id}}/bills">
+                                        <span class="bx bx-stats"></span> Statistics</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="border p-2 bg-light rounded">
+                    <h6 class="text-primary">Personal Details</h6>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Full Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{admin.first_name}} {{admin.middle_name}}
+                                {{admin.last_name}} {{admin.ext_name}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Gender</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{admin.gender}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Civil Status</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{admin.civil_status}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Adress</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{admin.address.name}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Religion</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{admin.religion}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Contact No</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{admin.contact_no}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{admin.email}}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Meter No.</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{admin.meter_no}}</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+   function set_dates() {
+        var options = { year: 'numeric', month: 'short', day: 'numeric' };
+        var today = new Date();
+
+        document.getElementById('reading_latest_date').innerText = "(as of " + today.toLocaleDateString("en-US", options) + ")";
+        document.getElementById('bill_latest_date').innerText = "(as of " + today.toLocaleDateString("en-US", options) + ")";
+    }
+    set_dates();
+</script>
+
+<script>
+    async function get_total_consumption() {
+        const response = await fetch('/api/v1/consumption/{{admin.id}}');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        if  (data['consumption__sum'] != null){
+            document.getElementById('total_consumption').innerHTML = data['consumption__sum'];
+        }
+    }
+    get_total_consumption();
+
+    async function get_total_unpaid_bills() {
+        const response = await fetch('/api/v1/bills-unpaid/{{admin.id}}');
+        const data = await response.json(); // Extracting data as a JSON Object from the response
+
+        if  (data['amount__sum'] != null){
+            document.getElementById('total_bills_unpaid').innerHTML = data['amount__sum'];
+        }
+    }
+    get_total_unpaid_bills();
+</script>
+
+<script>
+    async function changeRole() {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                id: '{{admin.id}}',
+            }),
+        };
+        const response = await fetch('/api/v1/action/make-admin', requestOptions);
+        window.location.reload()
+       
+    }
+</script>
+
+
+{% endblock content %}

@@ -58,7 +58,7 @@ def add_reading(request):
 
     consumer = CustomUser.objects.get(id=request.GET["user_id"])
     last_reading = Reading.objects.all().filter(user_id=request.GET["user_id"]).order_by('billing_month').last()
-    data = {"consumer": consumer, "last_reading": last_reading}
+    data = {"consumer": consumer, "last_reading": last_reading, 'page': 'consumers'}
     return render(request, "./base/reading/add_reading.html", data)
 
 def edit_reading(request, id):
@@ -103,5 +103,5 @@ def edit_reading(request, id):
         messages.success(request, "Reading updated successfully")
         return redirect("/consumers/" + request.POST["consumer_id"] + "/readings")
 
-    data = {"consumer": consumer, "reading": reading, 'collectible': collectible}
+    data = {"consumer": consumer, "reading": reading, 'collectible': collectible, 'page': 'consumers'}
     return render(request, "./base/reading/edit_reading.html", data)

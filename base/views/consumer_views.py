@@ -17,7 +17,7 @@ def index(request):
 
     consumers = CustomUser.objects.filter(is_superuser=False)
 
-    data = {"consumers": consumers}
+    data = {"consumers": consumers, 'page': 'consumers'}
     return render(request, "./base/consumer/consumers.html", data)
 
 
@@ -39,7 +39,8 @@ def view_consumer(request, id):
     data = {
         "baranggays": baranggays,
         "consumer": consumer,
-        "latest_bill": latest_bill
+        "latest_bill": latest_bill,
+        'page': 'consumers'
     }
 
     return render(request, "./base/consumer/view_consumer.html", data)
@@ -62,6 +63,7 @@ def view_consumer_readings(request, id):
     data = {
         "readings": readings,
         "consumer": consumer,
+        'page': 'consumers'
     }
 
     return render(request, "./base/consumer/view_consumer_readings.html", data)
@@ -84,6 +86,7 @@ def view_consumer_bills(request, id):
     data = {
         "bills": bills,
         "consumer": consumer,
+        'page': 'consumers'
     }
 
     return render(request, "./base/consumer/view_consumer_bills.html", data)
@@ -159,7 +162,7 @@ def edit_consumer(request, id):
         return redirect("/consumers/" + str(id))
 
     baranggays = Baranggay.objects.all()
-    data = {"baranggays": baranggays, "consumer": consumer}
+    data = {"baranggays": baranggays, "consumer": consumer, 'page': 'consumers'}
     return render(request, "./base/consumer/edit_consumer.html", data)
 
 def get_notifications(request):

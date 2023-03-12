@@ -9,12 +9,12 @@
 <!--Add Modals Here-->
 
 <div class="container">
-    <h1>Admins</h1>
+    <h1>Admin Users</h1>
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin">Admin Panel</a></li>
-            <li class="breadcrumb-item">Admins</li>
+            <li class="breadcrumb-item"><a href="/admin/users">Administration</a></li>
+            <li class="breadcrumb-item">Admin Users</li>
         </ol>
     </nav>
 
@@ -41,7 +41,7 @@
                         <td>{{admin.address.name}}</td>
                         <td>{{admin.meter_no}}</td>
                         <td class="w-25">
-                            <a class="btn btn-sm btn-success" href="/consumers/{{admin.id}}"><span
+                            <a class="btn btn-sm btn-success" href="/admin/users/{{admin.id}}"><span
                                     class="bx bx-user"></span> View Profile</a>
                         </td>
                     </tr>

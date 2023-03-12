@@ -57,6 +57,8 @@ def view_collectible(request, id):
         "reading": reading,
         "consumer": consumer,
         "arrear": arrear,
+        'page': 'consumers'
+        
     }
     return render(request, "./base/collectible/view_collectible.html", data)
 
@@ -103,6 +105,7 @@ def transact(request, id):
         "reading": reading,
         "consumer": consumer,
         "arrear": arrear,
+        'page': 'consumers'
     }
     return render(request, "./base/collectible/transact.html", data)
 
@@ -182,7 +185,9 @@ def transact_view(request, id):
     data = {
         'transaction':transaction,
         'consumer':consumer,
-        'invoices': invoices
+        'invoices': invoices,
+        'page': 'consumers'
+        
     }
 
     return render(request, "./base/collectible/transact_view.html", data)
