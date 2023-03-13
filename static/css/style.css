@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed');
+@import url('https://fonts.googleapis.com/css?family=Poppins');
 
 * {
-    font-family: 'Barlow Semi Condensed', 'Arial';
+    font-family: 'Poppins', 'Arial';
     box-sizing: border-box;
 }
 
