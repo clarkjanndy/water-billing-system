@@ -80,11 +80,11 @@ WSGI_APPLICATION = "water_billing_system.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "wbacs",
+        "NAME": "railway",
         "USER": "root",
-        "PASSWORD": "",
-        "HOST": "localhost",
-        "PORT": "",
+        "PASSWORD": "ESEbuIvcF6ppseaLhTcf",
+        "HOST": "containers-us-west-204.railway.app",
+        "PORT": "7720",
         "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
     }
 }
