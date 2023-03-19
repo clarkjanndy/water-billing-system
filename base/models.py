@@ -30,6 +30,15 @@ class CustomUser(AbstractUser):
         if bills:
             return 'paid'
         return 'unpaid'
+    
+    def get_latest_bill(self):
+        collectible = Collectible.objects.select_related("reading").filter(reading__user_id=self.id).order_by("-reading__billing_month").first()
+        
+        if not collectible:
+            return 0
+        
+        print(collectible.id)        
+        return collectible.id
         
 
 class PasswordResetRequest(models.Model):

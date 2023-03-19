@@ -3,10 +3,10 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from base.models import Transaction, CustomUser, PasswordResetRequest, Reading
+from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Collectible
 
 
-from django.db.models import Sum, Count, Value, F
+from django.db.models import Sum, Count, Value, F, Q
 from django.db.models.functions import TruncMonth
 
 # Create your views here.
@@ -129,6 +129,23 @@ def delete_password_reset_request(request, id):
     
     messages.success(request, "Password reset request has been deleted")
     return redirect("/admin/password-reset-requests")
+
+
+def treasury_and_transactions(request):
+     if not request.user.is_authenticated:
+        return redirect("/")
+    
+     if not request.user.is_superuser:
+        return HttpResponse(status=403)
+    
+     transactions = Transaction.objects.all().order_by('-created_on')
+     consumers = CustomUser.objects.exclude(is_superuser=1)
+     
+     data = {'page': 'administration',
+             'transactions': transactions,
+             'consumers': consumers}
+     
+     return render(request, './base/treasury-and-transactions.html', data)
     
 def reports(request):
     if not request.user.is_authenticated:

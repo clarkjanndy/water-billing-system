@@ -70,7 +70,12 @@ def transact(request, id):
     if not request.user.is_superuser:
         return redirect("/")
 
-    collectible = Collectible.objects.get(id=id)
+    collectible = Collectible.objects.filter(id=id).first()
+    
+    if not collectible:
+        messages.success(request, "No current billing for that consumer yet.")
+        return redirect('/admin/treasury-and-transactions')
+
     reading = Reading.objects.get(id=collectible.reading_id)
     consumer = CustomUser.objects.get(id=reading.user_id)
 
