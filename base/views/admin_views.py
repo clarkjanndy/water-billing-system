@@ -44,7 +44,10 @@ def view_user(request, id):
     if not request.user.is_superuser:
         return HttpResponse(status=403)
 
-    admin = CustomUser.objects.get(is_superuser = 1, id = id)
+    admin = CustomUser.objects.get(id = id)
+    
+    if  not admin.is_superuser:
+        return redirect (f'/consumers/{admin.id}')    
     
     data = {'admin':admin,'page': 'administration'}
     return render(request, './base/view_user.html', data)

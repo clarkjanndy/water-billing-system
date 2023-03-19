@@ -137,6 +137,7 @@ def transact_complete(request):
             amount=request.POST["total"],
             tendered=request.POST["tendered"],
             change=request.POST["change"],
+            order_number=request.POST["order_number"],
             content="{firstname} {middlename} {lastname} {extname} had payed a total of {total} on {date}".format(
                 firstname=consumer.first_name,
                 middlename=consumer.middle_name,

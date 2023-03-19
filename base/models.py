@@ -74,6 +74,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
     tendered = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
     change = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
+    order_number = models.CharField(max_length=120, default='ABCD-1234')
     content = models.TextField(blank=False, null=True)
     created_on = models.DateTimeField(null=True, blank=True, default=datetime.now)
 

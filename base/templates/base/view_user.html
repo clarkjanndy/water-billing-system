@@ -45,15 +45,15 @@
                         <h6 class="text-muted mb-1">{% if admin.is_superuser == 1 %}Admin{% endif %}</h6>
                         <h6 class="text-muted mb-1">{% if admin.is_superuser == 0 %}admin{% endif %}</h6>
                         <div class="d-flex justify-content-center">
-                            <a class="btn btn-outline-primary" href="\admins\{{admin.id}}\edit">
+                            <a class="btn btn-outline-primary" href="\consumers\{{admin.id}}\edit">
                                 <span class="bx bx-edit"></span> Edit Profile</a>
                         </div>
                     </div>
 
                   
-                    {% if user.is_superuser == 1%}
+                    {% if user.is_superuser %}
                     <div>
-                        <h6>Quick Actions</h6>
+                        <!-- <h6>Quick Actions</h6>
                         <div class="row">
                             <div class="col-12">
                                 <a class="btn btn-primary" href="\readings\add?user_id={{admin.id}}">
@@ -62,8 +62,11 @@
                                     <span class="bx bx-dollar"></span> Transact</a>
                             </div>
                         </div>
-
+                         -->
+                        
+                        {% if not user == admin %}
                         <h6>Others</h6>
+
                         <div class="row">
                             <div class="col-12" >
                                 <div class="form-check form-switch">
@@ -75,6 +78,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                     {% endif %}
 
@@ -83,7 +87,7 @@
             </div>
 
             <div class="col-lg-8">
-                <div class="row mb-4">
+                <!-- <div class="row mb-4">
                     <div class="col-lg-6">
                         <div class="border p-2 bg-light rounded">
                             <div class="text-primary"><i class="bx bx-water"></i> Consumed Water</div>
@@ -120,7 +124,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div> -->
 
                 <div class="border p-2 bg-light rounded">
                     <h6 class="text-primary">Personal Details</h6>
