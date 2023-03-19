@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/transaction-history', admin_views.transaction_history, name="transaction-history"),
     path('admin/consumption-histogram', admin_views.consumption_histogram, name="consumption_histogram"),
     path('admin/password-reset-requests', admin_views.password_reset_requests, name="password_reset_requests"),
-    path('admin/treasury-and-transactions', admin_views.treasury_and_transactions, name="password_reset_requests"),
+    path('admin/treasury-and-transactions', admin_views.treasury_and_transactions, name="treasury_and_transactions"),
     path('admin/reports', admin_views.reports, name="reports"),
     
     path('admin/approve-password-reset-request/<int:id>', admin_views.approve_password_reset_request, name="approve_password_reset_request"),
