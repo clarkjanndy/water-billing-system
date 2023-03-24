@@ -1,0 +1,238 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<!--Add Modals Here-->
+
+<div class="container">
+    <h1>Projections</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/admin/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item" aria-current="page">Projections</li>
+        </ol>
+    </nav>
+
+    {% if messages %}
+    {% for message in messages %}
+    {%include 'toast.html'%}
+    {% endfor %}
+    {% endif %}
+
+    <div class="p-3 bg-light rounded">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="border card p-2">
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="text-primary lead">Projections</div>
+                        <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="List of projected income and released water each month."><span
+                                class="bx bxs-info-square"></span></a>
+                    </div>
+
+                    <div class="d-flex mb-3 justify-content-end">
+                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_modal"><i
+                                class="bx bx-plus-circle"></i> New Entry</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table" id="requests">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th scope="col">Month</th>
+                                    <th scope="col">Released Water</th>
+                                    <th scope="col">Expected Income</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">- - -</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for projection in projections %}
+                                <tr>
+                                    <td>{{projection.month|date:"M, Y"}}</td>
+                                    <td>{{projection.released_water}} m<sup>3</sup></td>
+                                    <td><span>&#8369;</span> {{projection.expected_income}}</td>
+                                    <td class=" {% if projection.status == 'pending' %}text-muted{% endif %}
+                                    {% if prr.status == 'approved' %}text-success{% endif %}                        
+                        ">{{projection.status}}</td>
+                                    <td class="w-25">
+
+                                        <a class="btn btn-sm btn-success"
+                                            href="/admin/approve-password-reset-request/{{projection.id}}"><span
+                                                class="bx bx-info-circle"></span>
+                                            View</a>
+
+                                        <a class="btn btn-sm btn-primary"
+                                            href="/admin/delete-password-reset-request/{{projection.id}}"><span
+                                                class="bx bx-file"></span>
+                                            Update</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="bg-primary text-white p-3 card-header">
+                        Full Information
+                    </div>
+
+                    <div class="d-block p-3 card-body">
+                        <div class="row">
+                            <div class="col-lg-6">Month: </div>
+                            <div class="col-lg-6 text-muted">January</div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-lg-6">Released Water: </div>
+                            <div class="col-lg-6 text-muted">0 m<sup>3</sup></div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-lg-6">Consumed Water: </div>
+                            <div class="col-lg-6 text-muted">0 m<sup>3</sup></div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-lg-6">Water Loss: </div>
+                            <div class="col-lg-6 text-muted">0 m<sup>3</sup></div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-lg-6">Expected Income: </div>
+                            <div class="col-lg-6 text-muted"><span>&#8369;</span> 0</div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-lg-6">Deficit: </div>
+                            <div class="col-lg-6 text-muted"><span>&#8369;</span> 0</div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-lg-6">Status: </div>
+                            <div class="col-lg-6 text-muted">Achieved</div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="add_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">New Entry</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="add_entry" action="/projections/add/">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="billing_month" class="col-form-label">Billing Month:</label>
+                        <input type="month" class="form-control" id="add_month" name="month">
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="billing_month" class="col-form-label">Released Water: (in m<sup>3</sup>)</label>
+                        <input type="text" class="form-control" id="add_released_water" name="released_water"
+                            oninput="calculate_income()">
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="billing_month" class="col-form-label">Expected Income: (in pesos)</label>
+                        <input type="text" class="form-control" id="add_expected_income" name="expected_income">
+                        <div class="is-invalid"></div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculate_income() {
+        const released_water = document.getElementById("add_released_water")
+        const expected_income = document.getElementById("add_expected_income")
+
+        expected_income.value = parseFloat(released_water.value) * 10
+    }
+</script>
+
+<script>
+    const add_validation = new window.JustValidate('#add_entry', {
+        errorFieldCssClass: 'is-invalid',
+    });
+
+    document.getElementById('add_month').valueAsDate = new Date();
+    add_month = document.getElementById('add_month')
+
+    add_validation
+        .addField('#add_month', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        }, {
+            validator: () => {
+                var func = async function validate() {
+                    console.log(add_month.value)
+                    const response = await fetch('/api/v1/validate-projection-month?month=' + add_month.value + "-1");
+                    const data = await response.json(); // Extracting data as a JSON Object from the response
+                    return data['valid']
+                }
+                return func;
+            },
+            errorMessage: 'Projection already set for that month',
+        }])
+        .addField('#add_released_water', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        }, {
+            rule: 'number',
+            errorMessage: 'Please input a valid value',
+        }])
+        .addField('#add_expected_income', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        }, {
+            rule: 'number',
+            errorMessage: 'Please input a valid value',
+        }])
+        .onSuccess((event) => {
+            document.getElementById("add_entry").submit();
+        });
+</script>
+
+<script>
+    $('#requests').dataTable({
+        "ordering": false
+    });
+</script>
+
+{%endblock content%}

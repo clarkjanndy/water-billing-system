@@ -90,4 +90,9 @@ class Transaction(models.Model):
 class Invoice(models.Model):
     collectible = models.OneToOneField(Collectible, on_delete = models.DO_NOTHING, null = True)
     transaction = models.ForeignKey(Transaction, on_delete = models.DO_NOTHING, null = True)
+
+class Projection(models.Model):
+    month = models.DateField()
+    released_water = models.DecimalField( max_digits=15, decimal_places=2, help_text="in cm3")
+    expected_income = models.DecimalField( max_digits=15, decimal_places=2, help_text="in pesos")
     

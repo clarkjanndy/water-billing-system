@@ -9,6 +9,7 @@ urlpatterns = [
     path('validate-username', validation_views.validate_username, name="validate_username"),
     path('validate-meter', validation_views.validate_meter, name="validate_meter"),
     path('validate-billing-month', validation_views.validate_billing_month, name="validate_billing_month"),
+    path('validate-projection-month', validation_views.validate_projection_month, name="validate_projection_month"),
 
     #analytics
     path('consumer-count', analytics_views.consumer_count, name="consumer_count"),

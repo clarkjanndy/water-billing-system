@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.contrib.auth.hashers import check_password
 
-from base.models import CustomUser, Reading
+from base.models import CustomUser, Reading, Projection
 
 # 
 def validate_password(request):
@@ -30,6 +30,13 @@ def validate_meter(request):
 def validate_billing_month(request):
     reading = Reading.objects.all().filter(billing_month = request.GET['billing_month'], user_id = request.GET['user_id'])
     if not reading.exists():
+         return JsonResponse({'valid': True})
+    
+    return JsonResponse({'valid': False})
+
+def validate_projection_month(request):
+    projection = Projection.objects.all().filter(month = request.GET['month'])
+    if not projection.exists():
          return JsonResponse({'valid': True})
     
     return JsonResponse({'valid': False})

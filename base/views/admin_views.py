@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Collectible
+from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Collectible, Projection
 
 
 from django.db.models import Sum, Count, Value, F, Q
@@ -146,6 +146,19 @@ def treasury_and_transactions(request):
              'consumers': consumers}
      
      return render(request, './base/treasury-and-transactions.html', data)
+
+def projections(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    if not request.user.is_superuser:
+        return HttpResponse(status=403)
+    
+    projections = Projection.objects.all().order_by("-month")
+    
+    data = {"page": "reports",
+            "projections": projections}
+    return render(request, './base/projections.html', data)
     
 def reports(request):
     if not request.user.is_authenticated:
