@@ -1,7 +1,7 @@
-from datetime import datetime
-from gc import collect
+from datetime import datetime, date
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models import Count, Sum, Min, Value
 
 class Baranggay(models.Model):
     name = models.CharField(max_length = 50, blank = False)
@@ -96,3 +96,24 @@ class Projection(models.Model):
     released_water = models.DecimalField( max_digits=15, decimal_places=2, help_text="in cm3")
     expected_income = models.DecimalField( max_digits=15, decimal_places=2, help_text="in pesos")
     
+    def consumed_water(self):
+        consumed = Reading.objects.filter(billing_month=self.month).aggregate(consumed=Sum('consumption'))
+        return consumed.get('consumed')    
+    
+    def water_loss(self):
+        loss = self.released_water - self.consumed_water()
+        return loss if loss > 0 else 0
+    
+    def collected(self):
+       collection = Transaction.objects.filter(created_on__month=self.month.month).aggregate(collection=Sum('amount'))
+       collected = collection.get('collection') if collection.get('collection') else 0
+       return collected
+        
+    def deficit(self):
+       collection = Transaction.objects.filter(created_on__month=self.month.month).aggregate(collection=Sum('amount'))
+       collected = collection.get('collection') if collection.get('collection') else 0
+       result = self.expected_income - collected
+       return result if result > 0 else 0
+   
+    def status(self):
+        return 'Accomplished' if self.deficit() <= 0 else 'Unaccomplished'

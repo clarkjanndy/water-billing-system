@@ -24,7 +24,7 @@
     {% endfor %}
     {% endif %}
 
-    <div class="p-3 bg-light rounded">
+    <div class="p-3 bg-light rounded mb-5">
         <div class="row">
             <div class="col-lg-8">
                 <div class="border card p-2">
@@ -41,7 +41,7 @@
                                 class="bx bx-plus-circle"></i> New Entry</a>
                     </div>
                     <div class="table-responsive">
-                        <table class="table" id="requests">
+                        <table class="table" id="projections">
                             <thead class="bg-primary text-white">
                                 <tr>
                                     <th scope="col">Month</th>
@@ -62,10 +62,17 @@
                         ">{{projection.status}}</td>
                                     <td class="w-25">
 
-                                        <a class="btn btn-sm btn-success"
-                                            href="/admin/approve-password-reset-request/{{projection.id}}"><span
-                                                class="bx bx-info-circle"></span>
-                                            View</a>
+                                        <a class="btn btn-sm btn-success" href="#" id="view_button" onclick="populate_information(this)"
+                                        month="{{projection.month|date:"M, Y"}}"
+                                        released_water="{{projection.released_water}} m<sup>3</sup>"
+                                        consumed_water="{{projection.consumed_water}} m<sup>3</sup>"
+                                        water_loss="{{projection.water_loss}} m<sup>3</sup>"
+                                        expected_income="<span>&#8369;</span> {{projection.expected_income}}"
+                                        collected="<span>&#8369;</span> {{projection.collected}}"
+                                        deficit="<span>&#8369;</span> {{projection.deficit}}"
+                                        status="{{projection.status}}"
+                                        >
+                                        <span class="bx bx-info-circle"></span> View</a>
 
                                         <a class="btn btn-sm btn-primary"
                                             href="/admin/delete-password-reset-request/{{projection.id}}"><span
@@ -89,43 +96,49 @@
                     <div class="d-block p-3 card-body">
                         <div class="row">
                             <div class="col-lg-6">Month: </div>
-                            <div class="col-lg-6 text-muted">January</div>
+                            <div class="col-lg-6 text-muted" id="month">- - - </div>
                         </div>
                         <hr>
 
                         <div class="row">
                             <div class="col-lg-6">Released Water: </div>
-                            <div class="col-lg-6 text-muted">0 m<sup>3</sup></div>
+                            <div class="col-lg-6 text-muted" id="released_water">- - -  m<sup>3</sup></div>
                         </div>
                         <hr>
 
                         <div class="row">
                             <div class="col-lg-6">Consumed Water: </div>
-                            <div class="col-lg-6 text-muted">0 m<sup>3</sup></div>
+                            <div class="col-lg-6 text-muted" id="consumed_water">- - -  m<sup>3</sup></div>
                         </div>
                         <hr>
 
                         <div class="row">
                             <div class="col-lg-6">Water Loss: </div>
-                            <div class="col-lg-6 text-muted">0 m<sup>3</sup></div>
+                            <div class="col-lg-6 text-muted" id="water_loss">- - -  m<sup>3</sup></div>
                         </div>
                         <hr>
 
                         <div class="row">
                             <div class="col-lg-6">Expected Income: </div>
-                            <div class="col-lg-6 text-muted"><span>&#8369;</span> 0</div>
+                            <div class="col-lg-6 text-muted" id="expected_income"><span>&#8369;</span> - - - </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-lg-6">Collected: </div>
+                            <div class="col-lg-6 text-muted" id="collected"><span>&#8369;</span> - - - </div>
                         </div>
                         <hr>
 
                         <div class="row">
                             <div class="col-lg-6">Deficit: </div>
-                            <div class="col-lg-6 text-muted"><span>&#8369;</span> 0</div>
+                            <div class="col-lg-6 text-muted" id="deficit"><span>&#8369;</span> - - - </div>
                         </div>
                         <hr>
 
                         <div class="row">
                             <div class="col-lg-6">Status: </div>
-                            <div class="col-lg-6 text-muted">Achieved</div>
+                            <div class="col-lg-6 text-muted" id="status">---</div>
                         </div>
                     </div>
 
@@ -184,6 +197,26 @@
 
         expected_income.value = parseFloat(released_water.value) * 10
     }
+
+    function populate_information(identifier){
+        var month = document.getElementById("month") 
+        var released_water = document.getElementById("released_water")
+        var consumed_water = document.getElementById("consumed_water")
+        var water_loss = document.getElementById("water_loss")
+        var expected_income = document.getElementById("expected_income")
+        var deficit = document.getElementById("deficit")
+        var status = document.getElementById("status")
+        var collected = document.getElementById("collected")
+
+        month.innerHTML = identifier.getAttribute("month")
+        released_water.innerHTML = identifier.getAttribute("released_water")
+        consumed_water.innerHTML =  identifier.getAttribute("consumed_water")
+        water_loss.innerHTML = identifier.getAttribute("water_loss")
+        expected_income.innerHTML = identifier.getAttribute("expected_income")
+        collected.innerHTML = identifier.getAttribute("collected")
+        deficit.innerHTML = identifier.getAttribute("deficit")
+        status.innerHTML = identifier.getAttribute('status')
+    }
 </script>
 
 <script>
@@ -230,7 +263,7 @@
 </script>
 
 <script>
-    $('#requests').dataTable({
+    $('#projections').dataTable({
         "ordering": false
     });
 </script>
