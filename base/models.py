@@ -36,8 +36,7 @@ class CustomUser(AbstractUser):
         
         if not collectible:
             return 0
-        
-        print(collectible.id)        
+              
         return collectible.id
         
 

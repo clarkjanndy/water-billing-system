@@ -74,10 +74,12 @@
                                         >
                                         <span class="bx bx-info-circle"></span> View</a>
 
-                                        <a class="btn btn-sm btn-primary"
-                                            href="/admin/delete-password-reset-request/{{projection.id}}"><span
-                                                class="bx bx-file"></span>
-                                            Update</a>
+                                        <a class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#update_modal"
+                                        id="{{projection.id}}"
+                                        month="{{projection.month|date:"Y-m-d"}}"
+                                        released_water="{{projection.released_water}}"
+                                        expected_income="{{projection.expected_income}}"
+                                        ><span class="bx bx-file"></span> Update</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -150,7 +152,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!--Add Modal -->
 <div class="modal fade" id="add_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
@@ -171,7 +173,7 @@
                     <div class="form-group">
                         <label for="billing_month" class="col-form-label">Released Water: (in m<sup>3</sup>)</label>
                         <input type="text" class="form-control" id="add_released_water" name="released_water"
-                            oninput="calculate_income()">
+                           >
                         <div class="is-invalid"></div>
                     </div>
 
@@ -190,13 +192,61 @@
     </div>
 </div>
 
-<script>
-    function calculate_income() {
-        const released_water = document.getElementById("add_released_water")
-        const expected_income = document.getElementById("add_expected_income")
+<!--Update Modal -->
+<div class="modal fade" id="update_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Update Entry</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="update_entry" action="/projections/update/">
+                    {% csrf_token %}
 
-        expected_income.value = parseFloat(released_water.value) * 10
-    }
+                    <div class="form-group d-none">
+                        <label for="billing_month" class="col-form-label">Id:</label>
+                        <input type="input" class="form-control" id="id" name="id">
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="update_month" class="col-form-label">Billing Month:</label>
+                        <input type="month" class="form-control" id="update_month" name="month" readonly>
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="billing_month" class="col-form-label">Released Water: (in m<sup>3</sup>)</label>
+                        <input type="text" class="form-control" id="update_released_water" name="released_water">
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="billing_month" class="col-form-label">Expected Income: (in pesos)</label>
+                        <input type="text" class="form-control" id="update_expected_income" name="expected_income">
+                        <div class="is-invalid"></div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const add_released_water_input =  document.getElementById("add_released_water")
+    add_released_water_input.addEventListener('keyup', (evt)=>{
+      document.getElementById("add_expected_income").value = parseFloat(evt.target.value) * 10
+    })
+
+    const update_released_water_input =  document.getElementById("update_released_water")
+    update_released_water_input.addEventListener('keyup', (evt)=>{
+      document.getElementById("update_expected_income").value = parseFloat(evt.target.value) * 10
+    })
 
     function populate_information(identifier){
         var month = document.getElementById("month") 
@@ -260,6 +310,64 @@
         .onSuccess((event) => {
             document.getElementById("add_entry").submit();
         });
+
+    const update_validation = new window.JustValidate('#update_entry', {
+        errorFieldCssClass: 'is-invalid',
+    });
+
+    update_month = document.getElementById('update_month')
+
+    update_validation
+        // .addField('#update_month', [{
+        //     rule: 'required',
+        //     errorMessage: 'This field is required',
+        // }, {
+        //     validator: () => {
+        //         var func = async function validate() {
+        //             console.log(add_month.value)
+        //             const response = await fetch('/api/v1/validate-projection-month?month=' + update_month.value + "-1");
+        //             const data = await response.json(); // Extracting data as a JSON Object from the response
+        //             return data['valid']
+        //         }
+        //         return func;
+        //     },
+        //     errorMessage: 'Projection already set for that month',
+        // }])
+        .addField('#update_released_water', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        }, {
+            rule: 'number',
+            errorMessage: 'Please input a valid value',
+        }])
+        .addField('#update_expected_income', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        }, {
+            rule: 'number',
+            errorMessage: 'Please input a valid value',
+        }])
+        .onSuccess((event) => {
+            document.getElementById("update_entry").submit();
+        });
+</script>
+
+<script>
+    const update_modal = document.getElementById('update_modal')
+    update_modal.addEventListener('show.bs.modal', event => {
+        // Button that triggered the modal
+        const button = event.relatedTarget
+        
+        const id = update_modal.querySelector('#id')
+        const month = update_modal.querySelector('#update_month')
+        const released_water = update_modal.querySelector('#update_released_water')
+        const expected_income = update_modal.querySelector('#update_expected_income')
+
+        id.value = button.getAttribute('id')
+        month.valueAsDate = new Date(button.getAttribute("month"))
+        released_water.value = parseInt(button.getAttribute('released_water'))
+        expected_income.value = parseInt(button.getAttribute('expected_income')) 
+    })
 </script>
 
 <script>

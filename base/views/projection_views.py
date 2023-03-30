@@ -26,4 +26,25 @@ def add(request):
         
         
     return HttpResponse(status=405)
+
+def update(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    if not request.user.is_superuser:
+        return HttpResponse(status=403)
+    
+    if request.method == 'POST':
+        projection = Projection.objects.get(
+            id = request.POST['id']
+        )
+        projection.released_water = request.POST['released_water']
+        projection.expected_income = request.POST['expected_income']
+        projection.save()
+                  
+        messages.success(request, "Entry has been updated")
+        return redirect("/admin/projections") 
+        
+        
+    return HttpResponse(status=405)
     

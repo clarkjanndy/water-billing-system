@@ -50,6 +50,7 @@ urlpatterns = [
     path('print/reciept/<int:id>', collectible_views.print_reciept, name="print_reciept"),
     
     path('projections/add/', projection_views.add, name="add_pojection"),
+    path('projections/update/', projection_views.update, name="update_pojection"),
     
     # printable reports
     path('report/consumption/', report_views.print_consumption, name="print_consumption"),

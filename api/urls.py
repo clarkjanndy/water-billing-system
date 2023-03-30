@@ -24,12 +24,18 @@ urlpatterns = [
     path('consumption/<int:id>', analytics_views.consumption_get, name="consumption_get"), 
     path('consumption-histogram', analytics_views.consumption_history_all, name="consumption_histogram_all"),
     path('consumption-histogram/<int:id>', analytics_views.consumption_history_get, name="consumption_histogram_get"), 
+    path('consumption-pie-chart', analytics_views.consumption_pie_chart, name="consumption_pie_chart"), 
 
     path('bills-paid', analytics_views.bills_paid_all, name="bills_paid_all"),
     path('bills-paid-by-month', analytics_views.bills_paid_all_by_month, name="bills_paid_all_by_month"),
     path('bills-unpaid', analytics_views.bills_unpaid_all, name="bills_unpaid_all"),
     path('bills-unpaid/<int:id>', analytics_views.bills_unpaid_get, name="bills_unpaid_get"),
-    path('bills-paid-vs-unpaid/<int:id>', analytics_views.bills_paid_vs_unpaid_get, name="bills_paid_vs_unpaid_get"),  
+    path('bills-paid-vs-unpaid/<int:id>', analytics_views.bills_paid_vs_unpaid_get, name="bills_paid_vs_unpaid_get"), 
+    
+    
+    path('collection-histogram', analytics_views.collection_histogram, name="collection_histogram"), 
+    path('collection-radial', analytics_views.collection_radial, name="collection_radial"),  
+       
 
     #actions
     path('action/make-admin', action_views.make_admin, name="make_admin"), 
