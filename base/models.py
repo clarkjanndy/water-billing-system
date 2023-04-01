@@ -20,17 +20,21 @@ class CustomUser(AbstractUser):
     address = models.ForeignKey(Baranggay, on_delete=models.DO_NOTHING, null = True)
     religion = models.CharField(null = False, blank = False, max_length = 32)
     contact_no = models.CharField(max_length=50, blank = True, default = '09')    
+   
     
     def __str__(self):
         return self.username
     
+    @property
     def get_status(self):
-        bills = Collectible.objects.select_related('reading').filter(reading__user = self, status = 'paid')
+        bills = Collectible.objects.select_related('reading').filter(reading__user = self, status = 'unpaid')
 
         if bills:
-            return 'paid'
-        return 'unpaid'
+            return 'unpaid'
+        
+        return 'paid'
     
+    @property
     def get_latest_bill(self):
         collectible = Collectible.objects.select_related("reading").filter(reading__user_id=self.id).order_by("-reading__billing_month").first()
         
@@ -65,7 +69,7 @@ class Reading(models.Model):
     user = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING)
     
     def __str__(self):
-        return self.consumption
+        return f'{self.consumption}'
     
 class Collectible(models.Model):
     penalty = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)

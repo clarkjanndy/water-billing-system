@@ -18,9 +18,13 @@ def dashboard(request):
     if not request.user.is_superuser:
         return HttpResponse(status=403)
     
-    transactions = Transaction.objects.select_related('user').order_by('-created_on')
+    consumers = CustomUser.objects.filter(is_superuser = 0)
     
-    data = {'transactions': transactions,
+    paid_count = len([consumer for consumer in consumers if consumer.get_status == 'paid'])
+    unpaid_count =  len([consumer for consumer in consumers if consumer.get_status == 'unpaid'])    
+    
+    data = {'paid_count': paid_count,
+            'unpaid_count': unpaid_count,
             "page": "dashboard"}
 
     return render(request, './base/dashboard.html', data)

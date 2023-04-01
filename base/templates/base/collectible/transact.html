@@ -39,7 +39,7 @@
                         {% endfor %}
 
                         {% else %}
-                            <p class="text-danger">This consumer has no unpaid or due billings right now.</p>
+                            <div class="alert alert-danger">This consumer has no unpaid or due billings right now.</div>
                         {% endif %}
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     </div>
 
                     <div class="form-group mb-3 col-12">
-                        <label class="mb-2">Order Number</label>
+                        <label class="mb-2">Official Reciept Number: </label>
                         <input type="text" name="order_number" id="order_number" class="form-control"
                             placeholder="Order Number">
                         <div class="invalid-feedback"></div>

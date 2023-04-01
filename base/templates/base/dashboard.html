@@ -20,7 +20,7 @@
             <div class="border bg-light rounded">
                 <div class="row">
                     <div class="col-5">
-                        <div style="height: 150px;"
+                        <div style="height: 200px;"
                             class="d-flex justify-content-center align-items-center text-white bg-primary">
                             <div class="text-center">
                                 <i class="bx bx-user" style="font-size: 40px;"></i>
@@ -28,11 +28,24 @@
                         </div>
                     </div>
                     <div class="col-7">
-                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
-                            <div class="text-center">
-                                <div>
-                                    <h5 id="consumers" style="font-size: 30px;">200</h5>
-                                    <h5>Consumers</h5>
+                        <div style="height: 200px;" class="d-flex justify-content-center align-items-end">
+                            <div>
+                                <div class="text-center">
+                                    <div>
+                                        <h5 id="consumers" style="font-size: 30px; font-weight: bold;">0</h5>
+                                        <h5 class="text-muted">Consumers</h5>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6 text-center">
+                                       <smail class="text-primary">Paid</smail>
+                                       <p><b>{{paid_count}}</b></p>
+                                    </div>
+                                    <div class="col-6 text-center ">
+                                        <small class="text-success">Unpaid</small>
+                                        <p><b>{{unpaid_count}}</b></p>
+                                     </div>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +59,7 @@
             <div class="border bg-light rounded">
                 <div class="row">
                     <div class="col-5">
-                        <div style="height: 150px;"
+                        <div style="height: 200px;"
                             class="d-flex justify-content-center align-items-center text-white bg-primary">
                             <div class="text-center">
                                 <i class="bx bx-building-house" style="font-size: 40px;"></i>
@@ -54,11 +67,11 @@
                         </div>
                     </div>
                     <div class="col-7">
-                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
+                        <div style="height: 200px;" class="d-flex justify-content-center align-items-center">
                             <div class="text-center">
                                 <div>
-                                    <h5 id="baranggays" style="font-size: 30px;">200</h5>
-                                    <h5>Barangays</h5>
+                                    <h5 id="baranggays" style="font-size: 30px; font-weight: bold;">0</h5>
+                                    <h5 class="text-muted">Barangays</h5>
                                 </div>
                             </div>
                         </div>
@@ -72,7 +85,7 @@
             <div class="border bg-light rounded">
                 <div class="row">
                     <div class="col-5">
-                        <div style="height: 150px;"
+                        <div style="height: 200px;"
                             class="d-flex justify-content-center align-items-center text-white bg-primary">
                             <div class="text-center">
                                 <i class="bx bx-user-circle" style="font-size: 40px;"></i>
@@ -80,11 +93,11 @@
                         </div>
                     </div>
                     <div class="col-7">
-                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
+                        <div style="height: 200px;" class="d-flex justify-content-center align-items-center">
                             <div class="text-center">
                                 <div>
-                                    <h5 id="admins" style="font-size: 30px;">200</h5>
-                                    <h5>Admin Users</h5>
+                                    <h5 id="admins" style="font-size: 30px; font-weight: bold;">0</h5>
+                                    <h5 class="text-muted">Admin Users</h5>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +111,7 @@
             <div class="border bg-light rounded">
                 <div class="row">
                     <div class="col-5">
-                        <div style="height: 150px;"
+                        <div style="height: 200px;"
                             class="d-flex justify-content-center align-items-center text-white bg-primary">
                             <div class="text-center">
                                 <i class="bx bx-key" style="font-size: 50px;"></i>
@@ -106,11 +119,11 @@
                         </div>
                     </div>
                     <div class="col-7">
-                        <div style="height: 150px" class="d-flex justify-content-center align-items-center">
+                        <div style="height: 200px" class="d-flex justify-content-center align-items-center">
                             <div class="text-center">
                                 <div>
-                                    <h5 id="password-reset-requests" style="font-size: 40px;">200</h5>
-                                    <h5>Password <br>Reset Request</h5>
+                                    <h5 id="password-reset-requests" style="font-size: 40px; font-weight: bold;">0</h5>
+                                    <h5 class="text-muted">Password <br>Reset Request</h5>
                                 </div>
                             </div>
                         </div>
@@ -190,7 +203,7 @@
                 <div style="height: 75px;" class="bg-primary">
                     <div class="row p-2">
                         <div class="col-6 text-center text-white" style="border-right: 1px solid wheat;">
-                            <div>Total Collection</div>
+                            <div>Total Income</div>
                             <h4>&#8369; <span id="total_collection">00.00</span> </h4>
                         </div>
                         <div class="col-6 text-center text-white">
@@ -395,19 +408,19 @@
         document.getElementById('total_collection').innerHTML = parseFloat(data['total_collection'])
 
         var options = {
-          series: [data['percentage']],
-          chart: {
-          height: 250,
-          type: 'radialBar',
-        },
-        plotOptions: {
-          radialBar: {
-            hollow: {
-              size: '70%',
-            }
-          },
-        },
-        labels: ['Collected Funds'],
+            series: [data['percentage']],
+            chart: {
+                height: 250,
+                type: 'radialBar',
+            },
+            plotOptions: {
+                radialBar: {
+                    hollow: {
+                        size: '70%',
+                    }
+                },
+            },
+            labels: ['Total Collection'],
         };
 
         var chart = new ApexCharts(document.querySelector("#collection-income"), options);
@@ -417,10 +430,5 @@
     collection_chart();
 </script>
 
-<script>
-    $('#transactions').dataTable({
-        "ordering": false
-    });
-</script>
 
 {%endblock content%}
