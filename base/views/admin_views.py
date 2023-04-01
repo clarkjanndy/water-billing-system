@@ -171,8 +171,9 @@ def reports(request):
     if not request.user.is_superuser:
         return HttpResponse(status=403)
 
-    # transactions = Transaction.objects.select_related('user').order_by('-created_on')
+    reports = Projection.objects.all().order_by('-month')
     
-    # data = {'transactions':transactions}
-    return render(request, './base/reports.html')
+    data = {'reports':reports,
+            "page": "reports",}
+    return render(request, './base/reports.html', data)
 

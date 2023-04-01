@@ -53,7 +53,7 @@ urlpatterns = [
     path('projections/update/', projection_views.update, name="update_pojection"),
     
     # printable reports
-    path('report/consumption/', report_views.print_consumption, name="print_consumption"),
+    path('admin/print-report/<int:id>/', report_views.print_report, name="print_consumption"),
          
     path('logout', page_views.logout, name="logout"),   
 ]

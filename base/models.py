@@ -120,3 +120,11 @@ class Projection(models.Model):
    
     def status(self):
         return 'Accomplished' if self.deficit() <= 0 else 'Unaccomplished'
+    
+    def transactions(self):
+        transactions = Transaction.objects.filter(created_on__month=self.month.month)
+        return transactions
+    
+    def readings(self):
+        readings = Reading.objects.filter(billing_month=self.month)
+        return readings
