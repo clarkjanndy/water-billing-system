@@ -3,10 +3,10 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from base.models import Transaction, CustomUser, PasswordResetRequest, Reading
+from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Collectible, Projection
 
 
-from django.db.models import Sum, Count, Value, F
+from django.db.models import Sum, Count, Value, F, Q
 from django.db.models.functions import TruncMonth
 
 # Create your views here.
@@ -18,9 +18,13 @@ def dashboard(request):
     if not request.user.is_superuser:
         return HttpResponse(status=403)
     
-    transactions = Transaction.objects.select_related('user').order_by('-created_on')
+    consumers = CustomUser.objects.filter(is_superuser = 0)
     
-    data = {'transactions': transactions,
+    paid_count = len([consumer for consumer in consumers if consumer.get_status == 'paid'])
+    unpaid_count =  len([consumer for consumer in consumers if consumer.get_status == 'unpaid'])    
+    
+    data = {'paid_count': paid_count,
+            'unpaid_count': unpaid_count,
             "page": "dashboard"}
 
     return render(request, './base/dashboard.html', data)
@@ -44,7 +48,10 @@ def view_user(request, id):
     if not request.user.is_superuser:
         return HttpResponse(status=403)
 
-    admin = CustomUser.objects.get(is_superuser = 1, id = id)
+    admin = CustomUser.objects.get(id = id)
+    
+    if  not admin.is_superuser:
+        return redirect (f'/consumers/{admin.id}')    
     
     data = {'admin':admin,'page': 'administration'}
     return render(request, './base/view_user.html', data)
@@ -126,6 +133,36 @@ def delete_password_reset_request(request, id):
     
     messages.success(request, "Password reset request has been deleted")
     return redirect("/admin/password-reset-requests")
+
+
+def treasury_and_transactions(request):
+     if not request.user.is_authenticated:
+        return redirect("/")
+    
+     if not request.user.is_superuser:
+        return HttpResponse(status=403)
+    
+     transactions = Transaction.objects.all().order_by('-created_on')
+     consumers = CustomUser.objects.exclude(is_superuser=1)
+     
+     data = {'page': 'administration',
+             'transactions': transactions,
+             'consumers': consumers}
+     
+     return render(request, './base/treasury-and-transactions.html', data)
+
+def projections(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    if not request.user.is_superuser:
+        return HttpResponse(status=403)
+    
+    projections = Projection.objects.all().order_by("-month")
+    
+    data = {"page": "reports",
+            "projections": projections}
+    return render(request, './base/projections.html', data)
     
 def reports(request):
     if not request.user.is_authenticated:
@@ -134,8 +171,9 @@ def reports(request):
     if not request.user.is_superuser:
         return HttpResponse(status=403)
 
-    # transactions = Transaction.objects.select_related('user').order_by('-created_on')
+    reports = Projection.objects.all().order_by('-month')
     
-    # data = {'transactions':transactions}
-    return render(request, './base/reports.html')
+    data = {'reports':reports,
+            "page": "reports",}
+    return render(request, './base/reports.html', data)
 

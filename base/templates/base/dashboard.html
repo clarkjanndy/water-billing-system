@@ -20,7 +20,7 @@
             <div class="border bg-light rounded">
                 <div class="row">
                     <div class="col-5">
-                        <div style="height: 150px;"
+                        <div style="height: 200px;"
                             class="d-flex justify-content-center align-items-center text-white bg-primary">
                             <div class="text-center">
                                 <i class="bx bx-user" style="font-size: 40px;"></i>
@@ -28,11 +28,24 @@
                         </div>
                     </div>
                     <div class="col-7">
-                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
-                            <div class="text-center">
-                                <div>
-                                    <h5 id="consumers" style="font-size: 30px;">200</h5>
-                                    <h5>Consumers</h5>
+                        <div style="height: 200px;" class="d-flex justify-content-center align-items-end">
+                            <div>
+                                <div class="text-center">
+                                    <div>
+                                        <h5 id="consumers" style="font-size: 30px; font-weight: bold;">0</h5>
+                                        <h5 class="text-muted">Consumers</h5>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6 text-center">
+                                       <smail class="text-primary">Paid</smail>
+                                       <p><b>{{paid_count}}</b></p>
+                                    </div>
+                                    <div class="col-6 text-center ">
+                                        <small class="text-success">Unpaid</small>
+                                        <p><b>{{unpaid_count}}</b></p>
+                                     </div>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +59,7 @@
             <div class="border bg-light rounded">
                 <div class="row">
                     <div class="col-5">
-                        <div style="height: 150px;"
+                        <div style="height: 200px;"
                             class="d-flex justify-content-center align-items-center text-white bg-primary">
                             <div class="text-center">
                                 <i class="bx bx-building-house" style="font-size: 40px;"></i>
@@ -54,11 +67,11 @@
                         </div>
                     </div>
                     <div class="col-7">
-                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
+                        <div style="height: 200px;" class="d-flex justify-content-center align-items-center">
                             <div class="text-center">
                                 <div>
-                                    <h5 id="baranggays" style="font-size: 30px;">200</h5>
-                                    <h5>Barangays</h5>
+                                    <h5 id="baranggays" style="font-size: 30px; font-weight: bold;">0</h5>
+                                    <h5 class="text-muted">Barangays</h5>
                                 </div>
                             </div>
                         </div>
@@ -72,7 +85,7 @@
             <div class="border bg-light rounded">
                 <div class="row">
                     <div class="col-5">
-                        <div style="height: 150px;"
+                        <div style="height: 200px;"
                             class="d-flex justify-content-center align-items-center text-white bg-primary">
                             <div class="text-center">
                                 <i class="bx bx-user-circle" style="font-size: 40px;"></i>
@@ -80,11 +93,11 @@
                         </div>
                     </div>
                     <div class="col-7">
-                        <div style="height: 150px;" class="d-flex justify-content-center align-items-center">
+                        <div style="height: 200px;" class="d-flex justify-content-center align-items-center">
                             <div class="text-center">
                                 <div>
-                                    <h5 id="admins" style="font-size: 30px;">200</h5>
-                                    <h5>Admin Users</h5>
+                                    <h5 id="admins" style="font-size: 30px; font-weight: bold;">0</h5>
+                                    <h5 class="text-muted">Admin Users</h5>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +111,7 @@
             <div class="border bg-light rounded">
                 <div class="row">
                     <div class="col-5">
-                        <div style="height: 150px;"
+                        <div style="height: 200px;"
                             class="d-flex justify-content-center align-items-center text-white bg-primary">
                             <div class="text-center">
                                 <i class="bx bx-key" style="font-size: 50px;"></i>
@@ -106,11 +119,11 @@
                         </div>
                     </div>
                     <div class="col-7">
-                        <div style="height: 150px" class="d-flex justify-content-center align-items-center">
+                        <div style="height: 200px" class="d-flex justify-content-center align-items-center">
                             <div class="text-center">
                                 <div>
-                                    <h5 id="password-reset-requests" style="font-size: 40px;">200</h5>
-                                    <h5>Password <br>Reset Request</h5>
+                                    <h5 id="password-reset-requests" style="font-size: 40px; font-weight: bold;">0</h5>
+                                    <h5 class="text-muted">Reset Request</h5>
                                 </div>
                             </div>
                         </div>
@@ -139,21 +152,24 @@
                 <div class="d-flex justify-content-between mb-2 p-2">
                     <div class="text-primary lead"></div>
                     <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                        data-bs-title="More details"><span class='bx bx-right-arrow-alt'
-                            style="font-size: 25px;"></span></a>
+                        data-bs-title="More details"></span></a>
                 </div>
-                <div style="height: 240px;">
+                <div style="height: 266px;">
                     <div id="paid-vs-unpaid"></div>
                 </div>
                 <div style="height: 75px;" class="bg-primary">
                     <div class="row p-2">
-                        <div class="col-6 text-center text-white" style="border-right: 1px solid wheat;">
+                        <div class="col-4 text-center text-white" style="border-right: 1px solid wheat;">
                             <div>Released Water</div>
-                            <h4>00.00 m<sup>3</sup></h4>
+                            <h4><span id="released_water">00.00</span> m<sup>3</sup></h4>
                         </div>
-                        <div class="col-6 text-center text-white">
+                        <div class="col-4 text-center text-white" style="border-right: 1px solid wheat;">
+                            <div>Consumed</div>
+                            <h4><span id="consumed_water">00.00</span> m<sup>3</sup></h4>
+                        </div>
+                        <div class="col-4 text-center text-white">
                             <div>Water Loss</div>
-                            <h4>00.00 m<sup>3</sup></h4>
+                            <h4><span id="water_loss">00.00</span> m<sup>3</sup></h4>
                         </div>
                     </div>
                 </div>
@@ -179,21 +195,20 @@
                 <div class="d-flex justify-content-between mb-2 p-2">
                     <div class="text-primary lead"></div>
                     <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                        data-bs-title="More details"><span class='bx bx-right-arrow-alt'
-                            style="font-size: 25px;"></span></a>
+                        data-bs-title="More details"></span></a>
                 </div>
-                <div style="height: 240px;">
+                <div style="height: 266px;">
                     <div id="collection-income"></div>
                 </div>
                 <div style="height: 75px;" class="bg-primary">
                     <div class="row p-2">
                         <div class="col-6 text-center text-white" style="border-right: 1px solid wheat;">
-                            <div>Total Collection</div>
-                            <h4>&#8369; 00.00</h4>
+                            <div>Total Income</div>
+                            <h4>&#8369; <span id="total_collection">00.00</span> </h4>
                         </div>
                         <div class="col-6 text-center text-white">
                             <div>Projected Income</div>
-                            <h4>&#8369; 00.00</h4>
+                            <h4>&#8369; <span id="projected_income">00.00</span></h4>
                         </div>
                     </div>
                 </div>
@@ -300,25 +315,29 @@
 
 <script>
     async function consumption_pie_chart() {
-        const response = await fetch('/api/v1/bills-paid-vs-unpaid/2');
+        const response = await fetch('/api/v1/consumption-pie-chart');
         const data = await response.json(); // Extracting data as a JSON Object from the response
 
-        if (data['paid'] == null) {
-            data['paid'] = 0;
+        if (data['released_water'] == null) {
+            data['released_water'] = 0;
         }
 
-        if (data['unpaid'] == null) {
-            data['unpaid'] = 0;
+        if (data['consumed_water'] == null) {
+            data['consumed_water'] = 0;
         }
+
+        document.getElementById('released_water').innerHTML = parseFloat(data['released_water'])
+        document.getElementById('consumed_water').innerHTML = parseFloat(data['consumed_water'])
+        document.getElementById('water_loss').innerHTML = parseFloat(data['water_loss'])
 
         var options = {
-            series: [parseFloat(data['paid']), parseFloat(data['unpaid'])],
+            series: [parseFloat(data['released_water']), parseFloat(data['consumed_water'])],
             chart: {
                 type: 'pie',
                 height: 240,
 
             },
-            labels: ["Paid", "Unpaid"],
+            labels: ["Released Water", "Consumed Water"],
             responsive: [{
                 breakpoint: 480,
                 options: {
@@ -340,7 +359,7 @@
 
 <script>
     async function collection_histogram() {
-        const response = await fetch('/api/v1/consumption-histogram');
+        const response = await fetch('/api/v1/collection-histogram');
         const data = await response.json(); // Extracting data as a JSON Object from the response
 
         var date_format = { year: 'numeric', month: 'short' };
@@ -382,31 +401,26 @@
 
 <script>
     async function collection_chart() {
-        const response = await fetch('/api/v1/consumption-histogram');
+        const response = await fetch('/api/v1/collection-radial');
         const data = await response.json(); // Extracting data as a JSON Object from the response
 
-        var date_format = { year: 'numeric', month: 'short' };
-        var formatted_date = new Array()
-
-        for (const date of data['x_label']) {
-            formatted_date.push(new Date(date).toLocaleDateString("en-US", date_format))
-        }
-
+        document.getElementById('projected_income').innerHTML = parseFloat(data['projected_income'])
+        document.getElementById('total_collection').innerHTML = parseFloat(data['total_collection'])
 
         var options = {
-          series: [10],
-          chart: {
-          height: 250,
-          type: 'radialBar',
-        },
-        plotOptions: {
-          radialBar: {
-            hollow: {
-              size: '70%',
-            }
-          },
-        },
-        labels: ['Collected Funds'],
+            series: [data['percentage']],
+            chart: {
+                height: 250,
+                type: 'radialBar',
+            },
+            plotOptions: {
+                radialBar: {
+                    hollow: {
+                        size: '70%',
+                    }
+                },
+            },
+            labels: ['Total Collection'],
         };
 
         var chart = new ApexCharts(document.querySelector("#collection-income"), options);
@@ -416,10 +430,5 @@
     collection_chart();
 </script>
 
-<script>
-    $('#transactions').dataTable({
-        "ordering": false
-    });
-</script>
 
 {%endblock content%}

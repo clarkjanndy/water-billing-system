@@ -14,6 +14,21 @@
         size: Letter;
         margin: 1cm;
     }
+
+    * {
+        font-size: 15px;
+    }
+
+    th {
+        color: white;
+        padding: 2px;
+        padding-bottom: -3px;
+    }
+
+    td {
+        padding: 2px;
+        padding-bottom: -3px;
+    }
 </style>
 
 <body>
@@ -25,15 +40,139 @@
                         alt="Water Billing System" width="90">
                 </td>
                 <td>
-                    <h1>Water Billing and Collection System</h1>
-                    <span>Monthly Collection Report</span>
+                    <div>Water Billing and Collection System</div>
+                    <div>Month of {{report.month|date:"N, Y"}}</div>
                 </td>
                 <td>
-                  
+
                 </td>
             </tr>
         </table>
     </center>
+
+    <!-- Part 1 Header -->
+    <table class="header" style="margin-top: 12px;">
+        <tr style="background-color: rgb(40, 146, 40)">
+            <th align="left">Part I: Consumption</th>
+        </tr>
+    </table>
+
+    <table style="border: 1px solid gray">
+        <tr style="background-color: rgb(53, 53, 166)">
+            <th align="left">Meter No</th>
+            <th align="left">Consumer</th>
+            <th align="left">Reading Month</th>
+            <th align="left">Water Consumed</th>
+
+        </tr>
+
+        {% for r in readings %}
+        <tr>
+
+            <td>{{r.user.meter_no}}</td>
+            <td>{{r.user.first_name}} {{r.user.middle_name}} {{r.user.last_name}}
+                {{r.user.ext_name}}
+            </td>
+            <td>{{r.billing_month|date:"N, Y"}}</td>
+            <td>{{r.consumption}} m<sup>3</sup></td>
+        </tr>
+        {% endfor %}
+
+        <tr>
+            <td colspan="3"><b>Total Consumed</b></td>
+            <td><b>{{report.consumed_water}} m<sup>3</sup></b></td>
+        </tr>
+    </table>
+    <!-- End of Part 1 -->
+
+    <pdf:nextpage />
+
+    <!-- Part 2 Header -->
+    <table class="header" style="margin-top: 12px;">
+        <tr style="background-color: rgb(40, 146, 40)">
+            <th align="left">Part II: Collection</th>
+        </tr>
+    </table>
+
+    <table style="border: 1px solid gray">
+        <tr style="background-color: rgb(53, 53, 166)">
+            <th align="left">Meter No</th>
+            <th align="left">Consumer</th>
+            <th align="left">Date of Transaction</th>
+            <th align="left">Amount Collected</th>
+        </tr>
+
+        {% for trans in transactions %}
+        <tr>
+
+            <td align="left">{{trans.user.meter_no}}</td>
+            <td>{{trans.user.first_name}} {{trans.user.middle_name}} {{trans.user.last_name}}
+                {{trans.user.ext_name}}
+            </td>
+            <td>{{trans.created_on|date:"M d, Y"}}</td>
+            <td>{{trans.amount}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="3"><b>Total Collection</b></td>
+            <td><b>{{report.collected}}</b></td>
+        </tr>
+    </table>
+    <!-- End of Part 2 -->
+    <pdf:nextpage />
+
+    <!-- Part 3 Header -->
+    <table class="header" style="margin-top: 12px;">
+        <tr style="background-color: rgb(40, 146, 40)">
+            <th align="left">Part III: Other Informations</th>
+        </tr>
+    </table>
+
+    <table style="border: 1px solid gray">
+        <tr>
+            <td align="left">Month:</td>
+            <td  align="left"><b>{{report.month|date:"N, Y"}}</b></td>
+        </tr>
+
+        <tr>
+            <td align="left">Released Water:</td>
+            <td  align="left"><b>{{report.released_water}} m<sup>3</sup></b></td>
+        </tr>
+
+        <tr>
+            <td align="left">Consumed Water:</td>
+            <td  align="left"><b>{{report.consumed_water}} m<sup>3</sup></b></td>
+        </tr>
+
+        <tr>
+            <td align="left">Water Loss:</td>
+            <td  align="left"><b>{{report.water_loss}} m<sup>3</sup></b></td>
+        </tr>
+
+        <tr>
+            <td align="left">Expected Income:</td>
+            <td  align="left"><b>{{report.expected_income}}</b></td>
+        </tr>
+
+        <tr>
+            <td align="left">Collected:</td>
+            <td  align="left"><b>{{report.collected}}</b></td>
+        </tr>
+
+        <tr>
+            <td align="left">Deficit:</td>
+            <td  align="left"><b>{{report.deficit}}</b></td>
+        </tr>
+
+        <tr>
+            <td align="left">Status::</td>
+            <td  align="left"><b>{{report.status}}</b></td>
+        </tr>
+
+
+    </table>
+    <!-- End of Part 3 -->
+
 
 </body>
 

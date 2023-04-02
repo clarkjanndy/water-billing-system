@@ -21,7 +21,7 @@ from base.models import (
 
 def init(request):
     if CustomUser.objects.all().exists():
-        return HttpResponse(status=403)
+        return HttpResponse(status=400)
 
     CustomUser.objects.create_user(
         first_name="Admin",
@@ -30,7 +30,8 @@ def init(request):
         ext_name="Admin",
         username="admin",
         password="admin",
-        is_superuser = 1
+        is_superuser = 1,
+        is_staff = 1
     )
     
     Baranggay.objects.create(name='Poblacion', code='POB')

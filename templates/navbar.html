@@ -10,7 +10,7 @@
     </button>
     <a class="navbar-brand" href="/">
       <img src="{% static 'images/logo.jpg'%}" alt="Water Billing System" width="50">
-      Waterworks Billing And Collection System
+      <span class="d-none d-sm-inline" style="font-size: 18px;">Waterworks Billing And Collection System</span> 
     </a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -22,12 +22,12 @@
           <a class="nav-link" href="/admin/dashboard"><span class="bx bx-grid"></span> Dashboard</span></a>
         </li>
 
-        <li class="nav-item menu-item {% if page == 'consumers' %}active{% endif %}">
-          <a class="nav-link" href="/consumers"><span class="bx bx-user"></span> Consumers</span></a>
-        </li>
-
         <li class="nav-item menu-item {% if page == 'barangays' %}active{% endif %}">
           <a class="nav-link" href="/baranggays"><span class="bx bx-building-house"></span> Barangays</span></a>
+        </li>
+
+        <li class="nav-item menu-item {% if page == 'consumers' %}active{% endif %}">
+          <a class="nav-link" href="/consumers"><span class="bx bx-user"></span> Consumers</span></a>
         </li>
 
         <li class="nav-item dropdown menu-item  {% if page == 'administration' %}active{% endif %}">
@@ -45,6 +45,14 @@
             </li>
 
             <li>
+              <a class="dropdown-item p-3" href="/admin/treasury-and-transactions">
+                <span style="margin-right: 10px;">&#8369;</span>
+                <div class="d-inline">Treasury and Transactions</div>
+              </a>
+            </li>
+
+
+            <li>
               <a class="dropdown-item p-3" href="/admin/password-reset-requests">
                 <i class="bx bx-key d-inline" style="margin-right: 10px;"></i>
                 <div class="d-inline">Password Reset Requests</div>
@@ -54,8 +62,27 @@
           </ul>
         </li>
 
-        <li class="nav-item menu-item">
-          <a class="nav-link" href="/consumers"><span>&#8369;</span> Treasury</span></a>
+        <li class="nav-item dropdown menu-item  {% if page == 'reports' %}active{% endif %}">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="bx bx-file"></span>
+            Reports
+            <span class="bx bx-chevron-down"></span>
+          </a>
+          <ul class="dropdown-menu shadow">
+            <li>
+              <a class="dropdown-item p-3" href="/admin/projections">
+                <i class="bx bx-notepad d-inline" style="margin-right: 10px;"></i>
+                <div class="d-inline"> Projections</div>
+              </a>
+            </li>
+
+            <li>
+              <a class="dropdown-item p-3" href="/admin/reports">
+                <i class="bx bxs-file-txt d-inline" style="margin-right: 10px;"></i>
+                <div class="d-inline"> Reports</div>
+              </a>
+            </li> 
+          </ul>
         </li>
         {% endif %}
       </ul>

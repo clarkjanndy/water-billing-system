@@ -1,13 +1,7 @@
 from base.views import notification_views
 from django.urls import path
 
-from .views import page_views
-from .views import admin_views
-from .views import consumer_views
-from .views import baranggay_views
-from .views import reading_views
-from .views import collectible_views
-from .views import report_views
+from .views import page_views, admin_views, consumer_views, baranggay_views, reading_views, collectible_views, report_views, projection_views
 
 urlpatterns = [
     path('', page_views.landing_page, name="landing_page"),  
@@ -22,6 +16,8 @@ urlpatterns = [
     path('admin/transaction-history', admin_views.transaction_history, name="transaction-history"),
     path('admin/consumption-histogram', admin_views.consumption_histogram, name="consumption_histogram"),
     path('admin/password-reset-requests', admin_views.password_reset_requests, name="password_reset_requests"),
+    path('admin/treasury-and-transactions', admin_views.treasury_and_transactions, name="treasury_and_transactions"),
+    path('admin/projections', admin_views.projections, name="projections"),
     path('admin/reports', admin_views.reports, name="reports"),
     
     path('admin/approve-password-reset-request/<int:id>', admin_views.approve_password_reset_request, name="approve_password_reset_request"),
@@ -53,8 +49,11 @@ urlpatterns = [
     path('print/bills/<int:id>', collectible_views.print_collectible, name="print_collectible"),
     path('print/reciept/<int:id>', collectible_views.print_reciept, name="print_reciept"),
     
+    path('projections/add/', projection_views.add, name="add_pojection"),
+    path('projections/update/', projection_views.update, name="update_pojection"),
+    
     # printable reports
-    path('report/consumption/', report_views.print_consumption, name="print_consumption"),
+    path('admin/print-report/<int:id>/', report_views.print_report, name="print_consumption"),
          
     path('logout', page_views.logout, name="logout"),   
 ]

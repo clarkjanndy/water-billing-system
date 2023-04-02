@@ -29,6 +29,10 @@ def view_consumer(request, id):
         return redirect("/")
 
     consumer = CustomUser.objects.get(id=id)
+    
+    if consumer.is_superuser:
+        return redirect (f'/admin/users/{consumer.id}')    
+    
     baranggays = Baranggay.objects.all()
     latest_bill = (
         Collectible.objects.select_related("reading")

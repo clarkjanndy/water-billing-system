@@ -20,7 +20,8 @@ from django.conf.urls import handler403
 
 urlpatterns = [
     path('', include('base.urls')),
-    path('api/v1/', include('api.urls'))
+    path('api/v1/', include('api.urls')),
+    path('django-admin', admin.site.urls)
 ]
 
 handler403 = 'base.views.error_views.error_403'

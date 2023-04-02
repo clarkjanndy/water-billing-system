@@ -70,7 +70,12 @@ def transact(request, id):
     if not request.user.is_superuser:
         return redirect("/")
 
-    collectible = Collectible.objects.get(id=id)
+    collectible = Collectible.objects.filter(id=id).first()
+    
+    if not collectible:
+        messages.success(request, "No current billing for that consumer yet.")
+        return redirect('/admin/treasury-and-transactions')
+
     reading = Reading.objects.get(id=collectible.reading_id)
     consumer = CustomUser.objects.get(id=reading.user_id)
 
@@ -137,6 +142,7 @@ def transact_complete(request):
             amount=request.POST["total"],
             tendered=request.POST["tendered"],
             change=request.POST["change"],
+            order_number=request.POST["order_number"],
             content="{firstname} {middlename} {lastname} {extname} had payed a total of {total} on {date}".format(
                 firstname=consumer.first_name,
                 middlename=consumer.middle_name,
