@@ -46,8 +46,8 @@
                                 <tr>
                                     <th scope="col">Month</th>
                                     <th scope="col">Released Water</th>
+                                    <th scope="col">Remaining Water</th>
                                     <th scope="col">Expected Income</th>
-                                    <th scope="col">Status</th>
                                     <th scope="col">- - -</th>
                                 </tr>
                             </thead>
@@ -56,15 +56,14 @@
                                 <tr>
                                     <td>{{projection.month|date:"M, Y"}}</td>
                                     <td>{{projection.released_water}} m<sup>3</sup></td>
+                                    <td>{{projection.remaining_water}} m<sup>3</sup></td>
                                     <td><span>&#8369;</span> {{projection.expected_income}}</td>
-                                    <td class=" {% if projection.status == 'pending' %}text-muted{% endif %}
-                                    {% if prr.status == 'approved' %}text-success{% endif %}                        
-                        ">{{projection.status}}</td>
                                     <td class="w-25">
 
                                         <a class="btn btn-sm btn-success" href="#" id="view_button" onclick="populate_information(this)"
                                         month="{{projection.month|date:"M, Y"}}"
                                         released_water="{{projection.released_water}} m<sup>3</sup>"
+                                        remaining_water="{{projection.remaining_water}} m<sup>3</sup>"
                                         consumed_water="{{projection.consumed_water}} m<sup>3</sup>"
                                         water_loss="{{projection.water_loss}} m<sup>3</sup>"
                                         expected_income="<span>&#8369;</span> {{projection.expected_income}}"
@@ -78,6 +77,7 @@
                                         id="{{projection.id}}"
                                         month="{{projection.month|date:"Y-m-d"}}"
                                         released_water="{{projection.released_water}}"
+                                        remaining_water="{{projection.remaining_water}}"
                                         expected_income="{{projection.expected_income}}"
                                         ><span class="bx bx-file"></span> Update</a>
                                     </td>
@@ -105,6 +105,12 @@
                         <div class="row">
                             <div class="col-lg-6">Released Water: </div>
                             <div class="col-lg-6 text-muted" id="released_water">- - -  m<sup>3</sup></div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-lg-6">RemainingWater: </div>
+                            <div class="col-lg-6 text-muted" id="remaining_water">- - -  m<sup>3</sup></div>
                         </div>
                         <hr>
 
@@ -218,19 +224,26 @@
 
                     <div class="form-group">
                         <label for="billing_month" class="col-form-label">Released Water: (in m<sup>3</sup>)</label>
-                        <input type="text" class="form-control" id="update_released_water" name="released_water">
+                        <input type="text" class="form-control" id="update_released_water" name="released_water" readonly>
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="billing_month" class="col-form-label">Remaining Water: (in m<sup>3</sup>)</label>
+                        <input type="text" class="form-control" id="update_remaining_water" name="remaining_water">
                         <div class="is-invalid"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="billing_month" class="col-form-label">Expected Income: (in pesos)</label>
-                        <input type="text" class="form-control" id="update_expected_income" name="expected_income">
+                        <input type="text" class="form-control" id="update_expected_income" name="expected_income" readonly >
                         <div class="is-invalid"></div>
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+                <a href="#" class="btn btn-danger" id="delete-button">Delete</a>
             </div>
             </form>
         </div>
@@ -251,6 +264,7 @@
     function populate_information(identifier){
         var month = document.getElementById("month") 
         var released_water = document.getElementById("released_water")
+        var remaining_water= document.getElementById("remaining_water")
         var consumed_water = document.getElementById("consumed_water")
         var water_loss = document.getElementById("water_loss")
         var expected_income = document.getElementById("expected_income")
@@ -260,6 +274,7 @@
 
         month.innerHTML = identifier.getAttribute("month")
         released_water.innerHTML = identifier.getAttribute("released_water")
+        remaining_water.innerHTML = identifier.getAttribute("remaining_water")
         consumed_water.innerHTML =  identifier.getAttribute("consumed_water")
         water_loss.innerHTML = identifier.getAttribute("water_loss")
         expected_income.innerHTML = identifier.getAttribute("expected_income")
@@ -340,6 +355,13 @@
             rule: 'number',
             errorMessage: 'Please input a valid value',
         }])
+        .addField('#update_remaining_water', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        }, {
+            rule: 'number',
+            errorMessage: 'Please input a valid value',
+        }])
         .addField('#update_expected_income', [{
             rule: 'required',
             errorMessage: 'This field is required',
@@ -362,11 +384,15 @@
         const month = update_modal.querySelector('#update_month')
         const released_water = update_modal.querySelector('#update_released_water')
         const expected_income = update_modal.querySelector('#update_expected_income')
+        const remaining_water = update_modal.querySelector('#update_remaining_water')
+        const delete_button = update_modal.querySelector('#delete-button')
 
         id.value = button.getAttribute('id')
         month.valueAsDate = new Date(button.getAttribute("month"))
         released_water.value = parseInt(button.getAttribute('released_water'))
         expected_income.value = parseInt(button.getAttribute('expected_income')) 
+        remaining_water.value = parseInt(button.getAttribute('remaining_water'))
+        delete_button.href = `/projections/${button.getAttribute('id')}/delete`
     })
 </script>
 

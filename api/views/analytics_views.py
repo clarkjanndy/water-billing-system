@@ -111,7 +111,10 @@ def consumption_history_all(request):
 def consumption_pie_chart(request):
     released_water = Projection.objects.aggregate(released_water = Sum('released_water')).get('released_water')
     consumed_water = Reading.objects.aggregate(consumed_water = Sum('consumption')).get('consumed_water')
-    water_loss = 0 if released_water - consumed_water < 0 else released_water - consumed_water
+    
+    water_loss = 0
+    for projection in Projection.objects.all():
+        water_loss = water_loss + projection.water_loss()
     
     data = {'released_water': released_water,
             "consumed_water": consumed_water,

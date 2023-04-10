@@ -2,6 +2,9 @@ from datetime import datetime, date
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models import Count, Sum, Min, Value
+from decimal import Decimal
+
+from django.core.exceptions import ValidationError
 
 class Baranggay(models.Model):
     name = models.CharField(max_length = 50, blank = False)
@@ -64,12 +67,21 @@ class Reading(models.Model):
     previous = models.IntegerField(blank = False, null= False)
     present = models.IntegerField(blank = False, null = False)
     billing_month = models.DateField(null=True, blank=True)
-    consumption = models.IntegerField(blank = False, null=False)
+    consumption = models.DecimalField(blank = False, null=False,  max_digits=15, decimal_places=2)
     multiplier = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
     user = models.ForeignKey(CustomUser, on_delete = models.DO_NOTHING)
     
     def __str__(self):
         return f'{self.consumption}'
+    
+    def save(self, *args, **kwargs):
+        projection = Projection.objects.get(month = self.billing_month)
+    
+        if projection:
+            projection.remaining_water = projection.remaining_water - Decimal(self.consumption)
+            projection.save()
+        
+        return super(Reading, self).save(*args, **kwargs)
     
 class Collectible(models.Model):
     penalty = models.DecimalField(blank = False, null=False, decimal_places=2, max_digits=32)
@@ -97,25 +109,35 @@ class Invoice(models.Model):
 class Projection(models.Model):
     month = models.DateField()
     released_water = models.DecimalField( max_digits=15, decimal_places=2, help_text="in cm3")
+    remaining_water = models.DecimalField( max_digits=15, decimal_places=2, help_text="in cm3", default = 0)
     expected_income = models.DecimalField( max_digits=15, decimal_places=2, help_text="in pesos")
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            if Decimal(self.released_water) < self.consumed_water():
+                raise ValidationError('Released water must be greater than or equal to consumed')
+            
+            self.remaining_water = Decimal(self.released_water) - self.consumed_water() #calculate remaning here
+        return super(Projection, self).save(*args, **kwargs)
     
     def consumed_water(self):
         consumed = Reading.objects.filter(billing_month=self.month).aggregate(consumed=Sum('consumption'))
-        return consumed.get('consumed')    
+        return consumed.get('consumed') if consumed.get('consumed') else 0
     
-    def water_loss(self):
-        loss = self.released_water - self.consumed_water()
-        return loss if loss > 0 else 0
+    def water_loss(self):         
+        if Decimal(self.remaining_water) >= self.consumed_water():
+            return 0
+        
+        return self.consumed_water() - Decimal(self.remaining_water)
+        
+        
     
     def collected(self):
        collection = Transaction.objects.filter(created_on__month=self.month.month).aggregate(collection=Sum('amount'))
-       collected = collection.get('collection') if collection.get('collection') else 0
-       return collected
+       return collection.get('collection') if collection.get('collection') else 0
         
     def deficit(self):
-       collection = Transaction.objects.filter(created_on__month=self.month.month).aggregate(collection=Sum('amount'))
-       collected = collection.get('collection') if collection.get('collection') else 0
-       result = self.expected_income - collected
+       result = self.expected_income - self.collected()
        return result if result > 0 else 0
    
     def status(self):
@@ -123,8 +145,8 @@ class Projection(models.Model):
     
     def transactions(self):
         transactions = Transaction.objects.filter(created_on__month=self.month.month)
-        return transactions
+        return transactions if  transactions else []
     
     def readings(self):
         readings = Reading.objects.filter(billing_month=self.month)
-        return readings
+        return readings if readings else []

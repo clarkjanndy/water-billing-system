@@ -24,9 +24,10 @@ def dashboard(request):
     unpaid_count =  len([consumer for consumer in consumers if consumer.get_status == 'unpaid'])    
     
     data = {'paid_count': paid_count,
-            'unpaid_count': unpaid_count,
+            'unpaid_count': unpaid_count,   
+            'consumers': consumers,
             "page": "dashboard"}
-
+    
     return render(request, './base/dashboard.html', data)
 
 def users(request):
