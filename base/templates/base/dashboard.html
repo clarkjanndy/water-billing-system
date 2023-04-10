@@ -39,11 +39,19 @@
 
                                 <div class="row">
                                     <div class="col-6 text-center">
-                                       <smail class="text-primary">Paid</smail>
+                                       <smail>
+                                        <a data-bs-toggle="modal" data-bs-target="#paid_consumers_modal" href="">
+                                            Paid
+                                        </a>
+                                    </smail>
                                        <p><b>{{paid_count}}</b></p>
                                     </div>
                                     <div class="col-6 text-center ">
-                                        <small class="text-success">Unpaid</small>
+                                        <small >
+                                            <a class="text-success" data-bs-toggle="modal" data-bs-target="#unpaid_consumers_modal" href="">
+                                                Unpaid
+                                            </a>
+                                        </small>
                                         <p><b>{{unpaid_count}}</b></p>
                                      </div>
                                 </div>
@@ -217,6 +225,112 @@
     </div>
 
 </div>
+
+<!-- Paid Consumer Modal -->
+<div class="modal fade" id="paid_consumers_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Paid Consumers</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table" id="paid_consumers">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Meter No.</th>
+                                <th scope="col">Contact</th>
+                                <th scope="col">- - -</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for consumer in consumers %}
+                                {% if consumer.get_status == 'paid' %}
+                                    <tr>
+                                    
+                                        <td>{{consumer.first_name}} {{consumer.middle_name}} {{consumer.last_name}}
+                                            {{consumer.ext_name}}
+                                        </td>
+                                        <td>{{consumer.meter_no}}</td>
+                                        <td>{{consumer.contact_no}}</td>
+                                        <td class="w-25">
+                                            <a class="btn btn-sm btn-success" href="/consumers/{{consumer.id}}"><span
+                                                    class="bx bx-wallet"></span> View Profile</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Unpaid Consumer Modal -->
+<div class="modal fade" id="unpaid_consumers_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Unpaid Consumers</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table" id="unpaid_consumers">
+                        <thead class="bg-primary text-white">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Meter No.</th>
+                                <th scope="col">Contact</th>
+                                <th scope="col">- - -</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for consumer in consumers %}
+                                {% if consumer.get_status == 'unpaid' %}
+                                    <tr>
+                                    
+                                        <td>{{consumer.first_name}} {{consumer.middle_name}} {{consumer.last_name}}
+                                            {{consumer.ext_name}}
+                                        </td>
+                                        <td>{{consumer.meter_no}}</td>
+                                        <td>{{consumer.contact_no}}</td>
+                                        <td class="w-25">
+                                            <a class="btn btn-sm btn-success" href="/consumers/{{consumer.id}}"><span
+                                                    class="bx bx-wallet"></span> View Profile</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+     $('#paid_consumers').dataTable({
+        "ordering": false
+    });
+
+    $('#unpaid_consumers').dataTable({
+        "ordering": false
+    });
+</script>
 
 <!-- <script>
     function set_dates() {
