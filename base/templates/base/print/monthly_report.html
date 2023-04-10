@@ -96,20 +96,19 @@
 
     <table style="border: 1px solid gray">
         <tr style="background-color: rgb(53, 53, 166)">
-            <th align="left">Meter No</th>
-            <th align="left">Consumer</th>
+            <th align="left">Order No</th>
             <th align="left">Date of Transaction</th>
+            <th align="left">Consumer</th>
             <th align="left">Amount Collected</th>
         </tr>
 
         {% for trans in transactions %}
         <tr>
-
-            <td align="left">{{trans.user.meter_no}}</td>
+            <td align="left">{{trans.order_number}}</td>            
+            <td>{{trans.created_on|date:"M d, Y"}}</td>
             <td>{{trans.user.first_name}} {{trans.user.middle_name}} {{trans.user.last_name}}
                 {{trans.user.ext_name}}
             </td>
-            <td>{{trans.created_on|date:"M d, Y"}}</td>
             <td>{{trans.amount}}</td>
         </tr>
         {% endfor %}
@@ -137,6 +136,11 @@
         <tr>
             <td align="left">Released Water:</td>
             <td  align="left"><b>{{report.released_water}} m<sup>3</sup></b></td>
+        </tr>
+
+        <tr>
+            <td align="left">Remaining Water:</td>
+            <td  align="left"><b>{{report.remaining_water}} m<sup>3</sup></b></td>
         </tr>
 
         <tr>

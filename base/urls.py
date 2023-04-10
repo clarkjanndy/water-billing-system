@@ -51,6 +51,8 @@ urlpatterns = [
     
     path('projections/add/', projection_views.add, name="add_pojection"),
     path('projections/update/', projection_views.update, name="update_pojection"),
+    path('projections/<int:id>/delete', projection_views.delete, name="update_pojection"),
+   
     
     # printable reports
     path('admin/print-report/<int:id>/', report_views.print_report, name="print_consumption"),
