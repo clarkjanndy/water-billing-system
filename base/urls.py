@@ -57,6 +57,6 @@ urlpatterns = [
     # printable reports
     path('admin/print-report/<int:id>/', report_views.print_report, name="print_consumption"),
          
-    path('logout', page_views.logout, name="logout"),   
+    path('logout/', page_views.logout, name="logout"),   
 ]
     

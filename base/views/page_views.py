@@ -88,10 +88,13 @@ def login(request):
     message = ""
     username = ""
     password = ""
+    agree = ""
 
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
+        agree = request.POST["agree"]
+        
 
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -107,7 +110,7 @@ def login(request):
     return render(
         request,
         "login.html",
-        {"message": message, "username": username, "password": password},
+        {"message": message, "username": username, "password": password, "agree": agree},
     )
 
 
