@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from base.models import Collectible, CustomUser, Notification
-from base.models import Baranggay
-from base.models import Reading
+from base.models import Collectible, CustomUser, Notification, Baranggay, Reading, Transaction
+
 
 from django.contrib import messages
 
@@ -86,9 +85,12 @@ def view_consumer_bills(request, id):
         .filter(reading__user_id=id)
         .order_by("-reading__billing_month")
     )
+    
+    transactions = Transaction.objects.filter(user=consumer).order_by("-created_on")
 
     data = {
         "bills": bills,
+        "transactions": transactions,
         "consumer": consumer,
         'page': 'consumers'
     }
