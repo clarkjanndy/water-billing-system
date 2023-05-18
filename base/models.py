@@ -6,6 +6,8 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 
+from django.utils import timezone
+
 class Baranggay(models.Model):
     name = models.CharField(max_length = 50, blank = False)
     code = models.CharField(max_length = 50, blank = True)
@@ -23,7 +25,7 @@ class CustomUser(AbstractUser):
     address = models.ForeignKey(Baranggay, on_delete=models.DO_NOTHING, null = True)
     religion = models.CharField(null = False, blank = False, max_length = 32)
     contact_no = models.CharField(max_length=50, blank = True, default = '09')    
-   
+    registration_date = models.DateField(default=timezone.now)
     
     def __str__(self):
         return self.username

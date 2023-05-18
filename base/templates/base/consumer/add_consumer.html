@@ -101,12 +101,19 @@
                     <div class="invalid-feedback"></div>
                 </div>
 
-
+               
                 <div class="form-group mb-3 col-lg-6 col-md-6">
                     <label class="mb-2">Meter Number:</label>
                     <input type="text" name="meter_no" id="meter_no" class="form-control" placeholder="Meter Number">
                     <div class="invalid-feedback"></div>
                 </div>
+
+                <div class="form-group mb-3 col-lg-6 col-md-6">
+                    <label class="mb-2">Registration Date:</label>
+                    <input type="date" name="registration_date" id="registration_date" class="form-control" placeholder="Registration Date:">
+                    <div class="invalid-feedback"></div>
+                </div>
+
 
             </div>
 
@@ -176,6 +183,10 @@
         .addField('#email', [{
             rule: 'email',
             errorMessage: 'Please enter a valid email',
+        },])
+        .addField('#registration_date', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
         },])
         .addField('#meter_no', [{
             rule: 'required',

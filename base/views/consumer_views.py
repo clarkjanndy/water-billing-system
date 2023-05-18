@@ -119,6 +119,7 @@ def add_consumer(request):
             contact_no=request.POST["contact_no"],
             meter_no=request.POST["meter_no"],
             email=request.POST["email"],
+            registration_date=request.POST["registration_date"],
             username=(
                 request.POST["first_name"] + "_" + request.POST["last_name"]
             ).lower(),
@@ -129,7 +130,7 @@ def add_consumer(request):
         return redirect("/consumers/" + str(new_consumer.id))
 
     baranggays = Baranggay.objects.all()
-    data = {"baranggays": baranggays}
+    data = {"baranggays": baranggays, 'page': 'consumers'}
     return render(request, "./base/consumer/add_consumer.html", data)
 
 
@@ -159,7 +160,7 @@ def edit_consumer(request, id):
         consumer.contact_no = request.POST["contact_no"]
         consumer.meter_no = request.POST["meter_no"]
         consumer.email = request.POST["email"]
-        consumer.username = request.POST["username"]
+        consumer.registration_date =  request.POST["registration_date"]
         consumer.save()
 
         messages.success(request, "Details updated successfully")
