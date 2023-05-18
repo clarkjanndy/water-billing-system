@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 
+from ..utils.constants import dummy_text
 
 from base.models import (
     CustomUser,
@@ -16,6 +17,7 @@ from base.models import (
     PasswordResetRequest,
     Notification,
     Baranggay,
+    Setting
 )
 
 
@@ -23,7 +25,7 @@ def init(request):
     if CustomUser.objects.all().exists():
         return HttpResponse(status=400)
 
-    CustomUser.objects.create_user(
+    admin = CustomUser.objects.create_user(
         first_name="Admin",
         middle_name="Admin",
         last_name="Admin",
@@ -35,6 +37,34 @@ def init(request):
     )
     
     Baranggay.objects.create(name='Poblacion', code='POB')
+    
+    Setting.objects.create(
+        name='Privacy Policy', 
+        variable = "PRIVACY_POLICY", 
+        value = dummy_text, 
+        created_by = admin 
+    )
+    
+    Setting.objects.create(
+        name='Rate', 
+        variable = "RATE", 
+        value = "70", 
+        created_by = admin 
+    )
+    
+    Setting.objects.create(
+        name='Minimum Consumption', 
+        variable = "MIN_CONSUMPTION", 
+        value = "10", 
+        created_by = admin 
+    )
+    
+    Setting.objects.create(
+        name='Minimum Charge', 
+        variable = "MIN_CHARGE", 
+        value = "80", 
+        created_by = admin 
+    )
 
     messages.info(request,'Database setup successful.')
     return redirect('/login')
@@ -106,11 +136,19 @@ def login(request):
                 return redirect("/consumers/" + str(user.id))
         else:
             message = "Invalid username and/or password"
+            
+    settings = Setting.objects.filter(variable = 'PRIVACY_POLICY')
 
     return render(
         request,
         "login.html",
-        {"message": message, "username": username, "password": password, "agree": agree},
+        {
+            "message": message, 
+            "username": username, 
+            "password": password, 
+            "agree": agree,
+            "privacy_policy": settings.first(),
+        },
     )
 
 

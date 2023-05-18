@@ -8,10 +8,12 @@ from django.core.exceptions import ValidationError
 
 from django.utils import timezone
 
+from .utils.constants import dummy_text
+
 class Baranggay(models.Model):
     name = models.CharField(max_length = 50, blank = False)
     code = models.CharField(max_length = 50, blank = True)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default=dummy_text)
     
     def __str__(self):
         return self.name
@@ -29,6 +31,9 @@ class CustomUser(AbstractUser):
     
     def __str__(self):
         return self.username
+    
+    def get_full_name(self):
+        return f'{self.first_name} {self.middle_name} {self.last_name} {self.ext_name}'
     
     @property
     def get_status(self):
@@ -131,8 +136,6 @@ class Projection(models.Model):
             return 0
         
         return self.consumed_water() - Decimal(self.remaining_water)
-        
-        
     
     def collected(self):
        collection = Transaction.objects.filter(created_on__month=self.month.month).aggregate(collection=Sum('amount'))
@@ -152,3 +155,12 @@ class Projection(models.Model):
     def readings(self):
         readings = Reading.objects.filter(billing_month=self.month)
         return readings if readings else []
+    
+class Setting(models.Model):
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='setting_author')
+    name = models.CharField(max_length=225)
+    variable = models.CharField(max_length=225)
+    value = models.TextField()
+    
+    def __str__(self):
+        return f'{self.variable} - {self.value}'

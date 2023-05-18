@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Collectible, Projection
+from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Projection, Setting
 
 
 from django.db.models import Sum, Count, Value, F, Q
@@ -177,4 +177,17 @@ def reports(request):
     data = {'reports':reports,
             "page": "reports",}
     return render(request, './base/reports.html', data)
+
+def settings(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    if not request.user.is_superuser:
+        return HttpResponse(status=403)
+
+    settings = Setting.objects.all()
+    
+    data = {'settings':settings,
+            'page': 'administration'}
+    return render(request, './base/settings.html', data)
 

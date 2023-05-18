@@ -1,0 +1,85 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<!--Add Modals Here-->
+
+<style>
+
+    td {
+    white-space: nowrap;
+    }
+
+    .td-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 30%;
+    max-width: 0;
+    }
+</style>
+
+<div class="container">
+    <h1>Settings and Configurations</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/admin/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item" aria-current="page">Settings and Configurations</li>
+        </ol>
+    </nav>
+
+    {% if messages %}
+    {% for message in messages %}
+    {%include 'toast.html'%}
+    {% endfor %}
+    {% endif %}
+    
+    <div class="p-3 bg-light rounded">
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table" id="requests">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th scope="col">Variable</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Created by</th>
+                            <th scope="col">- - -</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for setting in settings %}
+                        <tr>
+                            <td>{{setting.variable}}</td>
+                            <td >{{setting.name}}</td>
+                            <td class="td-truncate">{{setting.value}}</td>
+                            <td>{{setting.created_by.get_full_name}}</td>
+                            <td>
+                                <a class="btn btn-sm btn-success"><span class="bx bx-file"></span> Edit</a>
+                            </td>                 
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+<script>
+    $('#requests').dataTable({
+        "ordering": false
+    });
+</script>
+
+{%endblock content%}

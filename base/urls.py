@@ -19,6 +19,8 @@ urlpatterns = [
     path('admin/treasury-and-transactions', admin_views.treasury_and_transactions, name="treasury_and_transactions"),
     path('admin/projections', admin_views.projections, name="projections"),
     path('admin/reports', admin_views.reports, name="reports"),
+    path('admin/settings', admin_views.settings, name="settings"),
+    
     
     path('admin/approve-password-reset-request/<int:id>', admin_views.approve_password_reset_request, name="approve_password_reset_request"),
     path('admin/delete-password-reset-request/<int:id>', admin_views.delete_password_reset_request, name="delete_password_reset_request"),
