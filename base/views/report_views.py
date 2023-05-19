@@ -44,8 +44,6 @@ def print_barangay_report(request, id):
                'consumers': consumers
                }
     
-    print(consumers)
-    
     template_path = "./base/print/barangay_report.html"
     
     pdf=pdf_generator(template_path, context).generate()
