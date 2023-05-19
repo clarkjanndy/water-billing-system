@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Projection, Setting
+from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Projection, Setting, Baranggay
 
 
 from django.db.models import Sum, Count, Value, F, Q
@@ -176,8 +176,10 @@ def reports(request):
         return HttpResponse(status=403)
 
     reports = Projection.objects.all().order_by('-month')
+    barangays = Baranggay.objects.all().order_by('name')    
     
     data = {'reports':reports,
+            "barangays": barangays,
             "page": "reports",}
     return render(request, './base/reports.html', data)
 

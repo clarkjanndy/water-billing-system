@@ -1,15 +1,13 @@
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.shortcuts import redirect, get_object_or_404
-from django.contrib import messages
 
-from base.models import Transaction, CustomUser, PasswordResetRequest, Projection
+from base.models import Projection, Baranggay, CustomUser
 
 from base.utils.pdf_generator import pdf_generator
 
 
 # Create your views here.
-def print_report(request, id):
+def print_monthly_report(request, id):
     if not request.user.is_authenticated:
         return redirect("/")
     
@@ -28,7 +26,32 @@ def print_report(request, id):
     pdf=pdf_generator(template_path, context).generate()
     
     response = HttpResponse(pdf.read(),content_type='application/pdf;')
-    response['Content-Disposition'] = 'filename="monthly_collection.pdf"'
+    response['Content-Disposition'] = 'filename="monthly_report.pdf"'
+    
+    return response
+
+def print_barangay_report(request, id):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    if not request.user.is_superuser:
+        return HttpResponse(status=403)
+    
+    barangay = get_object_or_404(Baranggay, id = id)
+    consumers = CustomUser.objects.filter(address = barangay, is_superuser= False)
+    
+    context = {'barangay': barangay,
+               'consumers': consumers
+               }
+    
+    print(consumers)
+    
+    template_path = "./base/print/barangay_report.html"
+    
+    pdf=pdf_generator(template_path, context).generate()
+    
+    response = HttpResponse(pdf.read(),content_type='application/pdf;')
+    response['Content-Disposition'] = 'filename="barangay_report.pdf"'
     
     return response
 

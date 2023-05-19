@@ -18,6 +18,20 @@ class Baranggay(models.Model):
     def __str__(self):
         return self.name
     
+    def consumer_count(self):
+        count = CustomUser.objects.filter(address=self, is_superuser = 0).aggregate(count=Count(id)).get('count')
+        return count
+    
+    def collected(self):
+        consumers = CustomUser.objects.all().filter(address=self, is_superuser = 0)
+        collection = Transaction.objects.filter(user__in = consumers).aggregate(collection=Sum('amount')).get('collection')
+        return collection
+    
+    def consumed_water(self):
+        consumers = CustomUser.objects.all().filter(address=self, is_superuser = 0)
+        consumption = Reading.objects.filter(user__in = consumers).aggregate(consumption=Sum('consumption')).get('consumption')
+        return consumption
+    
 class CustomUser(AbstractUser):
     meter_no = models.CharField(max_length=50, blank = False)
     middle_name = models.CharField(max_length=50, blank = True)
