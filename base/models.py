@@ -82,9 +82,10 @@ class Reading(models.Model):
         return f'{self.consumption}'
     
     def save(self, *args, **kwargs):
-        projection = Projection.objects.get(month = self.billing_month)
+        query_projection = Projection.objects.filter(month = self.billing_month)
     
-        if projection:
+        if query_projection:
+            projection = query_projection.first()
             projection.remaining_water = projection.remaining_water - Decimal(self.consumption)
             projection.save()
         
