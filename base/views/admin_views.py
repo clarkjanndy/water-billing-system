@@ -7,7 +7,7 @@ from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, 
 
 
 from django.db.models import Sum, Count, Value, F, Q
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth, ExtractYear
 
 # Create your views here.
 
@@ -23,9 +23,12 @@ def dashboard(request):
     paid_count = len([consumer for consumer in consumers if consumer.get_status == 'paid'])
     unpaid_count =  len([consumer for consumer in consumers if consumer.get_status == 'unpaid'])    
     
+    years =  Transaction.objects.annotate(year=ExtractYear('created_on')).values('year').distinct().order_by('-year')
+  
     data = {'paid_count': paid_count,
             'unpaid_count': unpaid_count,   
             'consumers': consumers,
+            "years": years,
             "page": "dashboard"}
     
     return render(request, './base/dashboard.html', data)
