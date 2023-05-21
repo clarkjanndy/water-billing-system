@@ -60,7 +60,7 @@
                 <div class="form-group col-lg-6">
                     <label for="multiplier" class="col-form-label">Multiplier: (rate per cubic meter or
                         m<sup>3</sup>)</label>
-                    <input type="number" class="form-control" id="multiplier" name="multiplier" value="10"
+                    <input type="number" class="form-control" id="multiplier" name="multiplier" value="{{rate}}"
                         oninput="get_consumption()" placeholder='Multiplier'>
                     <div class="is-invalid"></div>
                 </div>
@@ -101,7 +101,7 @@
     const consumption = document.getElementById('consumption');
     const multiplier = document.getElementById('multiplier');
     const total_bill = document.getElementById('total_bill');
-    const minimum_consumption = 10;
+    const minimum_consumption = {{minimum_consumption}};
 
     // const  date = '{{last_reading.billing_month|date:"m/Y"}}';
     // var [month, year] = date.split('/');
@@ -165,10 +165,7 @@
         });
 
 
-
-
     function get_consumption() {
-
         consumed = parseInt(present.value) - parseInt(previous.value);
         var consumed_output = 0;
         var total_bill_output = 0;
@@ -180,7 +177,7 @@
             if (consumed > minimum_consumption) {
                 total_bill.value = Math.round(total * 100) / 100;
             } else {
-                total_bill.value = 10;
+                total_bill.value = {{minimum_charge}};
             }
 
         } else {

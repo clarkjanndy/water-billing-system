@@ -3,11 +3,11 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Collectible, Projection
+from base.models import Transaction, CustomUser, PasswordResetRequest, Reading, Projection, Setting, Baranggay
 
 
 from django.db.models import Sum, Count, Value, F, Q
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth, ExtractYear
 
 # Create your views here.
 
@@ -23,9 +23,12 @@ def dashboard(request):
     paid_count = len([consumer for consumer in consumers if consumer.get_status == 'paid'])
     unpaid_count =  len([consumer for consumer in consumers if consumer.get_status == 'unpaid'])    
     
+    years =  Transaction.objects.annotate(year=ExtractYear('created_on')).values('year').distinct().order_by('-year')
+  
     data = {'paid_count': paid_count,
             'unpaid_count': unpaid_count,   
             'consumers': consumers,
+            "years": years,
             "page": "dashboard"}
     
     return render(request, './base/dashboard.html', data)
@@ -173,8 +176,23 @@ def reports(request):
         return HttpResponse(status=403)
 
     reports = Projection.objects.all().order_by('-month')
+    barangays = Baranggay.objects.all().order_by('name')    
     
     data = {'reports':reports,
+            "barangays": barangays,
             "page": "reports",}
     return render(request, './base/reports.html', data)
+
+def settings(request):
+    if not request.user.is_authenticated:
+        return redirect("/")
+    
+    if not request.user.is_superuser:
+        return HttpResponse(status=403)
+
+    settings = Setting.objects.all()
+    
+    data = {'settings':settings,
+            'page': 'administration'}
+    return render(request, './base/settings.html', data)
 

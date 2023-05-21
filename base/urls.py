@@ -1,7 +1,7 @@
 from base.views import notification_views
 from django.urls import path
 
-from .views import page_views, admin_views, consumer_views, baranggay_views, reading_views, collectible_views, report_views, projection_views
+from .views import page_views, admin_views, consumer_views, baranggay_views, reading_views, collectible_views, report_views, projection_views, settings_views
 
 urlpatterns = [
     path('', page_views.landing_page, name="landing_page"),  
@@ -19,6 +19,11 @@ urlpatterns = [
     path('admin/treasury-and-transactions', admin_views.treasury_and_transactions, name="treasury_and_transactions"),
     path('admin/projections', admin_views.projections, name="projections"),
     path('admin/reports', admin_views.reports, name="reports"),
+    
+    path('admin/settings', admin_views.settings, name="settings"),
+    path('admin/settings/add', settings_views.add_setting, name="settings"),
+    path('admin/settings/edit', settings_views.edit_reading, name="settings"),
+    
     
     path('admin/approve-password-reset-request/<int:id>', admin_views.approve_password_reset_request, name="approve_password_reset_request"),
     path('admin/delete-password-reset-request/<int:id>', admin_views.delete_password_reset_request, name="delete_password_reset_request"),
@@ -55,8 +60,9 @@ urlpatterns = [
    
     
     # printable reports
-    path('admin/print-report/<int:id>/', report_views.print_report, name="print_consumption"),
+    path('admin/print-monthly-report/<int:id>/', report_views.print_monthly_report, name="print_monthly_report"),
+    path('admin/print-barangay-report/<int:id>/', report_views.print_barangay_report, name="print_barangay_report"),
          
-    path('logout', page_views.logout, name="logout"),   
+    path('logout/', page_views.logout, name="logout"),   
 ]
     

@@ -108,10 +108,10 @@
 
                             <div class="d-flex justify-content-end">
                                 <div>
-
-                                    <a class="btn btn-outline-primary" href="/bills/{{latest_bill.id}}?from=profile">
+                                   {% if consumer.get_latest_bill %}     
+                                    <a class="btn btn-outline-primary" href="/bills/{{consumer.get_latest_bill}}?from=profile">
                                         <span class="bx bx-food-menu"></span> View Billing</a>
-
+                                   {% endif %}         
                                     <a class="btn btn-outline-primary" href="/consumers/{{consumer.id}}/bills">
                                         <span class="bx bx-stats"></span> Statistics</a>
                                 </div>
@@ -195,6 +195,16 @@
                             <p class="text-muted mb-0">{{consumer.meter_no}}</p>
                         </div>
                     </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Registration Date</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{consumer.registration_date}}</p>
+                        </div>
+                    </div>
+                    <hr>
                 </div>
 
 

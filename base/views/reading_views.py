@@ -1,10 +1,8 @@
 from datetime import datetime
 from django.shortcuts import redirect, render
 
-from base.models import CustomUser
-from base.models import Reading
-from base.models import Collectible
-from base.models import Notification
+from base.models import CustomUser, Reading, Collectible, Notification, Setting
+
 
 from django.contrib import messages
 
@@ -58,7 +56,20 @@ def add_reading(request):
 
     consumer = CustomUser.objects.get(id=request.GET["user_id"])
     last_reading = Reading.objects.all().filter(user_id=request.GET["user_id"]).order_by('billing_month').last()
-    data = {"consumer": consumer, "last_reading": last_reading, 'page': 'consumers'}
+    
+    # get data from settings
+    rate = Setting.objects.get(variable = "RATE").value
+    minimum_consumption = Setting.objects.get(variable = "MIN_CONSUMPTION").value
+    minimum_charge = Setting.objects.get(variable = "MIN_CHARGE").value
+    
+    data = {
+        "consumer": consumer, 
+        "last_reading": last_reading, 
+        "rate": rate,
+        "minimum_consumption": minimum_consumption,
+        "minimum_charge": minimum_charge,
+        "page": 'consumers'
+    }
     return render(request, "./base/reading/add_reading.html", data)
 
 def edit_reading(request, id):

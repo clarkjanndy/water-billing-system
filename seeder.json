@@ -1,0 +1,78 @@
+[
+{
+    "model": "base.baranggay",
+    "pk": 1,
+    "fields": {
+        "name": "Poblacion",
+        "code": "POB",
+        "description": "\nOn the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized\nby the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that \nare bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the \nsame as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. \nIn a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, \nevery pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty \nor the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted.\nThe wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other \ngreater pleasures, or else he endures pains to avoid worse pains.\n"
+    }
+},
+{
+    "model": "base.customuser",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$390000$JiEKaogw8BiQmalQ5VoSlg$GqzffoYN0Dw+Ky5iQZrUxPerZ18XdbH2tDtLS341Juk=",
+        "last_login": "2023-05-18T16:28:32.867Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "Admin",
+        "last_name": "Admin",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2023-05-18T16:28:19.951Z",
+        "meter_no": "",
+        "middle_name": "Admin",
+        "ext_name": "Admin",
+        "gender": "",
+        "civil_status": "",
+        "address": null,
+        "religion": "",
+        "contact_no": "09",
+        "registration_date": "2023-05-18",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "base.setting",
+    "pk": 1,
+    "fields": {
+        "created_by": 1,
+        "name": "Privacy Policy",
+        "variable": "PRIVACY_POLICY",
+        "value": "\nOn the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized\nby the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that \nare bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the \nsame as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. \nIn a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, \nevery pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty \nor the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted.\nThe wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other \ngreater pleasures, or else he endures pains to avoid worse pains.\n"
+    }
+},
+{
+    "model": "base.setting",
+    "pk": 2,
+    "fields": {
+        "created_by": 1,
+        "name": "Rate",
+        "variable": "RATE",
+        "value": "70"
+    }
+},
+{
+    "model": "base.setting",
+    "pk": 3,
+    "fields": {
+        "created_by": 1,
+        "name": "Minimum Consumption",
+        "variable": "MIN_CONSUMPTION",
+        "value": "10"
+    }
+},
+{
+    "model": "base.setting",
+    "pk": 4,
+    "fields": {
+        "created_by": 1,
+        "name": "Minimum Charge",
+        "variable": "MIN_CHARGE",
+        "value": "80"
+    }
+}
+]

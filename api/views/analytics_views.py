@@ -197,7 +197,7 @@ def collection_histogram(request):
         )
         .values('month')
         .annotate(count = Count('id'), total=Sum('amount'))
-        .order_by("created_on__month")
+        .order_by("created_on__month").filter(created_on__year = request.GET.get('year'))
     )
     
     series = [transaction["total"] for transaction in transaction.iterator()]
@@ -209,9 +209,13 @@ def collection_histogram(request):
 
 def collection_radial(request):
     
-    projected_income = Projection.objects.aggregate(projected_income = Sum('expected_income')).get('projected_income')
-    total_collection = Transaction.objects.aggregate(total_collection = Sum('amount')).get('total_collection')
-    percentage = round((total_collection / projected_income)  * 100, 2)
+    projected_income = Projection.objects.filter(month__year = request.GET.get('year')).aggregate(projected_income = Sum('expected_income')).get('projected_income')
+    total_collection = Transaction.objects.filter(created_on__year = request.GET.get('year')).aggregate(total_collection = Sum('amount')).get('total_collection')
+    
+    percentage = 0
+    
+    if projected_income:
+        percentage = round((total_collection / projected_income)  * 100, 2)
     
     data = {'projected_income': projected_income,
             "total_collection": total_collection,

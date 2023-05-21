@@ -29,13 +29,16 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="border p-2 bg-light rounded">
-                    <h6 class="text-primary">Bills</h6>
-                    <h6>
+                    <h4 class="text-primary">Bills</h4>
+                    <h4>
                         Meter No: {{consumer.meter_no}}
-                    </h6>
+                    </h4>
                     <div class="d-flex justify-content-end mb-2">
-                        <a class="btn btn-primary" href="/bills/{{bills.first.id}}?from">
-                           <span class="bx bx-food-menu"></span> View Billing</a>
+                        {% if consumer.get_latest_bill %}
+                        <a class="btn btn-primary" href="/bills/{{consumer.get_latest_bill}}?from">
+                           <span class="bx bx-food-menu"></span> View Billing
+                        </a>
+                        {% endif %}
                     </div>
                     <div class="table-responsive">
                         <table class="table" id="bills">
@@ -74,7 +77,45 @@
 
                 </div>
 
+                <div class="border p-2 bg-light rounded mt-4">
+                    <h4 class="text-primary">Transactions</h4>
+                   
+                    <div class="d-flex justify-content-end mb-2">
+                      
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table" id="transactions">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">---</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                                {% for transaction in transactions %}
+                                <tr>
+                                    <td>{{transaction.created_on|date:"M d, Y"}}</td>
+                                    <td><span>&#8369;</span> {{transaction.amount}} m<sup>3</sup></td>
+                                    <td>
+                                        <a class="btn btn-sm btn-success" href="/transact/view/{{transaction.id}}"><span
+                                            class="bx bx-info-circle"></span> View Details</a>
+                                    </td>
+                                    
+                                </tr>
+                                {% endfor %}
+                              
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
             </div>
+
+            
             <div class="col-lg-4">
                 <div class="border p-2  bg-light rounded">
                     <h6 class="text-primary">Paid Vs. Unpaid Graph</h6>
@@ -128,6 +169,10 @@
 
 <script>
 	$('#bills').dataTable( {
+		"ordering": false
+	} );
+
+    $('#transactions').dataTable( {
 		"ordering": false
 	} );
 </script>

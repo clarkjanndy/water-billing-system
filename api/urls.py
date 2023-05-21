@@ -42,6 +42,9 @@ urlpatterns = [
     path('action/read-notification', action_views.read_notification, name="read_notification"),
     path('action/notification-mark-all-as-read', action_views.notification_mark_all_as_read, name="notification_mark_all_as_read"),
     path('action/notification-delete-all', action_views.notification_delete_all, name="notification_delete_all"),  
+    
+    #settings
+    path('settings/<int:id>', action_views.settings_by_id, name="make_admin"), 
 ]  
 
     

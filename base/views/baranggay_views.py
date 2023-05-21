@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.db.models import Sum
 
 from base.models import CustomUser
-from base.models import Baranggay
+from base.models import Baranggay, Transaction
 
 from django.contrib import messages
 
@@ -25,7 +26,13 @@ def view_baranggay(request, id):
 
     baranggay = Baranggay.objects.get(id=id)
     consumers = CustomUser.objects.all().filter(address_id=id, is_superuser = 0)
-    data = {"baranggay": baranggay, "consumers": consumers, 'page': 'barangays'}
+    
+    collection = Transaction.objects.filter(user__in = consumers).aggregate(collection=Sum('amount')).get('collection')
+    data = {
+        "baranggay": baranggay, 
+        "consumers": consumers, 
+        "page": 'barangays', 
+        "collection": collection if collection else 0.00}
     return render(request, "./base/baranggay/view_baranggay.html", data)
 
 

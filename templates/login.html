@@ -56,9 +56,16 @@
                         <div class="is-invalid"></div>
                     </div>
 
-                    {% if message != '' %}
                     <div class="text-danger">{{message}}</div>
-                    {% endif%}
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="true" id="agree" name="agree" 
+                        {% if agree == 'true' %}checked{% endif %} />
+                        <label class="form-check-label" for="check">
+                            I agree on the <a data-bs-toggle="modal" href="#privacy_policy">Privacy Policy<a>.
+                        </label>
+                        <div class="is-invalid"></div>
+                    </div>
 
                     <div class="lead text-secondary">
                         <p>Forgotten Password?</p>
@@ -77,6 +84,38 @@
 
     </div>
 
+
+    <div class="modal fade" id="privacy_policy" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-theme" id="exampleModalLabel">Privacy Policy</h1>
+                </div>
+                <div class="modal-body" style="text-align: justify;">
+                    {{privacy_policy.value}}    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"  id="accept">Accept</button>
+                    <button type="button" class="btn btn-danger"   id="decline">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        accept = document.querySelector('#accept');
+        accept.addEventListener('click', function() {
+           $('#privacy_policy').modal('hide')
+           $("#agree").prop("checked", true);
+         }, false);
+
+        decline = document.querySelector('#decline');
+        decline.addEventListener('click', function() {
+           $('#privacy_policy').modal('hide')
+           $("#agree").prop("checked", false);
+         }, false);
+    </script>
+
     <script>
         const validation = new window.JustValidate('#form', {
             errorFieldCssClass: 'is-invalid',
@@ -90,6 +129,10 @@
             .addField('#password', [{
                 rule: 'required',
                 errorMessage: 'This field is required',
+            },])
+            .addField('#agree', [{
+                rule: 'required',
+                errorMessage: 'Please agree on the Privacy Policy',
             },])
             .onSuccess((event) => {
                 document.getElementById("form").submit();

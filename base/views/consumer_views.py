@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from base.models import Collectible, CustomUser, Notification
-from base.models import Baranggay
-from base.models import Reading
+from base.models import Collectible, CustomUser, Notification, Baranggay, Reading, Transaction
+
 
 from django.contrib import messages
 
@@ -86,9 +85,12 @@ def view_consumer_bills(request, id):
         .filter(reading__user_id=id)
         .order_by("-reading__billing_month")
     )
+    
+    transactions = Transaction.objects.filter(user=consumer).order_by("-created_on")
 
     data = {
         "bills": bills,
+        "transactions": transactions,
         "consumer": consumer,
         'page': 'consumers'
     }
@@ -119,6 +121,7 @@ def add_consumer(request):
             contact_no=request.POST["contact_no"],
             meter_no=request.POST["meter_no"],
             email=request.POST["email"],
+            registration_date=request.POST["registration_date"],
             username=(
                 request.POST["first_name"] + "_" + request.POST["last_name"]
             ).lower(),
@@ -129,7 +132,7 @@ def add_consumer(request):
         return redirect("/consumers/" + str(new_consumer.id))
 
     baranggays = Baranggay.objects.all()
-    data = {"baranggays": baranggays}
+    data = {"baranggays": baranggays, 'page': 'consumers'}
     return render(request, "./base/consumer/add_consumer.html", data)
 
 
@@ -159,7 +162,7 @@ def edit_consumer(request, id):
         consumer.contact_no = request.POST["contact_no"]
         consumer.meter_no = request.POST["meter_no"]
         consumer.email = request.POST["email"]
-        consumer.username = request.POST["username"]
+        consumer.registration_date =  request.POST["registration_date"]
         consumer.save()
 
         messages.success(request, "Details updated successfully")

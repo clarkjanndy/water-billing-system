@@ -6,13 +6,31 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 
+from django.utils import timezone
+
+from .utils.constants import dummy_text
+
 class Baranggay(models.Model):
     name = models.CharField(max_length = 50, blank = False)
     code = models.CharField(max_length = 50, blank = True)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default=dummy_text)
     
     def __str__(self):
         return self.name
+    
+    def consumer_count(self):
+        count = CustomUser.objects.filter(address=self, is_superuser = 0).aggregate(count=Count(id)).get('count')
+        return count
+    
+    def collected(self):
+        consumers = CustomUser.objects.all().filter(address=self, is_superuser = 0)
+        collection = Transaction.objects.filter(user__in = consumers).aggregate(collection=Sum('amount')).get('collection')
+        return collection
+    
+    def consumed_water(self):
+        consumers = CustomUser.objects.all().filter(address=self, is_superuser = 0)
+        consumption = Reading.objects.filter(user__in = consumers).aggregate(consumption=Sum('consumption')).get('consumption')
+        return consumption
     
 class CustomUser(AbstractUser):
     meter_no = models.CharField(max_length=50, blank = False)
@@ -23,10 +41,13 @@ class CustomUser(AbstractUser):
     address = models.ForeignKey(Baranggay, on_delete=models.DO_NOTHING, null = True)
     religion = models.CharField(null = False, blank = False, max_length = 32)
     contact_no = models.CharField(max_length=50, blank = True, default = '09')    
-   
+    registration_date = models.DateField(default=timezone.now)
     
     def __str__(self):
         return self.username
+    
+    def get_full_name(self):
+        return f'{self.first_name} {self.middle_name} {self.last_name} {self.ext_name}'
     
     @property
     def get_status(self):
@@ -75,9 +96,10 @@ class Reading(models.Model):
         return f'{self.consumption}'
     
     def save(self, *args, **kwargs):
-        projection = Projection.objects.get(month = self.billing_month)
+        query_projection = Projection.objects.filter(month = self.billing_month)
     
-        if projection:
+        if query_projection:
+            projection = query_projection.first()
             projection.remaining_water = projection.remaining_water - Decimal(self.consumption)
             projection.save()
         
@@ -129,8 +151,6 @@ class Projection(models.Model):
             return 0
         
         return self.consumed_water() - Decimal(self.remaining_water)
-        
-        
     
     def collected(self):
        collection = Transaction.objects.filter(created_on__month=self.month.month).aggregate(collection=Sum('amount'))
@@ -150,3 +170,12 @@ class Projection(models.Model):
     def readings(self):
         readings = Reading.objects.filter(billing_month=self.month)
         return readings if readings else []
+    
+class Setting(models.Model):
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='setting_author')
+    name = models.CharField(max_length=225)
+    variable = models.CharField(max_length=225)
+    value = models.TextField()
+    
+    def __str__(self):
+        return f'{self.variable} - {self.value}'

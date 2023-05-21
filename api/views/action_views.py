@@ -1,7 +1,8 @@
 from django.http import HttpResponse
+from django.http import JsonResponse
 import json
 
-from base.models import CustomUser, Notification
+from base.models import CustomUser, Notification, Setting
 
 from django.contrib import messages
 
@@ -48,4 +49,15 @@ def notification_delete_all(request):
         Notification.objects.filter(user_id=data['id']).delete()
 
     return HttpResponse(status=200)
+
+def settings_by_id(request, id):
+    setting = Setting.objects.get(id=id)
+    
+    response = {
+        "variable": setting.variable,
+        "name": setting.name,
+        "value": setting.value
+    }
+
+    return JsonResponse(response, safe=True)
 

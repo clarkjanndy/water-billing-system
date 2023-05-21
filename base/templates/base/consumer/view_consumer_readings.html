@@ -30,10 +30,10 @@
         <div class="row">
             <div class="col-lg-7">
                 <div class="border p-2  bg-light rounded">
-                    <h6 class="text-primary">Readings</h6>
-                    <h6>
+                    <h4 class="text-primary">Readings</h4>
+                    <h4>
                         Meter No: {{consumer.meter_no}}
-                    </h6>
+                    </h4>
 
                     {% if user.is_superuser %}
                     <div class="d-flex justify-content-end mb-2">
@@ -145,5 +145,7 @@
 	$('#readings').dataTable( {
 		"ordering": false
 	} );
+
+    
 </script>
 {% endblock content %}

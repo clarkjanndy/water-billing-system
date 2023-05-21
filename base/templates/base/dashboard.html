@@ -146,7 +146,7 @@
         <div class="col-lg-8 col-md-8 p-2">
             <div class="border bg-light container p-2">
                 <div class="d-flex justify-content-between mb-2">
-                    <div class="text-primary lead">Consumption</div>
+                    <h3 class="text-primary">Consumption</h3>
                     <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         data-bs-title="Details about water consumption."><span class="bx bxs-info-square"></span></a>
                 </div>
@@ -189,34 +189,49 @@
         <div class="col-lg-8 col-md-8 p-2">
             <div class="border bg-light container p-2">
                 <div class="d-flex justify-content-between mb-2">
-                    <div class="text-primary lead">Collection</div>
+                    <h3 class="text-primary">Collections</h3>
                     <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                        data-bs-title="Details about water consumption."><span class="bx bxs-info-square"></span></a>
+                        data-bs-title="Details about collection."><span class="bx bxs-info-square"></span></a>
                 </div>
-                <div id="monthly-collection"></div>
 
+                <div class="d-flex justify-content-end mb-2">
+                    <form>
+                        <select id="dropdown" class="form-select" >
+                            {% for year in years%}
+                            <option value={{year.year}} class="form-select">{{year.year}}</option>
+                            {% endfor %}
+                        </select>
+                        
+                    </form>
+                 </div>
+                <div id="monthly-collection"></div>
             </div>
         </div>
 
         <div class="col-lg-4 col-md-4 p-2">
             <div class="border bg-light">
-                <div class="d-flex justify-content-between mb-2 p-2">
-                    <div class="text-primary lead"></div>
-                    <a class="text-muted lead" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                        data-bs-title="More details"></span></a>
+
+                <div style="height: 75px;" class="bg-primary">
+                    <div class="row p-2">
+                        <div class="col-6 text-center text-white" style="border-right: 1px solid wheat;">
+                            <div>Year</div>
+                            <h4 id="selected_year">0000</h4>
+                        </div>
+                        <div class="col-6 text-center text-white">
+                            <div>Projected Income</div>
+                            <h4>&#8369; <span id="projected_income">00.00</span></h4>
+                        </div>
+                    </div>
                 </div>
+              
                 <div style="height: 266px;">
                     <div id="collection-income"></div>
                 </div>
                 <div style="height: 75px;" class="bg-primary">
                     <div class="row p-2">
-                        <div class="col-6 text-center text-white" style="border-right: 1px solid wheat;">
+                        <div class="col text-center text-white">
                             <div>Total Income</div>
                             <h4>&#8369; <span id="total_collection">00.00</span> </h4>
-                        </div>
-                        <div class="col-6 text-center text-white">
-                            <div>Projected Income</div>
-                            <h4>&#8369; <span id="projected_income">00.00</span></h4>
                         </div>
                     </div>
                 </div>
@@ -394,7 +409,7 @@
                 height: 300,
                 type: "area",
                 toolbar: {
-                    show: false
+                    show: true
                 }
             },
             dataLabels: {
@@ -449,7 +464,13 @@
             chart: {
                 type: 'pie',
                 height: 240,
+                 toolbar: {
+                    show: true
+                }
 
+            },
+            dataLabels: {
+                enabled: false
             },
             labels: ["Released Water", "Consumed Water"],
             responsive: [{
@@ -472,77 +493,108 @@
 </script>
 
 <script>
-    async function collection_histogram() {
-        const response = await fetch('/api/v1/collection-histogram');
-        const data = await response.json(); // Extracting data as a JSON Object from the response
-
-        var date_format = { year: 'numeric', month: 'short' };
-        var formatted_date = new Array()
-
-        for (const date of data['x_label']) {
-            formatted_date.push(new Date(date).toLocaleDateString("en-US", date_format))
-        }
-
-        var options = {
-            chart: {
-                height: 300,
-                type: "bar",
-                toolbar: {
-                    show: false
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            series: [
-                {
-                    name: "Collection",
-                    data: data['series']
-                }
-            ],
-            xaxis: {
-                categories: formatted_date
+    histogram_options = {
+        chart: {
+            height: 300,
+            type: "bar",
+            toolbar: {
+                show: true
             }
-        };
+        },
+        series: [
+            {
+                name: "Collection",
+                data: []
+            }
+        ],
+        xaxis: {
+            categories: [],
+        }
+    };
+    const histogram_chart = new ApexCharts(document.querySelector("#monthly-collection"), histogram_options);
+    histogram_chart.render()
 
-        var chart = new ApexCharts(document.querySelector("#monthly-collection"), options);
-        chart.render();
+    radial_options = {
+        series: [],
+        chart: {
+            height: 250,
+            type: 'radialBar',
+            toolbar: {
+                show: true
+            }
+        },
+        plotOptions: {
+            radialBar: {
+                hollow: {
+                    size: '70%',
+                }
+            },
+        },
+        labels: ['Total Collection'],
+    }
+    const radial_chart = new ApexCharts(document.querySelector("#collection-income"), radial_options);
+    radial_chart.render()
+
+    function update_collection_histogram(year) {
+        let options = {};
+        fetch(`/api/v1/collection-histogram?year=${year}`)
+        .then(response => response.json())
+        .then(data => {
+            var date_format = { year: 'numeric', month: 'short' };
+            var formatted_date = new Array()
+
+            for (const date of data['x_label']) {
+                formatted_date.push(new Date(date).toLocaleDateString("en-US", date_format))
+            }
+           
+            histogram_chart.updateSeries([{
+                 data: data['series']
+            }]);
+
+            histogram_chart.updateOptions({
+                xaxis: {
+                categories: formatted_date
+                }
+            });
+    
+        })
+        .catch(error => {
+            // Handle any errors that occurred during the fetch request
+            console.log('An error occurred:', error);
+        });  
     }
 
-    collection_histogram();
-</script>
+    function update_collection_radial(year) {
+        let options = {};
+        fetch(`/api/v1/collection-radial?year=${year}`)
+        .then(response => response.json())
+        .then(data => {
 
+            radial_chart.updateSeries([data['percentage']]);
+            
+            document.getElementById('projected_income').innerHTML = parseFloat(data['projected_income'] || 0)
+            document.getElementById('total_collection').innerHTML = parseFloat(data['total_collection'] || 0)
+            document.getElementById('selected_year').innerHTML = year
 
-<script>
-    async function collection_chart() {
-        const response = await fetch('/api/v1/collection-radial');
-        const data = await response.json(); // Extracting data as a JSON Object from the response
-
-        document.getElementById('projected_income').innerHTML = parseFloat(data['projected_income'])
-        document.getElementById('total_collection').innerHTML = parseFloat(data['total_collection'])
-
-        var options = {
-            series: [data['percentage']],
-            chart: {
-                height: 250,
-                type: 'radialBar',
-            },
-            plotOptions: {
-                radialBar: {
-                    hollow: {
-                        size: '70%',
-                    }
-                },
-            },
-            labels: ['Total Collection'],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#collection-income"), options);
-        chart.render();
+        })
+        .catch(error => {
+            // Handle any errors that occurred during the fetch request
+            console.log('An error occurred:', error);
+        });  
     }
 
-    collection_chart();
-</script>
+    function update_collection_data(year){
+        update_collection_histogram(year)
+        update_collection_radial(year)
+    }
 
+    update_collection_data(new Date().getFullYear())
+
+    const dropdown = document.getElementById('dropdown');
+    dropdown.addEventListener('change', (event) => {
+    const selectedYear = event.target.value;        
+        update_collection_data(selectedYear)
+    });
+</script>
 
 {%endblock content%}

@@ -112,6 +112,13 @@
                 </div>
 
                 <div class="form-group mb-3 col-lg-6 col-md-6">
+                    <label class="mb-2">Registration Date:</label>
+                    <input type="date" name="registration_date" id="registration_date" class="form-control" placeholder="Registration Date:"
+                    value="{{consumer.registration_date|date:"Y-m-d"}}">
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-group mb-3 col-lg-6 col-md-6">
                     <label class="mb-2">Username</label>
                     <input type="text" name="username" id="username" class="form-control" placeholder="Username"
                         value="{{consumer.username}}" readonly>
@@ -137,6 +144,13 @@
         </form>
     </div>
 </div>
+
+
+
+<script>
+    data = document.getElementById('registration_date').value
+    document.getElementById('registration_date').valueAsDate = new Date(data);
+</script>
 
 <script>
     const validation = new window.JustValidate('#form', {

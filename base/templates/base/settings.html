@@ -1,0 +1,238 @@
+{% extends 'app.html'%}
+
+{% load static %}
+
+{% block content%}
+
+{%include 'navbar.html'%}
+
+<!--Add Modals Here-->
+
+<style>
+
+    td {
+    white-space: nowrap;
+    }
+
+    .td-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 30%;
+    max-width: 0;
+    }
+</style>
+
+<div class="container">
+    <h1>Settings and Configurations</h1>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/admin/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item" aria-current="page">Settings and Configurations</li>
+        </ol>
+    </nav>
+
+    {% if messages %}
+    {% for message in messages %}
+    {%include 'toast.html'%}
+    {% endfor %}
+    {% endif %}
+    
+    <div class="p-3 bg-light rounded">
+        <div class="col-lg-12">
+            <div class="mb-3 d-flex justify-content-end">
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_modal"><span class="bx bx-plus"></span> Add Setting</a>
+            </div>
+    
+            <div class="table-responsive">
+                <table class="table" id="settings">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th scope="col">Variable</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Created by</th>
+                            <th scope="col">- - -</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for setting in settings %}
+                        <tr>
+                            <td>{{setting.variable}}</td>
+                            <td >{{setting.name}}</td>
+                            <td class="td-truncate">{{setting.value}}</td>
+                            <td>{{setting.created_by.get_full_name}}</td>
+                            <td>
+                                <a class="btn btn-sm btn-success"
+                                data-bs-toggle="modal" data-bs-target="#edit_modal" id="{{setting.id}}"
+                                ><span class="bx bx-file"></span> Edit</a>
+                            </td>                 
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Add Modal -->
+<div class="modal fade" id="add_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">New Setting</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="add_setting" action="/admin/settings/add">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="variable" class="col-form-label">Variable:</label>
+                        <input type="text" class="form-control" id="add_variable" name="variable" placeholder="Variable" style="text-transform: uppercase;">
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name" class="col-form-label">Name: </label>
+                        <input type="text" class="form-control" id="add_name" name="name" placeholder="Name">
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="value" class="col-form-label">Value: </label>
+                        <textarea class="form-control" cols="10" rows="10" id="add_value" name="value" placeholder="Value"></textarea>
+                        <div class="is-invalid"></div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Edit Modal -->
+<div class="modal fade" id="edit_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Setting</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="edit_setting" action="/admin/settings/edit">
+                    {% csrf_token %}
+
+                    <div class="form-group d-none">
+                        <label for="id" class="col-form-label">Id:</label>
+                        <input type="text" class="form-control" id="edit_id" name="id" placeholder="Variable" readonly>
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="variable" class="col-form-label">Variable:</label>
+                        <input type="text" class="form-control" id="edit_variable" name="variable" placeholder="Variable" readonly>
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name" class="col-form-label">Name: </label>
+                        <input type="text" class="form-control" id="edit_name" name="name" placeholder="Name">
+                        <div class="is-invalid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="value" class="col-form-label">Value: </label>
+                        <textarea class="form-control" cols="10" rows="10" id="edit_value" name="value" placeholder="Value"></textarea>
+                        <div class="is-invalid"></div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" value="submit" class="btn btn-primary">Sumbit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#settings').dataTable({
+        "ordering": false
+    });
+
+    const add_validation = new window.JustValidate('#add_setting', {
+        errorFieldCssClass: 'is-invalid',
+    });
+    add_validation
+        .addField('#add_variable', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#add_name', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#add_value', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .onSuccess((event) => {
+            document.getElementById("add_setting").submit();
+        });
+
+        
+    const edit_validation = new window.JustValidate('#edit_setting', {
+    errorFieldCssClass: 'is-invalid',
+    });
+    edit_validation
+        .addField('#edit_variable', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#edit_name', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .addField('#edit_value', [{
+            rule: 'required',
+            errorMessage: 'This field is required',
+        },])
+        .onSuccess((event) => {
+            document.getElementById("edit_setting").submit();
+        });
+
+
+    const update_modal = document.getElementById('edit_modal')
+    update_modal.addEventListener('show.bs.modal', event => {
+        // Button that triggered the modal
+        const button = event.relatedTarget
+        id = parseInt(button.getAttribute('id'))
+
+        const id_input = update_modal.querySelector('#edit_id')
+        const variable = update_modal.querySelector('#edit_variable')
+        const name = update_modal.querySelector('#edit_name')
+        const value = update_modal.querySelector('#edit_value')
+
+        fetch(`/api/v1/settings/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            // Process the retrieved data
+            id_input.value = id
+            variable.value = data['variable']
+            name.value = data['name']
+            value.value = data['value']
+        })
+        .catch(error => {
+            // Handle any errors that occurred during the fetch request
+            console.log('An error occurred:', error);
+        });
+        
+        
+    })
+</script>
+
+{%endblock content%}
