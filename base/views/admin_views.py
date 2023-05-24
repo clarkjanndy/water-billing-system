@@ -176,10 +176,23 @@ def reports(request):
         return HttpResponse(status=403)
 
     reports = Projection.objects.all().order_by('-month')
-    barangays = Baranggay.objects.all().order_by('name')    
+    barangays = Baranggay.objects.all().order_by('name')
+    barangays_dropdown = barangays
+    
+    if request.GET.get('year'):
+        reports = reports.filter(month__year = request.GET.get('year'))
+        
+    if request.GET.get('barangay'):
+        barangays = barangays.filter(name__icontains = request.GET.get('barangay'))
+        
+    years =  Projection.objects.annotate(year=ExtractYear('month')).values('year').distinct().order_by('-year')
     
     data = {'reports':reports,
             "barangays": barangays,
+            "years": years,
+            "barangays_dropdown": barangays_dropdown,
+            "selected_year": int(request.GET.get('year')) if request.GET.get('year') else '',
+            "selected_barangay":  request.GET.get('barangay'),
             "page": "reports",}
     return render(request, './base/reports.html', data)
 

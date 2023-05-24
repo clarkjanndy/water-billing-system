@@ -19,7 +19,35 @@
     </nav>
 
     <div class="row">
+        <div class="col-lg-3">
+            <form class="mb-3">
+                <input value="{{selected_barangay}}" name="barangay" class="d-none">
+                <select class="form-select" name="year" onchange="this.form.submit()">
+                    <option value="" >---</option>
+                    {% for year in years %}
+                        <option value="{{year.year}}" {% if year.year == selected_year %}selected{% endif %}>{{year.year}}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        <div class="col-lg-3">
+            <form class="mb-3">
+                <input value="{{selected_year}}" name="year" class="d-none">
+                <select class="form-select" name="barangay" onchange="this.form.submit()">
+                    <option value="" >---</option>
+                    {% for barangay in barangays_dropdown %}
+                        <option value="{{barangay.name}}" {% if barangay.name == selected_barangay %}selected{% endif %}>{{barangay.name}}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        
+    </div>
+
+    <div class="row">
         <h4>Monthly Reports</h4>
+
         {% if reports %}
         {% for report in reports%}
         <div class="col-lg-3 col-md-4 p-2">
